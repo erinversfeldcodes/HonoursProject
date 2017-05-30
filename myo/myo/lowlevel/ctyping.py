@@ -101,7 +101,7 @@ class MyoLibrary(object):
         # Determine the name which can be used to load the library
         # based on the current platform.
         if platform == 'Windows' or platform == 'Windows (Cygwin)':
-            lib_name = 'myo%d.dll' % arch
+            lib_name = 'C:\\Program Files\\Thalmic Labs\\myo-sdk-win-0.9.0\\bin\\myo%d.dll' % arch
         elif platform == 'Darwin':
             # lib name is just 'myo' as per:
             # https://developer.thalmic.com/forums/topic/541/?page=2

@@ -1,12 +1,12 @@
 import csv
 import sys
 
-import myo.myo as libmyo
+from myo.myo import init, Hub, Feed, vector
 
-libmyo.init()
+init()
 
-feed = libmyo.device_listener.Feed()
-hub = libmyo.Hub()
+feed = Feed()
+hub = Hub()
 hub.run(1000, feed)
 try:
     myo = feed.wait_for_single_device(timeout=10.0)  # seconds
@@ -19,15 +19,23 @@ try:
 
     while hub.running and myo.connected:
         quaternion_str = myo.orientation
+        vector_str = vector.Vector
         # file name is participant_number_gesture_number_myo_data.csv
-        file_name = participant_number + '_' + gesture_num + '_myo_data.csv'
+        file_name = participant_number + '_' + str(gesture_num) + '_myo_data.csv'
 
-        while input() != '\n':
-            with open(file_name, newline='') as csvfile:
+        while True:
+            keypress = input()
+            with open(file_name, "w+", newline='') as csvfile:
                 spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-                spamwriter.writerow(quaternion_str.x, quaternion_str.y, quaternion_str.z, quaternion_str.w)
+                string = str(quaternion_str.x)+','+str(quaternion_str.y)+','+str(quaternion_str.z)+','+str(quaternion_str.w)
+                spamwriter.writerow(string)#, vector_str.x, vector_str.y, vector_str.z
+            if keypress == 'q':
+                break
+        gesture_num += 1
+        print('Broke out of inner loop')
 
 except KeyboardInterrupt:
     print("Quitting...")
+
 finally:
     hub.shutdown()
