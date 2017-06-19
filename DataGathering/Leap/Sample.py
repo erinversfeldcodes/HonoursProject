@@ -8,6 +8,7 @@
 import sys, thread, time, os
 from config import *
 sys.path.insert(0, leap_lib)
+sys.path.insert(0, more_leap)
 import Leap
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 import ctypes
