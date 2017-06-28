@@ -10,7 +10,7 @@ for %%x in (%list%) do (
     if "%choice1%"=="m" (
       START .\\Myo\\MyoDataCapture
       ECHO Myo data gatherer is running
-      START .\\Kinect\\KinectApplication\\kinectv2_viewer
+      START .\\Kinect\\kinectv2_viewer %%x
       ECHO Kinect data gatherer is running
       START py -2 .\\Leap\\Sample.py meow%%x.txt
       ECHO Leap data gatherer is running
@@ -22,7 +22,7 @@ for %%x in (%list%) do (
     ) else (
       START .\\Myo\\MyoDataCapture
       ECHO Myo data gatherer is running
-      START .\\Kinect\\KinectApplication\\kinectv2_viewer
+      START .\\Kinect\\kinectv2_viewer %%x
       ECHO Kinect data gatherer is running
       START py -2 .\\Leap\\Sample.py meow%%x.txt
       ECHO Leap data gatherer is running
