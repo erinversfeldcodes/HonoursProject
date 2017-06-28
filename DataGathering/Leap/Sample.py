@@ -46,7 +46,10 @@ class SampleListener(Leap.Listener):
         serialized_length = serialized_tuple[1]
         data_address = serialized_data.cast().__long__()
         buffer = (ctypes.c_ubyte * serialized_length).from_address(data_address)
-        with open(os.path.realpath(self.filename), 'wb') as data_file:
+        if not os.path.exists(self.filename):
+            os.makedirs(self.filename)
+        f_name = str(time.time()) + ".txt"
+        with open(os.path.realpath(self.filename+"\\"+f_name), 'wb') as data_file:
             data_file.write(buffer)
 
         # new_frame = Leap.Frame()
@@ -172,7 +175,7 @@ class SampleListener(Leap.Listener):
 def main():
     # Create a sample listener and controller
     listener = SampleListener()
-    listener.filename = sys.argv[1]
+    listener.filename = sys.argv[1] + "_" + str(time.time())
     controller = Leap.Controller()
 
     # Have the sample listener receive events from the controller

@@ -12,7 +12,7 @@ for %%x in (%list%) do (
       ECHO Myo data gatherer is running
       START .\\Kinect\\kinectv2_viewer %%x
       ECHO Kinect data gatherer is running
-      START py -2 .\\Leap\\Sample.py meow%%x.txt
+      START py -2 .\\Leap\\Sample.py Leap_%%x
       ECHO Leap data gatherer is running
       set /p choice2="Enter to terminate... "
       taskkill /IM py.exe
@@ -24,7 +24,7 @@ for %%x in (%list%) do (
       ECHO Myo data gatherer is running
       START .\\Kinect\\kinectv2_viewer %%x
       ECHO Kinect data gatherer is running
-      START py -2 .\\Leap\\Sample.py meow%%x.txt
+      START py -2 .\\Leap\\Sample.py Leap_%%x
       ECHO Leap data gatherer is running
       timeout 3
       taskkill /IM py.exe
