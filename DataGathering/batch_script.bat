@@ -15,9 +15,9 @@ for %%x in (%list%) do (
       START py -2 .\\Leap\\Sample.py Leap_%%x
       ECHO Leap data gatherer is running
       set /p choice2="Enter to terminate... "
-      taskkill /IM py.exe
       taskkill /IM MyoDataCapture.exe
       taskkill /IM kinectv2_viewer.exe
+      taskkill /IM py.exe
       timeout 1
     ) else (
       START .\\Myo\\MyoDataCapture
@@ -27,9 +27,9 @@ for %%x in (%list%) do (
       START py -2 .\\Leap\\Sample.py Leap_%%x
       ECHO Leap data gatherer is running
       timeout 3
-      taskkill /IM py.exe
       taskkill /IM MyoDataCapture.exe
       taskkill /IM kinectv2_viewer.exe
+      taskkill /IM py.exe
       timeout 1
     )
 )
