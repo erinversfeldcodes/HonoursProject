@@ -181,13 +181,14 @@ def main():
     # Have the sample listener receive events from the controller
 
     # Keep this process running until Enter is pressed
-    while True:
-        # filename = raw_input("File name: ")
-        # listener.filename = filename
-        controller.add_listener(listener)
-        # time.sleep(3)
-        # controller.remove_listener(listener)
-
+    controller.add_listener(listener)
+    try:
+        sys.stdin.readline()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        # Remove the sample listener when done
+        controller.remove_listener(listener)
 
 
 if __name__ == "__main__":
