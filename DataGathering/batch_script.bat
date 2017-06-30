@@ -1,13 +1,18 @@
 @echo off
-set /p participant_file="Participant (filename): ":
-python create_order.py "%participant_file%"
-set /p list=<"%participant_file%"
-echo "%list%"
+set "choice1="
+set "participant_file="
+set "list="
+setlocal EnableDelayedExpansion
+setlocal
+set /p participant_file="Participant (filename): "
+python create_order.py %participant_file%
+set /p list=<%participant_file%
+echo %list%
 for %%x in (%list%) do (
     echo PERFORM GESTURE %%x
-    ECHO Enter to start recording for 3 seconds, enter 'm' for manual termination
-    set /p choice1="Decide: ":
-    if "%choice1%"=="m" (
+    setlocal
+    set /p choice1="Enter to start recording for 3 seconds, enter m for manual termination: "
+    if "!choice1!"=="m" (
       START .\\Myo\\MyoDataCapture
       ECHO Myo data gatherer is running
       START .\\Kinect\\kinectv2_viewer %%x
@@ -32,4 +37,6 @@ for %%x in (%list%) do (
       taskkill /IM py.exe
       timeout 1
     )
+    endlocal
 )
+endlocal
