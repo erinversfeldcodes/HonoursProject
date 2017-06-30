@@ -183,7 +183,8 @@ def main():
     # Keep this process running until Enter is pressed
     controller.add_listener(listener)
     try:
-        sys.stdin.readline()
+        while True:
+            time.sleep(1)
     except KeyboardInterrupt:
         pass
     finally:
