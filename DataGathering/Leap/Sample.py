@@ -174,13 +174,18 @@ class SampleListener(Leap.Listener):
 
 def main():
     # Create a sample listener and controller
+    controller = Leap.Controller()
+    controller.set_policy(Leap.Controller.POLICY_BACKGROUND_FRAMES)
     listener = SampleListener()
     listener.filename = sys.argv[1] + "_" + str(time.time())
-    controller = Leap.Controller()
 
     # Have the sample listener receive events from the controller
 
     # Keep this process running until Enter is pressed
+    time.sleep(0.01)
+    if not controller.is_policy_set(Leap.Controller.POLICY_BACKGROUND_FRAMES):
+        print("background policy not set")
+        sys.exit()
     controller.add_listener(listener)
     try:
         while True:
