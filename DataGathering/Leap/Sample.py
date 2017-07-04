@@ -141,7 +141,7 @@ def main():
     # Have the sample listener receive events from the controller
 
     # Keep this process running until Enter is pressed
-    time.sleep(0.01)
+    time.sleep(0.05)
     if not controller.is_policy_set(Leap.Controller.POLICY_BACKGROUND_FRAMES):
         print("background policy not set")
         sys.exit()
