@@ -17,25 +17,25 @@ for %%x in (%list%) do (
       ECHO Myo data gatherer is running
       START .\\Kinect\\kinectv2_viewer %%x
       ECHO Kinect data gatherer is running
-      START py -2 .\\Leap\\Sample.py Leap_%%x
+      START python .\\Leap\\Sample.py Leap_%%x
       ECHO Leap data gatherer is running
       set /p choice2="Enter to terminate... "
-      taskkill /IM MyoDataCapture.exe
-      taskkill /IM kinectv2_viewer.exe
-      taskkill /IM py.exe
-      timeout 1
+      TASKKILL /IM MyoDataCapture.exe
+      TASKKILL /IM kinectv2_viewer.exe
+      TASKKILL /IM python.exe
+      TIMEOUT 1
     ) else (
       START .\\Myo\\MyoDataCapture
       ECHO Myo data gatherer is running
       START .\\Kinect\\kinectv2_viewer %%x
       ECHO Kinect data gatherer is running
-      START py -2 .\\Leap\\Sample.py Leap_%%x
+      START python .\\Leap\\Sample.py Leap_%%x
       ECHO Leap data gatherer is running
-      timeout 3
-      taskkill /IM MyoDataCapture.exe
-      taskkill /IM kinectv2_viewer.exe
-      taskkill /IM py.exe
-      timeout 1
+      TIMEOUT 3
+      TASKKILL /IM MyoDataCapture.exe
+      TASKKILL /IM kinectv2_viewer.exe
+      TASKKILL /IM python.exe
+      TIMEOUT 1
     )
     endlocal
 )
