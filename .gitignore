@@ -1,5 +1,5 @@
-config.py
-config.pyc
+DataGathering/Leap/config.py
+DataGathering/Leap/config.pyc
 
 # Windows image file caches
 Thumbs.db
