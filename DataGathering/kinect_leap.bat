@@ -4,9 +4,8 @@ set "participant_file="
 set "list="
 setlocal EnableDelayedExpansion
 setlocal
-set /p participant_file="Participant (filename): "
-python create_order.py %participant_file%
-set /p list=<%participant_file%
+set /p participant_file="Participant number: "
+set /p list=<orders\%participant_file%
 echo %list%
 for %%x in (%list%) do (
     echo PERFORM GESTURE %%x
@@ -19,7 +18,7 @@ for %%x in (%list%) do (
       ECHO Leap data gatherer is running
       set /p choice2="Enter to terminate... "
       TASKKILL /IM kinectv2_viewer.exe
-      TASKKILL /IM python.exe
+      TASKKILL /IM py.exe
       TIMEOUT 1
     ) else (
       START .\\Kinect\\kinectv2_viewer %%x
@@ -28,7 +27,7 @@ for %%x in (%list%) do (
       ECHO Leap data gatherer is running
       TIMEOUT 3
       TASKKILL /IM kinectv2_viewer.exe
-      TASKKILL /IM python.exe
+      TASKKILL /IM py.exe
       TIMEOUT 1
     )
     endlocal

@@ -4,9 +4,8 @@ set "participant_file="
 set "list="
 setlocal EnableDelayedExpansion
 setlocal
-set /p participant_file="Participant (filename): "
-python create_order.py %participant_file%
-set /p list=<%participant_file%
+set /p participant_file="Participant number: "
+set /p list=<orders\%participant_file%
 echo %list%
 for %%x in (%list%) do (
     echo PERFORM GESTURE %%x
