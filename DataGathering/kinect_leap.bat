@@ -14,7 +14,7 @@ for %%x in (%list%) do (
     if "!choice1!"=="m" (
       START .\\Kinect\\kinectv2_viewer %%x
       ECHO Kinect data gatherer is running
-      START python .\\Leap\\Sample.py Leap_%%x
+      START py -2 .\\Leap\\Sample.py Leap_%%x
       ECHO Leap data gatherer is running
       set /p choice2="Enter to terminate... "
       TASKKILL /IM kinectv2_viewer.exe
@@ -23,7 +23,7 @@ for %%x in (%list%) do (
     ) else (
       START .\\Kinect\\kinectv2_viewer %%x
       ECHO Kinect data gatherer is running
-      START python .\\Leap\\Sample.py Leap_%%x
+      START py -2 .\\Leap\\Sample.py Leap_%%x
       ECHO Leap data gatherer is running
       TIMEOUT 3
       TASKKILL /IM kinectv2_viewer.exe
