@@ -5,7 +5,7 @@ set "list="
 setlocal EnableDelayedExpansion
 setlocal
 set /p participant_file="Participant number: "
-set /p list=<orders\%participant_file%
+set /p list=<orders\%participant_file%.txt
 echo %list%
 for %%x in (%list%) do (
     echo PERFORM GESTURE %%x
