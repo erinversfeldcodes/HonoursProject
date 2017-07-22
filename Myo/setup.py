@@ -1,0 +1,1 @@
+[requirements] = sklearn, myo, numpy, pygame
