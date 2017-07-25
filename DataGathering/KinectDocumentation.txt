@@ -4,7 +4,7 @@ Before running batch script:
   - Ensure the USB cable is plugged into a USB 3.0 port on the laptop/computer. A white light should show on the adapter connected to the USB cable if correctly connected.
   - Open Kinect Studio and then connect to the device (button in top left corner of application).
   - Xbox white light and red infrared lights should be on on the Kinect.
-  - Position the Kinect to be facing the position of the hand. The Kinect can be tilted upwards so that it does not face straight along the table, but rather the field above the table.
+  - Position the Kinect to be facing the hand, approximately 100-110cm away from the hand. The Kinect can be tilted upwards so that it does not face straight along the table, but rather the field above the table.
   
 While running batch script:
   - Important: Ensure the hand is the closest object in the field of view of the Kinect! Prevent objects such as laptop/computer or mouse from being in line with the hand; These should either be out of the field of view, or further behind the hand recorded.
