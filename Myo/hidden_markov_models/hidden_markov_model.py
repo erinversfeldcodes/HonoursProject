@@ -7,7 +7,6 @@ def train(target_values_training, training_data, target_values_test, test_data):
 
     number_of_states = None
 
-
-    gaussian = hmm.GaussianHMM(n_components=number_of_states).fit()
-    gmm = hmm.GMMHMM()
-    multinomial = hmm.MultinomialHMM()
+    gaussian = hmm.GaussianHMM(n_components=number_of_states).fit(training_data)
+    gmm = hmm.GMMHMM(n_components=number_of_states).fit(training_data)
+    multinomial = hmm.MultinomialHMM(n_components=number_of_states).fit(training_data)
