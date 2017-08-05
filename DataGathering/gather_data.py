@@ -18,10 +18,12 @@ with open('./orders/' + str(participant_number) + "-" + str(round_number) + ".tx
     print(gestures)
     for gesture in gestures:
 
+        input("Press ENTER to record gesture: " + gesture)
+
         os.system("START .\\Myo\\MyoDataCapture")
         print("Myo data gatherer is running")
 
-        os.system("START .\\Kinect\\kinectv2_viewer(updatedv2) " + gesture)
+        os.system("START .\\Kinect\\kinectv2_viewer(updatedv3) " + gesture)
         print("Kinect data gatherer is running")
 
         path_to_data_gatherer_script = os.path.abspath("Leap\\Sample.py")
@@ -31,5 +33,5 @@ with open('./orders/' + str(participant_number) + "-" + str(round_number) + ".tx
         time.sleep(3)
 
         os.system("TASKKILL /IM MyoDataCapture.exe")
-        os.system("TASKKILL /IM kinectv2_viewer(updatedv2).exe ")
+        os.system("TASKKILL /IM kinectv2_viewer(updatedv3).exe ")
         time.sleep(1)
