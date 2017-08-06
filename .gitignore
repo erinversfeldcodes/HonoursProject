@@ -1,4 +1,4 @@
-# Windows image file caches
+p# Windows image file caches
 Thumbs.db
 ehthumbs.db
 
@@ -45,9 +45,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-*.png
 190617 121015/1.jpg
-*.jpg
 Myo/.idea/Myo.iml
 Myo/.idea/modules.xml
 Myo/.idea/misc.xml
