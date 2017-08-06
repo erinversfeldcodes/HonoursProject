@@ -1,9 +1,14 @@
+import logging
 import os
 import subprocess
 import sys
 import tkinter
 from tkinter import *
 import time
+
+time_stamp = time.time()
+logging.basicConfig(filename=(str(time_stamp) + ".log"), level=logging.DEBUG)
+logging.info("Loaded gather_data.py")
 
 
 class DataGatheringApplication(Tk):
@@ -36,8 +41,10 @@ class DataGatheringApplication(Tk):
 
     def set_gestures(self, gestures):
         self.gestures = gestures
+        logging.debug("Set gestures to: "+ str(self.gestures))
 
     def get_gestures(self):
+        logging.debug("Returning gestures to: " + str(self.gesture))
         return self.gestures
 
 
@@ -68,10 +75,14 @@ class ParticipantInfoFrame(Frame):
 
     def load_data(self):
         participant_number = self.participant_entry.get()
+        logging.debug("Partiticpant number set to: " + str(participant_number))
         round_number = self.round_entry.get()
+        logging.debug("Round number set to: " + str(round_number))
 
         try:
+            logging.debug("Trying to open file containing order of gestures to be performed.")
             with open('./orders/' + str(participant_number) + '-' + str(round_number) + '.txt') as order_of_gestures:
+                logging.debug("Able to open file containing the gestures to be performed.")
                 self.done_button.destroy()
 
                 confirm_label = Label(self, text="Thank you! Please click 'Next' to proceed.")
@@ -84,6 +95,7 @@ class ParticipantInfoFrame(Frame):
                 self.controller.set_gestures(gestures)
 
         except FileNotFoundError:
+            logging.debug("Unable to open file containing order of gestures to be performed.")
             error_msg = Label(self, text="Please enter the correct participant and round number.")
             error_msg.grid(row=2, column=0)
 
@@ -120,32 +132,37 @@ class DataRecordingFrame(Frame):
             image_path = os.path.abspath(image_name)
             paths.append(image_path)
 
+        logging.info("Paths to images of gestures: " + str(paths))
         return paths
 
     def next_gesture(self):
         try:
             self.current_gesture = next(self.image_iterator)
+            logging.debug("Current gesture set to: " + str(self.current_gesture))
             gesture_image = PhotoImage(file=self.current_gesture)
             self.image_label.img = gesture_image
             self.image_label.config(image=self.image_label.img)
         except StopIteration:
+            logging.info("Readhed the end of the list of gestures to be performed. Exiting.")
             sys.exit()
 
     def start_recording(self):
-        os.system("START ..\\Myo\\MyoDataCapture")
-        print("Myo data gatherer is running")
+        #os.system("START ..\\Myo\\MyoDataCapture")
+        #print("Myo data gatherer is running")
 
         os.system("START ..\\Kinect\\kinectv2_viewer(updatedv3) " + self.current_gesture)
+        logging.info("Kinect data gatherer is running.")
         print("Kinect data gatherer is running")
 
-        os.system("START /IM py -2 ..\\Leap\\Sample.py " + self.current_gesture)
-        print("Leap data gatherer is running")
+        #os.system("START /IM py -2 ..\\Leap\\Sample.py " + self.current_gesture)
+        #print("Leap data gatherer is running")
 
         time.sleep(3)
 
-        os.system("TASKKILL /IM MyoDataCapture.exe")
+        #os.system("TASKKILL /IM MyoDataCapture.exe")
         os.system("TASKKILL /IM kinectv2_viewer(updatedv3).exe ")
-        os.system("TASKKILL /IM py.exe")
+        logging.info("Kinect data gatherer has been killed.")
+        #os.system("TASKKILL /IM py.exe")
         time.sleep(1)
 
         self.next_gesture()
@@ -153,4 +170,5 @@ class DataRecordingFrame(Frame):
 
 if __name__ == "__main__":
     app = DataGatheringApplication()
+    logging.debug("Created instance of DataGatheringApplication(): "+str(app))
     app.mainloop()
