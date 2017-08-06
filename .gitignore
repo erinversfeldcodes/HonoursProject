@@ -62,3 +62,5 @@ DataGathering/Leap/config.py
 DataGathering/Leap/config.pyc
 *.pyc
 */hmmlearn/*
+Myo/tests/test_data/
+Myo/tests/test_data/myo_data/
