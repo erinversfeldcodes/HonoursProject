@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>HANDGR Blog - Literature Review, Erin Versfeld</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
+    <script> 
+        $(function(){
+            $("#navbar").load("navbar.html");
+            $("#headLink").load("head_link.html");
+            $("#footer").load("footer.html");
+        });
+    </script>
+
+    <div id="headLink"></div>
+
+</head>
+
+<body style="background-color: rgb(30,144,255,0.1); position: absolute; size: 100%" data-spy="scroll" data-target="#myScrollspy" data-offset="15">
+    <div id="navbar"></div>
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/myo-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Using the Myo to recognise the South African Sign Language alphabet</h1>
+                        <h2 class="subheading">Literature review</h2>
+                        <span class="meta">Posted by <a href="#">Erin Versfeld</a> on 11 July, 2017</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <style>
+        .affix {
+            top:0;
+        }
+        .affix + .container {
+            padding-top: 70px;
+        }
+        .background-color {
+            background-color: rgb(30,144,255,0.5);
+        }
+        .fill-width.dropdown > .collapse-menu > li > a > font{
+           white-space: normal; 
+        }
+        .left {
+            overflow: hidden;
+            min-height: 50px;
+            width: 200px;
+            float: left;
+        }
+        .right {
+            float: right;
+            width: 1300px;
+            min-height: 50px;
+            margin-right: 200px;
+            float: right;
+        }
+    </style>
+    <!-- Post Content -->
+    <div class="container" style="width: 100%">
+            <div class="left">
+                <nav id="myScrollspy">
+                    <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="197">
+                        <h3 class="section-heading"><u>OVERVIEW</u></h3>
+                        <br>
+                        <li>                             
+                            <h4>
+                                <a href="literature_review_erin.html#abstract">
+                                    Abstract
+                                </a>
+                            </h4>
+                        </li>
+                        <li>
+                            <h4>
+                                <a href="literature_review_erin.html#introduction">
+                                    1. Introduction
+                                </a>
+                            </h4>
+                        </li>
+                        <li>
+                            <h4>
+                                <a role="button" href="literature_review_erin.html#technical-design" aria-haspop="true" aria-expanded="false">2. Technical Design </a>
+                                <a href="#collapse-technical-design" class="dropdown-toggle" data-toggle="collapse" role="button" aria-haspop="true" aria-expanded="false">
+                                        <span class="fa fa-caret-down"></span>
+                                </a>
+                            </h4>
+                            <ul style="list-style-type:none" id="collapse-technical-design" class="collapse-menu collapse">
+                                <li role="presentation">
+                                    <a role="menu-item" tabindex="-1" href="literature_review_erin.html#hardware">
+                                        <h4>
+                                            2.1 Hardware
+                                        </h4>
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menu-item" tabindex="-1" href="literature_review_erin.html#data-processing">
+                                        <h4>
+                                            2.2 Data pre-processing,<br/> &nbsp &nbsp &nbsp segementation and<br/> &nbsp &nbsp &nbsp feature extraction
+                                        </h4>
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menu-item" tabindex="-1" href="literature_review_erin.html#gesture-classifiers">
+                                        <h4>
+                                            2.3 Gesture classifiers
+                                        </h4>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <h4>
+                                <a role="button" href="literature_review_erin.html#experimental-design" aria-haspop="true" aria-expanded="false">
+                                    3. Experimental Design </a>
+                                <a href="#collapse-experimental-design" class="dropdown-toggle" data-toggle="collapse" role="button" aria-haspop="true" aria-expanded="false"><span class="fa fa-caret-down"></span></a>
+                            </h4>
+                            <ul style="list-style-type:none;" id="collapse-experimental-design" class="collapse-menu collapse">
+                                <li role="presentation">
+                                    <a role="menu-item" tabindex="-1" href="literature_review_erin.html#sample-population">
+                                        <h4>
+                                            3.1 Sample population
+                                        </h4>
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menu-item" tabindex="-1" href="literature_review_erin.html#gestures">
+                                        <h4>
+                                            3.2 Gestures
+                                        </h4>
+                                    </a>
+                                </li>
+                                <li class="dropdown">
+                                    <a role="button" href="literature_review_erin.html#evaluation" aria-haspop="true" aria-expanded="false">
+                                        <h4>
+                                            3.3 Evaluation
+                                            </a>
+                                            <a href="#collapse-experimental-design-evaluation" class="dropdown-toggle" data-toggle="collapse" role="button" aria-haspop="true" aria-expanded="false">
+                                                <span class="fa fa-caret-down"></span>
+                                            </a>
+                                        </h4>
+                                    </a>
+                                    <ul style="list-style-type:none" id="collapse-experimental-design-evaluation" class="collapse-menu collapse">
+                                        <li role="presentation">
+                                        <a role="menu-item" tabindex="-1" href="literature_review_erin.html#qualitative">
+                                                <h5>
+                                                    3.3.1 Qualitative
+                                                </h5>
+                                            </a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menu-item" tabindex="-1" href="literature_review_erin.html#quantitative">
+                                                <h5>
+                                                    3.3.1 Quantitative
+                                                </h5>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h4>
+                                <a href="literature_review_erin.html#conclusion">
+                                    4. Conclusion
+                                </a>
+                            </h4>
+                        </li>
+                        <li>
+                            <h4>
+                                <a href="literature_review_erin.html#references">
+                                    5. References
+                                </a>
+                            </h4>
+                        </li>
+                        <h4>
+                            <a href="supporting/literature_review_erin.pdf">
+                                Download &nbsp<span class="fa fa-download"></span>
+                            </a>
+                        </h4>
+                    </ul>
+                </nav>
+            </div>
+            <div class="right" style="position: relative;">
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <h2 id="abstract" class="intro-text text-center"><strong>Abstract</strong></h2>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <p>
+                    This review identifies a gap in the literature left by the lack of
+                    studies on applying electromyographic (EMG) sensor based gesture recognition to gestures from the South African Sign Language (SASL) alphabet. The Myo is a commercially available application of EMG - based gesture recognition, and includes inertial measurement unit sensors. It can be used to develop a tool to teach the hearing SASL alphabet gestures. It is currently very expensive for the hearing to learn SASL, hence the need for a tool to help bridge the communication divide between them and the Deaf. The technology is not currently able to interpret the full body expression required for speaking SASL, therefore this tool focusses on the subset it is ready for. Previous studies have poorly reported their data processing for the classifiers used to recognise these gestures. Five classifiers should be explored, namely artificial neural networks, Bayesian linear classifiers, K-means clustering, hidden Markov Models and linear discriminant analysis. It appears that will be the first study to use Bayesian linear classifiers in this context. Additionally, this tool should seek to balance qualitative and quantitative methods of analysis for this tool to compensate for the heavy quantitative focus of previous studies.
+                </p>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <h2 id="introduction" class="intro-text text-center"><strong>1.</strong> Introduction</h2>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <p>
+                    In recent years, there has been a drive to make the development of interfaces between humans and computers more naturalistic. Voice recognition, eye-motion detection, and gesture recognition are all examples of this development. These technologies have been applied in various settings, including, medicine [<a href="literature_review_erin.html#5">5</a>], music [<a href="literature_review_erin.html#17">17</a>, <a href="literature_review_erin.html#24">24</a>] and automobiles [<a href="literature_review_erin.html#2">2</a>]. The common goal has been to make computer use as simple as possible, so that users need not learn how to interact with new systems. However, these technologies can also be applied to bridging social divides.
+                </p>
+                <p>
+                    There currently exists a communication barrier between the Deaf and hearing communities. The former use sign languages as opposed to spoken languages to communicate. Historically, this difference has produced some discord between the linguistic communities, resulting in the Deaf experiencing a reduced set of social opportunities [<a href="literature_review_erin.html#20">20</a>]. In addition to this, most of the Deaf schools in South Africa implement a policy known as Total Communication [<a href="literature_review_erin.html#15">15</a>]. This entails using both spoken and sign languages in the classroom. According to [15], this contributes to the communication barrier between the Deaf and hearing. In addition to this, as of 2010, South African Sign Language (SASL) was not recognised as a subject in the South African primary and secondary education system [<a href="literature_review_erin.html#15">15</a>]. This also makes the barrier for the hearing to learn SASL higher than it should be, further contributing to the communication barrier. As it stands, learning SASL is a costly exercise, as it requires a trained SASL teacher, whose fees are understandably high.
+                </p>
+                <p>
+                    Given all these factors, a possible means of whittling away at the communication barrier would be to make learning SASL more affordable and accessible to the hearing. Such a system would be required to interpret signs; hence gesture recognition technology would be well suited to addressing this need.
+                </p>
+                <p>
+                    Sign languages make use of the entire body to communicate: facial expression, arm and hand positions, gestures and body posture all merge to communicate meaning. As it stands, gesture recognition cannot address all these components in a simple, easy-to-use, commercially available system. However, the alphabet for SASL is designed to be gestured with one hand. A system for recognising these gestures could be used to form the beginnings of a tool for teaching SASL to the hearing.
+                <p>
+                    In the past, several projects from all over the world have sought to bridge the divide between the Deaf and hearing [<a href="literature_review_erin.html#3">3</a>, <a href="literature_review_erin.html#6">6</a>, <a href="literature_review_erin.html#7">7</a>, <a href="literature_review_erin.html#11">11</a>, <a href="literature_review_erin.html#12">12</a>, <a href="literature_review_erin.html#16">16</a>, <a href="literature_review_erin.html#18">18</a>, <a href="literature_review_erin.html#22">22</a>, <a href="literature_review_erin.html#25">25</a>, <a href="literature_review_erin.html#26">26</a>]. This review seeks to determine how to apply
+                    the insights from the aforementioned studies to the South African
+                    context using commercially available gesture control
+                    technologies.
+                </p>
+                <p>
+                    Gesture recognition can be realised using various mediums, and
+                    has made significant advances in recent years [<a href="literature_review_erin.html#4">4</a>], making this the
+                    ideal time to begin this research. There is evidence to suggest that
+                    devices which make use of electromyographic (EMG) sensors can
+                    be adapted particularly well for this use [<a href="literature_review_erin.html#3">3</a>, <a href="literature_review_erin.html#26">26</a>]. The Myo
+                    armband is a commercially available example of the use of EMG
+                    sensors in gesture recognition devices.
+                </p>
+                <p>
+                    The Myo armband is a wearable gesture and motion control
+                    device which makes use of eight EMG sensors, a 3D gyroscope
+                    (gyro), a 3D accelerometer (ACC) and a magnetometer (MM).
+                    The EMG sensors measure muscle tension in the forearm, while
+                    the other three sensors contribute to an inertial measurement unit
+                    (IMU). The device uses a Bluetooth connection to connect to a
+                    digital device, such as a phone, tablet, laptop or PC [<a href="literature_review_erin.html#23">23</a>]. The data
+                    produced by the Myo requires pre-processing and segmentation
+                    prior to feature extraction. These features are then inputted to
+                    classifiers to determine which gesture has just been performed.This work proposes to make use of this armband to recognise
+                    South African Sign Language (SASL) letters.
+                </p>
+                <p>
+                    The following literature review will cover an analysis of the
+                    technical and experimental designs of previous studies. These
+                    analyses will serve to motivate the choice of hardware and other
+                    factors involved in developing this tool.
+                </p>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <h2 id="technical-design" class="intro-text text-center"><strong>2.</strong> Technical Design</h2>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <p>
+                    Various EMG technologies, data pre-processing, data segmentation, feature extraction and gesture classifiers have been used in past studies with a variety of results. For the Myo alone, results vary from 100% person-dependent accuracy of gesture recognition for Sinhala [<a href="literature_review_erin.html#14">14</a>] to being judged to have low accuracy for fine gestures, with the potential to produce high accuracy results for dynamic gestures [<a href="literature_review_erin.html#1">1</a>]. Each of these factors offer insight as to how the investigation into the best implementation of this tool should unfold.
+                </p>
+                <h2 id="hardware" class="intro-text">
+                    <font size="5">
+                        <strong>2.1</strong> Hardware
+                    </font>
+                </h2>
+                <p>
+                    The many hardware configurations used in previous research offer insight into the desired characteristics of the hardware for this tool. In 2007, [<a href="literature_review_erin.html#8">8</a>] discovered there is a 5 – 10% improvement in recognition of hand gestures when both EMG and IMU sensors are used as opposed to only EMG sensors [<a href="literature_review_erin.html#8">8</a>]. This is confirmed by the difference in results between [<a href="literature_review_erin.html#13">13</a>] and [<a href="literature_review_erin.html#19">19</a>], as can be seen in Table 1. Both studies used custom-made hardware with four EMG sensors. However, only [<a href="literature_review_erin.html#19">19</a>] made use of an IMU sensor, specifically an accelerometer [<a href="literature_review_erin.html#13">13</a>, <a href="literature_review_erin.html#19">19</a>]. When more EMG sensors and a gyroscope are included in the hardware specification, the results for these studies become more consistent [<a href="literature_review_erin.html#9">9</a>, <a href="literature_review_erin.html#10">10</a>, <a href="literature_review_erin.html#12">12</a>]. Thus, as the only widely available commercial gesture control device with EMG sensors, an accelerometer and a gyroscope, the Myo has been selected as the hardware of choice for this tool.
+                </p>                
+                <p>
+                    One of the shortcomings of the Myo is that one cannot control from which muscles the EMG sensors receive input from. As demonstrated in [<a href="literature_review_erin.html#8">8</a>] and [<a href="literature_review_erin.html#11">11</a>] (see Table 1), the control of this variable can mean that with fewer sensors a study can achieve results comparable with studies which used more, such as <a href="literature_review_erin.html#9">[9</a>, <a href="literature_review_erin.html#19">19</a>] and [<a href="literature_review_erin.html#26">26</a>]. Studies with the Myo have only been able to enforce its general placement, specifically the forearm [<a href="literature_review_erin.html#1">1</a>, <a href="literature_review_erin.html#14">14</a>, <a href="literature_review_erin.html#21">21</a>, <a href="literature_review_erin.html#22">22</a>]. However, this limitation does not seem a serious drawback, as a study with similar technology achieved a 95% accuracy rate for recognition of Thai sign language alphabet gestures [<a href="literature_review_erin.html#3">3</a>]. Accuracy rate refers to the the percentage of gestures performed which are correctly classified. The only study with the Myo which produced poor results is [<a href="literature_review_erin.html#1">1</a>]. This is also one of two studies which made use of supervised vector machines (SVMs) [<a href="literature_review_erin.html#1">1</a>, <a href="literature_review_erin.html#19">19</a>]. Both studies obtained lower accuracy rates than the other studies reviewed here. The key to replicating these high accuracy rates therefore appears to lie within the combination of data pre-processing and segmentation, feature extraction and classifiers used.
+                </p>
+                <h2 id="data-processing" class="intro-text">
+                    <font size="5">
+                        <strong>2.2</strong> Data pre-processing, segmentation and feature extraction
+                    </font>
+                </h2>
+                <p>
+                    One of the primary failings of previous studies has been in reporting the details of the pre-processing, segmentation and feature extraction the recorded data has undergone prior to being processed through a classifier. Of those segmentation methods described, the moving average algorithm and thresholding, or a combination thereof, appear to be the most popular [<a href="literature_review_erin.html#8">8</a>, <a href="literature_review_erin.html#12">12</a>, <a href="literature_review_erin.html#13">13</a>, <a href="literature_review_erin.html#14">14</a>, <a href="literature_review_erin.html#22">22</a>, <a href="literature_review_erin.html#26">26</a>]. This is probably because of the moving algorithm’s ability to smooth out short-term fluctuations and draw attention to the long-term behavior of the data. As can be seen in Table 2, the moving average algorithm can also be used for processing the data prior to segmentation [<a href="literature_review_erin.html#13">13</a>, <a href="literature_review_erin.html#14">14</a>]. Other forms of pre-processing include full wave rectification of the signals, Z-normalisation and the Butterworth Filter. Unfortunately, due to poor reporting on data pre-processing and segmentation it is difficult to ascertain when is best to use these methods. Therefore, the best approach the development path for this tool can take is to explore the methods which have used in studies with similar hardware (and therefore similar data), and only examine methods beyond these should their performance be suboptimal in the context of an extracted feature set and/ or classifier.
+                </p>
+                <p>
+                    Feature extraction has been better reported than either data pre-processing or segmentation. The most common feature utilised, regardless of the classifier to be used, appears to be the mean absolute value (MAV) [<a href="literature_review_erin.html#3">3</a>, <a href="literature_review_erin.html#10">10</a>, <a href="literature_review_erin.html#12">12</a>, <a href="literature_review_erin.html#13">13</a>, <a href="literature_review_erin.html#14">14</a>, <a href="literature_review_erin.html#26">26</a>] and the standard deviation (SD) [<a href="literature_review_erin.html#9">9</a>, <a href="literature_review_erin.html#14">14</a>, <a href="literature_review_erin.html#26">26</a>]. MAV is typically used to show the magnitude of the data in the window when the baseline of the data is equal to 0 [<a href="literature_review_erin.html#3">3</a>]. Other components are then utilised to represent the rest of the data within the same window. Autoregressive regressive (AR) coefficients are sometimes used for this purpose [<a href="literature_review_erin.html#13">13</a>, <a href="literature_review_erin.html#26">26</a>], although different ones are used in each instance. The choice here ultimately depends on the classifier, although there is no clear relationship between the extracted features and the choice of classifier. As with the methods for data pre-processing and segmentation, this means that the when developing this tool one should first explore those feature sets which have been used in studies with similar hardware before exploring other methods.
+                </p>
+                <h2 id="gesture-classifiers" class="intro-text">
+                    <font size="5">
+                        <strong>2.3</strong> Gesture classifiers
+                    </font>
+                </h2>
+                <p>
+                    The classifiers are the machine learning algorithms which are used to identify gestures. One of them, SVM, has already been discussed, and concluded to perform poorly for the type of data which is extracted from the Myo. Alternative methods for gesture classification include linear discriminant analysis (LDA) [10, 12, 26] hidden Markov models (HMMs) [9, 12, 13, 26], artificial neural networks (ANNs) [3], Bayesian linear classifiers (BLCs) [8, 13] and K-means clustering [12, 26]. ANNs [3], K-means clustering [12], LDA [12, 22, 26], and HMMs [12, 26] have all been used to examine sign languages in the past, therefore it appears that the development of this tool will be the first time BLCs have been used to recognise sign gestures. These classifiers have been used to produce recognition accuracy of over 90% for gestures. It is difficult to compare the context in which these have been used, given the poor reporting on data pre-processing, segmentation and feature extraction. However, we can compare the performance of these algorithms in terms of the amount of training they undergo.
+                </p>
+                <p>
+                    Overall, significantly higher accuracy rates can be obtained when the training set contains &#62;=100 recordings per gesture, as opposed to &#60;100. For example, Table 2 shows that the ANN in [21] performs worse than the ANN in [3] or [14]. Based on the reported data pre-processing, segmentation and feature extraction, the primary algorithmic difference which can account for the poorer performance of [21] is the fact that it undergoes less training than [3] and [14]. HMMs appear to require the most training out of the studies reviewed here.
+                </p>
+                <p>
+                    One of the advantages of a BLCs is its probabilistic underpinnings, which makes it easier to gauge how confident your classifier is of its output. This information makes tuning the classifier easier than in the case of classifiers such as ANNs. It is important to be able to tune the algorithm properly to ensure that it is not pre-maturely discarded before the optimal tuning has been found. ANNs, on the other hand, are better researched and easier to implement because of the extensive library support across languages in comparison to BLCs. Faster and more sound implementations mean that more progress can be made in exploring the usability of the classifier in this context. HMMs make merging implementations which recognise individual structures to recognise sequences of structures is relatively easy to do. This is advantageous in the context of this tool, as it means HMMs have the potential to recognise sequences of letters, and so spell out words. However, as already mentioned, HMMs require more training than other approaches. Of the approaches covered here, K-means clustering has the potential to be the fastest, as its implementation is O(n). This means that it will potentially make the tool more responsive and hence more useable than any of the other approaches. However, if its resultant clusters are of various sizes and densities it tends to perform poorly.
+                </p>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <h2 id="experimental-design" class="intro-text text-center"><strong>3.</strong> Experimental design</h2>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <h2 id="sample-population" class="intro-text">
+                    <font size="5">
+                        <strong>3.1</strong> Sample population
+                    </font>
+                </h2>
+                <p>
+                    As illustrated in Table 3, the maximum number of participants recruited for data gathering in the studies reviewed here was twenty [13]. Most of these, however, employed fewer than ten [1, 8, 9, 12, 14, 19, 21, 26]. It is difficult to establish how drastically the number of participants may have affected the outcome of these studies, given the variation in algorithmic variables discussed previously. Therefore, the when developing the training dataset, the number of participants recruited to generate the data can be minimised, provided the resulting data set contains at least 100 recordings per gesture. By minimising the number of participants, one can minimise the effect of the Myo’s limitations. In other words, the fact that one cannot control which muscles are focused on by the Myo’s EMG sensors will not be an issue if the participant pool is small enough. The handedness of participants has not been well documented, but when reported, right handedness appears heavily favoured [11, 12, 14, 19].
+                </p>
+                <h2 id="gestures" class="intro-text">
+                    <font size="5">
+                        <strong>3.2</strong> Gestures
+                    </font>
+                </h2>
+                <p>
+                    Of those studies which focus on sign languages, the majority used either dynamic or both dynamic and static gestures [3, 11, 12, 14, 22, 26]. Therefore, the tool can be used to recognise both static and dynamic SASL letters, as it was possible to achieve high accuracy rates for the recognition of both gesture forms. Given that this is the case, it would be best to utilise all the gestures within the alphabet. This will ensure that the tool will be as useful as possible within the scope of this undertaking. Once the system has been trained, it does not appear as though very much training is required for user-specific testing.
+                </p>
+                <h2 id="evaluation" class="intro-text">
+                    <font size="5">
+                        <strong>3.3</strong> Evaluation
+                    </font>
+                </h2>
+                <p>
+                    The final stage of any project is the evaluation of the final system. There are numerous methods by which this can be done, both qualitative and quantitative. The latter of these is the more common, but the former provides invaluable insight too.
+                </p>
+                <h3 id="qualitative" class="subheading">
+                    <font size="4">
+                        <i><strong>3.3.1</strong> Qualitative</i>
+                    <font>
+                </h3>
+                <p>
+                    Qualitative analysis of a system offers deep insights into its value and usability. A preliminary report on a project exploring using gesture control technology within the context of surgery, [5], used qualitative feedback to motivate future research into the application of the technology to the field. Similarly, a study on using gesture control technologies in live music performances provided an understanding of the value offered by the application [17]. These insights cannot be gained through using quantitative analyses alone. Both studies made use of participants’ observations to gain the insights, but questionnaires and focus group discussions are other potential sources. The developers of this tool should explore the benefits of these methods and use at least one to evaluate the system’s value. Many of the studies published have instead focussed on analysing the system with quantitative statistics.
+                </p>
+                <h3 id="quantitative" class="subheading">
+                    <font size="4">
+                        <i><strong>3.3.2</strong> Quantitative</i>
+                    <font>
+                </h3>
+                <p>
+                    The results of data segmentation have an impact on the final performance of a classifier, however, it appears many previous studies have neglected to assess the product of this stage. Understanding the performance of the data segmentation processes helps to assess the data gathering exercise. For example, [12] and [26], could establish the appropriate on and offset threshold for segmenting the data by determining that noise was the dominant factor in data recording. This strengthens the value in the results of both studies, the threshold values can be confirmed to be optimal. This body of work should assess the results of data segmentation to ensure that maximum understanding of the interplay between it and later stages of the process.
+                </p>
+                <p>
+                    When the feature set used in a study is somewhat complex, there are two primary statistical tools for establishing which of the features contributed most to the classification of gestures. This can help to eliminate features which confound the identification of gestures. Discriminant analysis is one of the most powerful of the tools for doing this used in past studies [11]. This tool allows one to predict one’s categorical dependent variables using continuous or binary dependent variables. In the case of [11], it helped to identify the features which were most significant when recognising American Sign Language gestures. If one has a priori knowledge, however, one need not necessarily use a statistical tool for a small feature set. [13] could achieve these same insights through observations rather than statistics as the feature set they used was significantly smaller than that of [11]. Without a priori knowledge, however, one can still discover relevant features to the classification. For this, the Principal Component Analysis is the statistical tool of choice [10]. When developing this tool, a healthy combination of all three techniques will probably be the best approach, given that there will be a degree of experimentation in finding the best features to use for each classifier.
+                </p>
+                <p>
+                    After training a classifier on test data, users will have to be recruited to assess the system. The most common quantitative measure taken from these assessments seems to be the accuracy with which the tool recognises the gestures performed [1, 3, 6, 16, 19]. Accuracy here refers to the number of times the user’s gesture is correctly identified by the system relative to the number of times the user produces the same gesture as a percentage. In other words, if the user produces the SASL sign for ‘A’ ten time, and the system correctly identifies it nine times, the system will have an accuracy rate of 90%. The robustness of the system can be superficially assessed using this measure through the experimental setup. An accuracy rate can be taken for user dependent [13, 14] and independent [9, 13, 14] scenarios, as well as session dependent and independent scenarios [9]. A shortcoming of previous studies has been to not adequately control for both variables (user and session). Controlling for both lends insight into the strengths and weaknesses of the classifiers, hence should be done in the course of developing this tool.
+                </p>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <h2 id="conclusion" class="intro-text text-center"><strong>4.</strong> Conclusion</h2>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <p>
+                    To conclude, the Myo is the optimal EMG-sensor based gesture recognition hardware to implement a tool for teaching the SASL alphabet in. It has been used in previous studies which applied gesture recognition to sign languages [1, 14, 22, 26], but appears to have not yet been applied to SASL.
+                </p>
+                <p>
+                    Inconsistencies in the documentation of data pre-processing, segmentation and feature extraction in previous studies mean that several approaches will need to be explored in order to find the optimal combinations. Classifiers, however, have been well documented. Previous publications suggest that SVMs would be a poor classifier to use for this tool, but that ANNs, HMMs, LDAs, BLCs and K-means clustering are worth exploring. HMMs appear to require more training than the other algorithms, and this will have to be considered when developing the training dataset.
+                </p>
+                <p>
+                    All of the gestures in the SASL alphabet should be included when developing the training dataset. Participation levels from previous studies suggest that there need not be too many participants involved in generating the training dataset. This means that the limitation of the Myo, namely that it can’t easily be focused on specific muscles, can be minimised.
+                </p>
+                <p>
+                    Overall, in developing this tool, several gaps in the literature will be filled. Application of an EMG-sensor based gesture recognition solution to the SASL alphabet and thorough documentation on data pre-processing, segmentation and feature extraction are two of the addressed gaps. The immediate future of the tool’s development will involve developing the test dataset and assessing the suitability of the five classifiers for the tool using a mix of qualitative and quantitative analyses.
+                </p>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <h2 id="references" class="intro-text text-center"><strong>5.</strong> References</h2>
+                <hr style="border-color: rgb(0, 153, 153, 0.4)">
+                <ol>
+                    <li id="1">
+                        <a>Abreu, J. G., Teixeira, J. M., Figueiredo, L. S. and Teichrieb, V. Evaluating sign language recognition using the Myo armband. In <i>2010 XVII Symposium on Virtual and Augemented Reality,</i> (2016), IEEE, 64-70
+                        </a>
+                    </li>
+                    <li id="2">
+                        <a>Akyol, S., Canzler, U., Bengler, K. and Hahn, W. Gesture control for use in automobiles.<i> MVA,</i> 349-352.
+                        </a>
+                    </li>
+                    <li id="3">
+                        <a>Amatanon, V., Chanhang, S., Naiyanetr, P. and Thongpang, S. Sign language-Thai alphabet conversion based on electromyogram (EMG). In <i>2014 7th Biomedical Engineering International Conference,</i> (2014), IEEE, 1-4
+                        </a>
+                    </li>
+                    <li id="4">
+                        <a>Bhuiyan, M. and Picking, R. Gesture-controlled user interfaces, what have we done and what's next. In <i>Proceedings of the Fifth Collaborative Research Symposium on Security, E-learning, Internet and Networking,</i> (Darmstadt, Germany, 2009), 25-29
+                        </a>
+                    </li>
+                    <li id="5">
+                        <a>Bizzotto, N., Costanzo, A., Bizzotto, L., Regis, D., Sandri, A., and Magnan, B. Leap motion gesture control with OsiriX in the operating room to control imaging: First experiences during live surgery.<i> Surgical innovation, 1</i>(2), 655-656
+                        </a>
+                    </li>
+                    <li id="6">
+                        <a>Cardoso, T., Delgado, J., and Barata, J. Hand gesture recognition towards enhancing accessibility.<i> Procedia Computer Science, 67,</i> 419-429
+                        </a>
+                    </li>
+                    <li id="7">
+                        <a>Chen, L., Wang, F., Deng, H., and Ji, K. Hand gesture recognition towards enhancing accessibility. In <i>2013 International Conference on Computer Sciences and Applications,</i> (2013), 313-316
+                        </a>
+                    </li>
+                    <li id="8">
+                        <a>Chen, X., Zhang, X., Zhao, Z. Y., Yang, J. H., Lantz, V., and Wang, K. Q. Hand gesture recognition research based on surface EMG sensors and 2D-accelerometers. In <i>2007 11th IEEE International Symposium on Wearable Computers,</i> (2007), 11-14
+                        </a>
+                    </li>
+                    <li id="9">
+                        <a>Georgi, M., Amma, C., & Schultz, T. Recognizing hand and finger gestures with IMU based motion and EMG based muscle activity sensing. <i>BIOSIGNALS,</i> 99-108
+                        </a>
+                    </li>
+                    <li id="10">
+                        <a>Jiang, S., Ly, B., Shang, X., Zhang, C., Wang, H., and Shull, P. B. Development of a real-time hand gesture recognition wristband based on sEMG and IMU sensing. In <i>2016 IEEE International Conference on Robotics and Biomimetics,</i> (2016), 1256-1261
+                        </a>
+                    </li>
+                    <li id="11">
+                        <a>Kosmidou, V. E., Hadjileontiadis, L. J., and Panas, S. M. Evaluation of surface EMG features for the recognition of American Sign Language gestures. In <i>Engineering in Medicine and Biology Society, 2006. 28th Annual International Conference of the IEEE,</i> (2006), 6197-6200
+                        </a>
+                    </li>
+                    <li id="12">
+                        <a>Li, Y., Chen, X., Tian, J., Zhang, X., Wang, K., and Yang, J. Automatic recognition of sign language sub-words based on portable accelerometer and EMG sensors. In <i>International Conference on Multimodal Interfaces and the Workshop on Machine Learning for Multimodal Interaction,</i> (2010), 17
+                        </a>
+                    </li>
+                    <li id="13">
+                        <a>Lu, Z., Chen, X., Li, Q., Zhang, X., and Zhou, P. A hand gesture recognition framework and wearable gesture-based interaction prototype for mobile devices.<i> IEEE transactions on human-machine systems, 44</i>(2), 293-299
+                        </a>
+                    </li>
+                    <li id="14">
+                        <a>Madushanka, A. L., Senevirathne, R. G., Wijesekara, L. M., Arunatilake, S. M., and Sandaruwan, K. D. Framework for Sinhala Sign Language recognition and translation using a wearable armband. In <i>2016 sixteenth International Conference on Advances in ICT for Emerging Regions,</i> (2016), 49-57
+                        </a>
+                    </li>
+                    <li id="15">
+                        <a>Magongwa, L. (2010). Deaf education in South Africa.<i> American Annals of the Deaf, 155</i>(4), 493-496
+                        </a>
+                    </li>
+                    <li id="16">
+                        <a>Marin, G., Dominio, F., and Zanuttigh, P. Hand gesture recognition with leap motion and Kinect devices.<i> 2014 IEEE International Conference on Image Processing,</i> (2014), 1565-1569
+                        </a>
+                    </li>
+                    <li id="17">
+                        <a>Marshall, M. T., Malloch, J., and Wanderley, M. M. Gesture control of sound spatialization for live musical performance.<i> International Gesture Workshop,</i> (Berlin Heidelberg, Germany, 2007), 227-238
+                        </a>
+                    </li>
+                    <li id="18">
+                        <a>Mitra, S., and Acharya, T. Gesture recognition: A survey.<i> IEEE Transactions on Systems, Man, and Cybernetics, Part C (Applications and Reviews), 37</i>(3), 311-324
+                        </a>
+                    </li>
+                    <li id="19">
+                        <a>Naik, G. R., Kumar, D. K., and Jayadeva. Twin SVM for gesture classification using the surface electromyogram.<i> IEEE Transactions on Information Technology in Biomedicine, 14</i>(2), 301-308.
+                        </a>
+                    </li>
+                    <li id="20">
+                        <a>Simms, L., Rusher, M., Andrews, J. F., and Coryell, J. Apartheid in Deaf education: Examining workforce diversity.<i> American Annals of the Deaf, 153</i>(4), 384-395
+                        </a>
+                    </li>
+                    <li id="21">
+                        <a>Srisuphab, A., and Silapachote, P. Artificial neural networks for gesture classification with inertial motion sensing armbands. <i>Region 10 Conference (TENCON), 2016 IEEE,</i> (2016), 1-5
+                        </a>
+                    </li>
+                    <li id="22">
+                        <a>Taylor, J. Real-time translation of American Sign Language using wearable technology.
+                        </a>
+                    </li>
+                    <li id="23">
+                        <a>Tech Specs. Retrieved April 29, 2017, from Myo: https://www.myo.com/techspecs
+                        </a>
+                    </li>
+                    <li id="24">
+                        <a>Trail, S., Dean, M., Odowichuck, G., Tavares, T. F., Driessen, P., Schloss, W. A., and Tzanetakis, G. Non-invasive sensing and gesture control for pitched percussion hyper-instruments using the Kinect. <i>NIME.</i>
+                        </a>
+                    </li>
+                    <li id="25">
+                        <a>Van Zijl, L., and Barker, D. South African Sign Language machine translation system. In <i>Proceedings of the 2nd International Conference on Computer Graphics, Virtual Reality, Visualisation and Interaction in Africa,</i> (2003), 49-52
+                        </a>
+                    </li>
+                    <li id="26">
+                        <a>Zhang, X., Chen, X., Li, Y., Lantz, V., Wang, K., and Yang, J. A framework for hand gesture recognition based on accelerometer and EMG sensors. <i>IEEE Transactions on Systems, Man, and Cybernetics-Part A: Systems and Humans, 41</i>(6), 1064-1076
+                        </a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        
+    <hr>
+
+    <!-- Footer -->   
+    <div id="footer"></div>
+
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
