@@ -3,13 +3,13 @@ import os
 import re
 import sys
 
-if sys.argv[1] or (sys.argv[1] and sys.argv[2]):
-    sys.path.append(sys.argv[1])
-    if sys.argv[2]:
-        sys.path.append(sys.argv[2])
-else:
-    sys.path.append("C:\\Users\\Erin\\Downloads\\WinPython-64bit-2.7.10.3\\python-2.7.10.amd64\\Lib\\site-packages\\scipy\\")
-    sys.path.append("C:\\Users\\Erin\\Downloads\\WinPython-64bit-2.7.10.3\\python-2.7.10.amd64\\Lib\\site-packages\\sklearn")
+# if sys.argv[1] or (sys.argv[1] and sys.argv[2]):
+#     sys.path.append(sys.argv[1])
+#     if sys.argv[2]:
+#         sys.path.append(sys.argv[2])
+# else:
+#     sys.path.append("C:\\Users\\Erin\\Downloads\\WinPython-64bit-2.7.10.3\\python-2.7.10.amd64\\Lib\\site-packages\\scipy\\")
+#     sys.path.append("C:\\Users\\Erin\\Downloads\\WinPython-64bit-2.7.10.3\\python-2.7.10.amd64\\Lib\\site-packages\\sklearn")
 
 from scipy import signal
 

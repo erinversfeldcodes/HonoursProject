@@ -1,4 +1,4 @@
-import data_processing.pre_processing as pre_processing
+import pre_processing as pre_processing
 
 import os
 import string
