@@ -52,7 +52,7 @@ Myo/.idea/misc.xml
 Myo/.idea/inspectionProfiles/profiles_settings.xml
 Myo/.idea/workspace.xml
 .idea/workspace.xml
-
+*.idea*
 # =========================
 # Programs, etc.
 # =========================
