@@ -44,7 +44,7 @@ class DataGatheringApplication(Tk):
         logging.debug("Set gestures to: "+ str(self.gestures))
 
     def get_gestures(self):
-        logging.debug("Returning gestures to: " + str(self.gesture))
+        logging.debug("Returning gestures to: " + str(self.gestures))
         return self.gestures
 
 
@@ -147,22 +147,22 @@ class DataRecordingFrame(Frame):
             sys.exit()
 
     def start_recording(self):
-        #os.system("START ..\\Myo\\MyoDataCapture")
-        #print("Myo data gatherer is running")
+        os.system("START ..\\Myo\\MyoDataCapture")
+        print("Myo data gatherer is running")
 
-        os.system("START ..\\Kinect\\kinectv2_viewer(updatedv3) " + self.current_gesture)
-        logging.info("Kinect data gatherer is running.")
-        print("Kinect data gatherer is running")
+        # os.system("START ..\\Kinect\\kinectv2_viewer(updatedv3) " + self.current_gesture)
+        # logging.info("Kinect data gatherer is running.")
+        # print("Kinect data gatherer is running")
 
-        #os.system("START /IM py -2 ..\\Leap\\Sample.py " + self.current_gesture)
-        #print("Leap data gatherer is running")
+        # os.system("START /IM py -2 ..\\Leap\\Sample.py " + self.current_gesture)
+        # print("Leap data gatherer is running")
 
         time.sleep(3)
 
-        #os.system("TASKKILL /IM MyoDataCapture.exe")
-        os.system("TASKKILL /IM kinectv2_viewer(updatedv3).exe ")
-        logging.info("Kinect data gatherer has been killed.")
-        #os.system("TASKKILL /IM py.exe")
+        os.system("TASKKILL /IM MyoDataCapture.exe")
+        # os.system("TASKKILL /IM kinectv2_viewer(updatedv3).exe ")
+        # logging.info("Kinect data gatherer has been killed.")
+        # os.system("TASKKILL /IM py.exe")
         time.sleep(1)
 
         self.next_gesture()
