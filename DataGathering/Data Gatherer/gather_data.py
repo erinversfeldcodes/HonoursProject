@@ -7,7 +7,7 @@ from tkinter import *
 import time
 
 time_stamp = time.time()
-logging.basicConfig(filename=(str(time_stamp) + ".log"), level=logging.DEBUG)
+logging.basicConfig(filename="./log/" + (str(time_stamp) + ".log"), level=logging.DEBUG)
 logging.info("Loaded gather_data.py")
 
 
@@ -137,11 +137,13 @@ class DataRecordingFrame(Frame):
 
     def next_gesture(self):
         try:
-            self.current_gesture = next(self.image_iterator)
-            logging.debug("Current gesture set to: " + str(self.current_gesture))
-            gesture_image = PhotoImage(file=self.current_gesture)
+            path_to_image = next(self.image_iterator)
+            self.current_gesture = path_to_image[-5]
+            logging.debug("Current gesture set to: " + str(path_to_image))
+            gesture_image = PhotoImage(file=path_to_image)
             self.image_label.img = gesture_image
             self.image_label.config(image=self.image_label.img)
+
         except StopIteration:
             logging.info("Readhed the end of the list of gestures to be performed. Exiting.")
             sys.exit()
@@ -150,19 +152,19 @@ class DataRecordingFrame(Frame):
         os.system("START ..\\Myo\\MyoDataCapture")
         print("Myo data gatherer is running")
 
-        # os.system("START ..\\Kinect\\kinectv2_viewer(updatedv3) " + self.current_gesture)
-        # logging.info("Kinect data gatherer is running.")
-        # print("Kinect data gatherer is running")
+        os.system("START ..\\Kinect\\kinectv2_viewer(updatedv3) " + self.current_gesture)
+        logging.info("Kinect data gatherer is running with gesture: " +str(self.current_gesture))
+        print("Kinect data gatherer is running")
 
-        # os.system("START /IM py -2 ..\\Leap\\Sample.py " + self.current_gesture)
-        # print("Leap data gatherer is running")
+        os.system("START /IM py -2 ..\\Leap\\Sample.py " + self.current_gesture)
+        print("Leap data gatherer is running")
 
         time.sleep(3)
 
         os.system("TASKKILL /IM MyoDataCapture.exe")
-        # os.system("TASKKILL /IM kinectv2_viewer(updatedv3).exe ")
-        # logging.info("Kinect data gatherer has been killed.")
-        # os.system("TASKKILL /IM py.exe")
+        os.system("TASKKILL /IM kinectv2_viewer(updatedv3).exe ")
+        logging.info("Kinect data gatherer has been killed.")
+        os.system("TASKKILL /IM py.exe")
         time.sleep(1)
 
         self.next_gesture()
