@@ -1,7 +1,7 @@
 from Myo.data_processing.pre_processing import *
 from Myo.data_processing.processing import *
 from Myo.data_processing.utils import *
-# import k_nearest_neighbour.k_nearest_neighbour
+import k_nearest_neighbour.k_nearest_neighbour as knn
 import artificial_neural_networks.artificial_neural_network as ann
 # import hidden_markov_models
 
@@ -60,32 +60,65 @@ def set_up():
     return acc_data, gyro_data, orientation_data, orientation_euler_data
 
 
-def train_gestural_only(emg_files):
+def train_ann(x_train, x_test, y_train, y_test):
+    max_accuracy = 0
+    # best_algorithm = None
+    best_combo = None
 
+    # for i in range(10, 100):
+    #     print(str(i) + " of 100.")
+
+    ann_accuracy, combo = ann.train(list(x_train), list(x_test), list(y_train), list(y_test))
+
+    if ann_accuracy > max_accuracy:
+        max_accuracy = ann_accuracy
+        # best_algorithm = algorithm
+        best_combo = combo
+
+    logging.info(str(time.time()) + ": ANN accuracy: " + str(max_accuracy) + ", with combination: " + str(best_combo))
+    return max_accuracy, best_combo
+
+
+def train_knn(x_train, x_test, y_train, y_test):
     max_accuracy = 0
     best_combo = None
 
-    for i in range(10, 100):
-        print(str(i) + " of 100.")
+    knn_accuracy, combo = knn.train(list(x_train), list(x_test), list(y_train), list(y_test))
 
-        emg_data = read_emg_data(emg_files, step=i)
-        logging.info(str(time.time()) + "Returned from gathering emg data")
-        print(str(time.time()) + "Returned from gathering emg data")
-        X = emg_data[0]
-        Y = emg_data[1]
+    if knn_accuracy > max_accuracy:
+        max_accuracy = knn_accuracy
+        best_combo = combo
 
-        x_train, x_test, y_train, y_test = train_test_split(X, Y, random_state=0)
-        print("Returned from splitting data, about to start training service")
-        logging.info(str(time.time()) + "Returned from splitting data, about to start training service")
-        ann_accuracy, combo = ann.train(list(x_train), list(x_test), list(y_train), list(y_test))
-        print("Returned from testing different ann training.")
-        logging.info(str(time.time()) + "Returned from testing different ann training.")
-        if ann_accuracy > max_accuracy:
-            max_accuracy = ann_accuracy
-            best_combo = combo.add("step=" + str(i))
+    logging.info(str(time.time()) + ": KNN accuracy: " + str(max_accuracy) + ", with combination: " + str(best_combo))
+    return max_accuracy, best_combo
 
-    print("ANN accuracy: " + str(max_accuracy))
-    print(best_combo)
+
+def train_gestural_only(emg_files):
+
+    max_accuracy = 0
+    best_algorithm = None
+
+    emg_data = read_emg_data(emg_files, step=80)
+    X = emg_data[0]
+    Y = emg_data[1]
+
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, random_state=0)
+
+    # ann_results = train_ann(x_train, x_test, y_train, y_test)
+    #
+    # if ann_results[0] > max_accuracy:
+    #     max_accuracy = ann_results[0]
+    #     best_algorithm = ("ANN", ann_results[1])
+
+    knn_results = train_knn(x_train, x_test, y_train, y_test)
+
+    if knn_results[0] > max_accuracy:
+        max_accuracy = knn_results[0]
+        best_algorithm = ("KNN", knn_results[1])
+
+    # hmm_results = train_hmm(emg_files)
+
+    logging.info(str(time.time()) + ": Best performance was: " + str(max_accuracy) + " from: " + str(best_algorithm))
 
 
 def train_spatial_only(acc_data, gyro_data, orientation_data, orientation_euler_data):
@@ -93,16 +126,4 @@ def train_spatial_only(acc_data, gyro_data, orientation_data, orientation_euler_
 
 
 if __name__ == "__main__":
-    acc_data, gyro_data, orientation_data, orientation_euler_data = set_up()
-
-    train_spatial_only(acc_data, gyro_data, orientation_data, orientation_euler_data)
-
-# myo_data = generate_gesture_data()
-#
-# training_data, target_data_training, test_data, target_data_test = train_test_split(myo_data,
-#                                                                                     test_size=0.1, train_size=0.9, gesture_order,
-#                                                                                     random_state=0)
-
-# knn_accuracy = k_nearest_neighbour.k_nearest_neighbour.train(target_data_training, training_data, target_data_test, test_data)
-# hmm_accuracy = hidden_markov_models.hidden_markov_model.train(target_data_training, training_data, target_data_test, test_data)
-# ann_accuracy = artificial_neural_networks.artificial_neural_network(target_data_training, training_data, target_data_test, test_data)
+    set_up()
