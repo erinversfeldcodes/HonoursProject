@@ -64,3 +64,4 @@ Myo/tests/test_data/
 Myo/tests/test_data/myo_data/
 */log/*
 *log
+*data* # TODO: Remove this
