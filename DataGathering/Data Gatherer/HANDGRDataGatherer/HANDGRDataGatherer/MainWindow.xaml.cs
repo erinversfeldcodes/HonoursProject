@@ -59,12 +59,12 @@ namespace KinectFingerTracking
                 round = Interaction.InputBox("Participant " + participant + ": \n    Invalid round number entered. Please enter a VALID round number (between 0 and 25): ", "HANDGR Data Gatherer", "");
 
             InitializeComponent();
-
             _sensor = KinectSensor.GetDefault();
 
             this.details.Text = "Participant Number: " + participant + "\nRound Number: " + round;
             gestureImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\images\\blank.png"));
 
+            //read in order of gestures
             using (var reader = new StreamReader(@"./orders/" + participant + "-" + round + ".txt"))
             {
                 while (!reader.EndOfStream)
@@ -110,7 +110,7 @@ namespace KinectFingerTracking
             {
                 if (gestureindex < gestures.Count)
                 { 
-                    //for each gesture
+                    //for each gesture, set recording boolean to true and start timer
                     recording = true;
                     gesture = gestures[gestureindex];
                     timer.Start();
@@ -135,8 +135,9 @@ namespace KinectFingerTracking
             if (recording)
             {
                 //record each gesture frame
-                SaveBitmap(gesturepath + "\\" + counter.ToString() + " " + ".png");
+                SaveBitmap(gesturepath + "\\" + counter.ToString() + ".png");
                 ++counter;
+                //reset timer if 3 seconds reached
                 if (timer.Elapsed.TotalSeconds > 3)
                 {
                     timer.Reset();
@@ -151,6 +152,7 @@ namespace KinectFingerTracking
                     }
                 }
             }
+            //update gesture information
             else {
                 if (gestureindex < gestures.Count)
                 {

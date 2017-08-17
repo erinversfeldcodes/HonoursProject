@@ -136,7 +136,7 @@ def main():
     controller = Leap.Controller()
     controller.set_policy(Leap.Controller.POLICY_BACKGROUND_FRAMES)
     listener = SampleListener()
-    listener.filename = sys.argv[1] + "_" + str(time.time())
+    listener.filename = "Leap_" + sys.argv[1] + "_" + str(time.time())
 
     # Have the sample listener receive events from the controller
 
