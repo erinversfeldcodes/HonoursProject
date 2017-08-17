@@ -1,8 +1,11 @@
-
+import logging
 import numpy
+import os
 import string
+import time
+
 from Myo.hmmlearn import hmm
-filename = "init_" + str(time.time())
+filename = "hmm_" + str(time.time())
 path_to_logs = os.path.abspath("log/")
 path_to_log_file = os.path.join(path_to_logs, filename)
 
@@ -46,4 +49,4 @@ def train(x_train, x_test, y_train, y_test):
         max_accuracy = mn_accuracy
         algorithm = "Multinomial"
 
-    return max_accuracy, algorithm
+    return max_accuracy, algorithm, best_combo
