@@ -1,4 +1,4 @@
-# Windows image file caches
+p# Windows image file caches
 Thumbs.db
 ehthumbs.db
 
@@ -45,16 +45,14 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-*.png
 190617 121015/1.jpg
-*.jpg
 Myo/.idea/Myo.iml
 Myo/.idea/modules.xml
 Myo/.idea/misc.xml
 Myo/.idea/inspectionProfiles/profiles_settings.xml
 Myo/.idea/workspace.xml
 .idea/workspace.xml
-
+*.idea*
 # =========================
 # Programs, etc.
 # =========================
@@ -62,3 +60,10 @@ DataGathering/Leap/config.py
 DataGathering/Leap/config.pyc
 *.pyc
 */hmmlearn/*
+Myo/tests/test_data/*
+Myo/tests/test_data/myo_data/*
+Myo/data/*
+*/log/*
+*log
+*/data/* # TODO: Remove this
+*_data/*
