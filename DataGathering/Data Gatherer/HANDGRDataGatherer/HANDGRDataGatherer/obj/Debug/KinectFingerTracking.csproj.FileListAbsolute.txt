@@ -1,0 +1,38 @@
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\bin\Debug\KinectFingerTracking.exe.config
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\bin\Debug\KinectFingerTracking.exe
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\bin\Debug\KinectFingerTracking.pdb
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\bin\Debug\LightBuzz.Vitruvius.FingerTracking.dll
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\bin\Debug\Microsoft.Kinect.dll
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\bin\Debug\LightBuzz.Vitruvius.FingerTracking.pdb
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\bin\Debug\LightBuzz.Vitruvius.FingerTracking.xml
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\bin\Debug\Microsoft.Kinect.xml
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.csprojResolveAssemblyReference.cache
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\MainWindow.g.cs
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\App.g.cs
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking_MarkupCompile.cache
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking_MarkupCompile.lref
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\MainWindow.baml
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.g.resources
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.Properties.Resources.resources
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.csproj.GenerateResource.Cache
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.exe
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-master\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.pdb
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\bin\Debug\KinectFingerTracking.exe.config
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.exe
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.pdb
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\bin\Debug\KinectFingerTracking.exe
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\bin\Debug\KinectFingerTracking.pdb
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\bin\Debug\LightBuzz.Vitruvius.FingerTracking.dll
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\bin\Debug\Microsoft.Kinect.dll
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\bin\Debug\LightBuzz.Vitruvius.FingerTracking.pdb
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\bin\Debug\LightBuzz.Vitruvius.FingerTracking.xml
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\bin\Debug\Microsoft.Kinect.xml
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.csprojResolveAssemblyReference.cache
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\MainWindow.g.cs
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\App.g.cs
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking_MarkupCompile.cache
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking_MarkupCompile.lref
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\MainWindow.baml
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.g.resources
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.Properties.Resources.resources
+C:\Users\kvrsha004\Desktop\Kinect-Finger-Tracking-ALL devices\KinectFingerTracking\KinectFingerTracking\obj\Debug\KinectFingerTracking.csproj.GenerateResource.Cache
