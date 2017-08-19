@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.VisualBasic;
+using Leap;
 
 
 namespace KinectFingerTracking
@@ -21,6 +22,8 @@ namespace KinectFingerTracking
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Controller leapController = null;
+        private LeapListener leapListener = null;
         private KinectSensor _sensor = null;
         private InfraredFrameReader _infraredReader = null;
         private DepthFrameReader _depthReader = null;
@@ -60,6 +63,10 @@ namespace KinectFingerTracking
 
             InitializeComponent();
             _sensor = KinectSensor.GetDefault();
+            leapController = new Controller();
+            controller.SetPolicy(Controller.PolicyFlag.POLICY_BACKGROUND_FRAMES);
+            leapListener = new LeapListener();
+            leapController.AddListener(leapListener);
 
             this.details.Text = "Participant Number: " + participant + "\nRound Number: " + round;
             gestureImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\images\\blank.png"));
@@ -113,6 +120,8 @@ namespace KinectFingerTracking
                     //for each gesture, set recording boolean to true and start timer
                     recording = true;
                     gesture = gestures[gestureindex];
+                    leapListener.filename = "Leap_" + gesture + "_" + leapController.Now();
+                    leapListener.recording = true;
                     timer.Start();
                     gesturepath = gesture + " " + DateTime.Now.ToString("ddMMyy HHmmss");
                     System.IO.Directory.CreateDirectory(gesturepath);
@@ -142,6 +151,7 @@ namespace KinectFingerTracking
                 {
                     timer.Reset();
                     recording = false;
+                    leapListener.recording = false;
                     counter = 0;
 
                     //kill Myo and Leap processes
@@ -283,6 +293,18 @@ namespace KinectFingerTracking
                 _sensor.Close();
                 _sensor = null;
             }
+
+            if (leapListener != null)
+            {
+                leapController.RemoveListener(leapListener);
+                leapListener = null;
+            }
+
+            if (leapController != null)
+            {
+                leapController.Dispose();
+                leapController = null;
+            }
         }
 
         private void DrawEllipse(DepthSpacePoint point, Brush brush, double radius)
@@ -301,4 +323,72 @@ namespace KinectFingerTracking
 
         }
     }
+    
+    public class LeapListener : Listener
+    {
+        private Object thisLock = new Object();
+        public string filename { get; set; }
+        public bool recording { get; set; }
+
+        private void SafeWriteLine(String line)
+        {
+            lock (thisLock)
+            {
+                Console.WriteLine(line);
+            }
+        }
+
+        public override void OnInit(Controller controller)
+        {
+            SafeWriteLine("Initialized");
+        }
+
+        public override void OnConnect(Controller controller)
+        {
+            SafeWriteLine("Connected");
+        }
+
+        public override void OnDisconnect(Controller controller)
+        {
+            //Note: not dispatched when running in a debugger.
+            SafeWriteLine("Disconnected");
+        }
+
+        public override void OnExit(Controller controller)
+        {
+            SafeWriteLine("Exited");
+        }
+
+        public override void OnFrame(Controller controller)
+        {
+            // Get the most recent frame and report some basic information
+            Frame frame = controller.Frame();
+
+            if (frame.Hands.Count == 1 && recording)
+            {
+                SafeWriteLine("Frame id: " + frame.Id
+                                                + ", timestamp: " + frame.Timestamp
+                                                + ", hands: " + frame.Hands.Count
+                                                + ", fingers: " + frame.Fingers.Count
+                                                + ", tools: " + frame.Tools.Count
+                                                + ", gestures: " + frame.Gestures().Count);
+            }
+            else {
+                SafeWriteLine(frame.Id.ToString());
+            }
+
+            if (recording)
+            {
+                string f_name = filename + "\\" + frame.Timestamp + ".data";
+                System.IO.FileInfo file = new System.IO.FileInfo(f_name);
+                file.Directory.Create();
+                byte[] serializedFrame = frame.Serialize;
+                System.IO.File.WriteAllBytes(file.FullName, serializedFrame);
+            }
+
+
+
+        }
+    }
+}
 }
