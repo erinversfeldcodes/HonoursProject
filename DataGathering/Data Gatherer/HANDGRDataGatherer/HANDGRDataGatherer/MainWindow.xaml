@@ -13,12 +13,14 @@
     <Viewbox>
         <Grid Width="512" Height="424">
             <TextBlock Height="25" HorizontalAlignment="Left" Margin="517,150,-116,0" Name="textBox1" VerticalAlignment="Top" Width="111" >
-                </TextBlock>
-            <TextBlock Height="70" HorizontalAlignment="Left" Margin="517,75,-155,0" Name="details" VerticalAlignment="Top" Width="150" >
-                </TextBlock>
+            </TextBlock>
+            <TextBlock Height="70" HorizontalAlignment="Left" Margin="517,75,-125,0" Name="details" VerticalAlignment="Top" Width="120" >
+            </TextBlock>
             <Image Name="camera"  />
             <Canvas Name="canvas"  />
-            <Image Name="gestureImage" Margin="517,180,-125,136" RenderTransformOrigin="3.367,-0.851" Source=""> </Image>
+            <Image Name="gestureImage" Margin="517,180,-125,136" RenderTransformOrigin="3.367,-0.851" Source=""></Image>
+            <TextBlock Foreground="Red" Height="70" HorizontalAlignment="Left" Margin="517,354,-130,0" Name="leapvalid" VerticalAlignment="Top" Width="125" RenderTransformOrigin="0.432,3.066" >
+            </TextBlock>
         </Grid>
     </Viewbox>
 </Window>

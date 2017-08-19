@@ -14,7 +14,6 @@ using System.Windows.Shapes;
 using Microsoft.VisualBasic;
 using Leap;
 
-
 namespace KinectFingerTracking
 {
     /// <summary>
@@ -64,11 +63,12 @@ namespace KinectFingerTracking
             InitializeComponent();
             _sensor = KinectSensor.GetDefault();
             leapController = new Controller();
-            controller.SetPolicy(Controller.PolicyFlag.POLICY_BACKGROUND_FRAMES);
+            leapController.SetPolicy(Controller.PolicyFlag.POLICY_BACKGROUND_FRAMES);
             leapListener = new LeapListener();
             leapController.AddListener(leapListener);
 
             this.details.Text = "Participant Number: " + participant + "\nRound Number: " + round;
+            this.leapvalid.Text = "";
             gestureImage.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + "\\images\\blank.png"));
 
             //read in order of gestures
@@ -109,33 +109,35 @@ namespace KinectFingerTracking
             }
         }
 
-        
+
 
         private void OnEnter(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == Key.Enter && HandsDetected)
+            if (e.Key == Key.Enter && HandsDetected && leapController.Frame().Hands.Count == 1)
             {
+                this.leapvalid.Text = "";
                 if (gestureindex < gestures.Count)
-                { 
+                {
                     //for each gesture, set recording boolean to true and start timer
                     recording = true;
                     gesture = gestures[gestureindex];
                     leapListener.filename = "Leap_" + gesture + "_" + leapController.Now();
+                    Console.WriteLine(leapListener.filename);
                     leapListener.recording = true;
                     timer.Start();
                     gesturepath = gesture + " " + DateTime.Now.ToString("ddMMyy HHmmss");
                     System.IO.Directory.CreateDirectory(gesturepath);
-                    
-                    //start Myo and Leap processes
+
+                    //start Myo
                     Process.Start("..\\Myo\\MyoDataCapture");
-                    ProcessStartInfo python = new ProcessStartInfo();
-                    python.FileName = "python";
-                    python.Arguments = "..\\Leap\\Sample.py " + gesture;
-                    Process.Start(python);
                     gestureindex++;
-                    
+
                 }
 
+            }
+            else
+            {
+                this.leapvalid.Text = "Check yourself :)";
             }
         }
 
@@ -155,7 +157,7 @@ namespace KinectFingerTracking
                     counter = 0;
 
                     //kill Myo and Leap processes
-                    var myo = Process.GetProcesses().Where(pr => (pr.ProcessName == "MyoDataCapture") || (pr.ProcessName == "python"));
+                    var myo = Process.GetProcesses().Where(pr => (pr.ProcessName == "MyoDataCapture"));
                     foreach (var process in myo)
                     {
                         process.Kill();
@@ -362,7 +364,8 @@ namespace KinectFingerTracking
         public override void OnFrame(Controller controller)
         {
             // Get the most recent frame and report some basic information
-            Frame frame = controller.Frame();
+            Leap.Frame frame = controller.Frame();
+            Console.WriteLine(frame.Id);
 
             if (frame.Hands.Count == 1 && recording)
             {
@@ -390,5 +393,4 @@ namespace KinectFingerTracking
 
         }
     }
-}
 }

@@ -1,0 +1,8 @@
+C:\Users\kvrsha004\Documents\GitHub\HonoursProject\DataGathering\Data Gatherer\HANDGRDataGatherer\LightBuzz.Vitruvius.FingerTracking\bin\x64\Debug\LightBuzz.Vitruvius.FingerTracking.dll
+C:\Users\kvrsha004\Documents\GitHub\HonoursProject\DataGathering\Data Gatherer\HANDGRDataGatherer\LightBuzz.Vitruvius.FingerTracking\bin\x64\Debug\LightBuzz.Vitruvius.FingerTracking.pdb
+C:\Users\kvrsha004\Documents\GitHub\HonoursProject\DataGathering\Data Gatherer\HANDGRDataGatherer\LightBuzz.Vitruvius.FingerTracking\bin\x64\Debug\LightBuzz.Vitruvius.FingerTracking.XML
+C:\Users\kvrsha004\Documents\GitHub\HonoursProject\DataGathering\Data Gatherer\HANDGRDataGatherer\LightBuzz.Vitruvius.FingerTracking\bin\x64\Debug\Microsoft.Kinect.dll
+C:\Users\kvrsha004\Documents\GitHub\HonoursProject\DataGathering\Data Gatherer\HANDGRDataGatherer\LightBuzz.Vitruvius.FingerTracking\bin\x64\Debug\Microsoft.Kinect.xml
+C:\Users\kvrsha004\Documents\GitHub\HonoursProject\DataGathering\Data Gatherer\HANDGRDataGatherer\LightBuzz.Vitruvius.FingerTracking\obj\x64\Debug\LightBuzz.Vitruvius.FingerTracking.csprojResolveAssemblyReference.cache
+C:\Users\kvrsha004\Documents\GitHub\HonoursProject\DataGathering\Data Gatherer\HANDGRDataGatherer\LightBuzz.Vitruvius.FingerTracking\obj\x64\Debug\LightBuzz.Vitruvius.FingerTracking.dll
+C:\Users\kvrsha004\Documents\GitHub\HonoursProject\DataGathering\Data Gatherer\HANDGRDataGatherer\LightBuzz.Vitruvius.FingerTracking\obj\x64\Debug\LightBuzz.Vitruvius.FingerTracking.pdb
