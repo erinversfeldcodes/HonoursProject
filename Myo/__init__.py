@@ -1,8 +1,8 @@
 from Myo.data_processing.processing import *
 from Myo.data_processing.utils import *
 from Myo.ensemble_classifiers.voting import *
-import k_nearest_neighbour.k_nearest_neighbour as nearest_neighbour
-import artificial_neural_networks.artificial_neural_network as neural_network
+import Myo.k_nearest_neighbour.k_nearest_neighbour as nearest_neighbour
+import Myo.artificial_neural_networks.artificial_neural_network as neural_network
 # import hidden_markov_models
 
 import logging
@@ -34,8 +34,9 @@ def set_up():
 
     emg_data = read_emg_data()
     imu_data = read_imu_data()
-    emg_and_imu_data = read_emg_and_imu()
+    # emg_and_imu_data = read_emg_and_imu()
 
+    # TODO: accomodate for 2+ classifiers producing the same value
     print("=========================================================================================")
     # find the best classifier of imu data
     msg = str(time.time()) + ": Find best IMU classifier"
@@ -72,8 +73,18 @@ def set_up():
         best_classifier = ('IMU and EMG data', best_combo_classifier, combo_accuracy, best_combo_classifier_params)
     print("=========================================================================================")
 
+    # find the best ensemble method
+    # TODO: add ensemble for data combo and emg, and data combo and imu
+    msg = str(time.time()) + ': Find best combination of classifiers for ensemble'
+    print(msg)
+    logging.info(msg)
     ensemble_accuracy = voting_ensemble_classifier(best_imu_classifier_obj, best_emg_classifier_obj)
-    if ensemble_accuracy > best_classifier[1]:
+    msg = str(time.time()) + ': Best ensemble produced an accuracy score of ' + str(ensemble_accuracy)
+    print(msg)
+    logging.info(msg)
+    print("=========================================================================================")
+
+    if ensemble_accuracy > best_classifier[2]:
         msg = str(time.time()) + ': An ensemble of ' + str(best_imu_classifier) + ' trained only on IMU data with params ' + str(best_imu_classifier_params) + ' and a ' + str(best_emg_classifier) + ' trained only on EMG data with params ' + str(best_emg_classifier_params) + ' performed best and produced an accuracy score of ' + str(ensemble_accuracy) + '.'
         print(msg)
         logging.info(msg)
@@ -82,9 +93,6 @@ def set_up():
         msg = str(time.time()) + ': A ' + str(best_classifier[1]) + ' trained on ' + str(best_classifier[0]) + ' with params ' + str(best_classifier[3]) + ' performed best and produced an accuracy score of ' + str(best_classifier[2])
         print(msg)
         logging.info(msg)
-    msg = str(time.time()) + ': A ' + str(best_classifier[1]) + ' trained on ' + str(best_classifier[0]) + ' with params ' + str(best_classifier[3]) + ' performed best and produced an accuracy score of ' + str(best_classifier[2])
-    print(msg)
-    logging.info(msg)
     print("=========================================================================================")
 
 
