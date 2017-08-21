@@ -27,8 +27,8 @@ def train(x_train, x_test, y_train, y_test):
     # experiment with parameters
     # TODO: establish how to vary the 'algorithm' parameter
     for weight in weights_options:
-        for neighbour in range(2, 4):  # 10):
-            for leaves in range(3, 4):  # 50):
+        for neighbour in range(2, 10):
+            for leaves in range(3, 50):
 
                 # create, train, fit
                 knn = KNeighborsClassifier(weights=weight, n_neighbors=neighbour, leaf_size=leaves)

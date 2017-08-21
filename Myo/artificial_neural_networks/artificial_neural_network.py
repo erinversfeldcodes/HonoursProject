@@ -37,7 +37,7 @@ def train(x_train, x_test, y_train, y_test):
     for activation in activation_options:
         for solver in solver_options:
             for learning_rate in learning_rate_options:
-                for hidden_layer_sizes in range(1, 2):  # 110):
+                for hidden_layer_sizes in range(1, 110):
 
                     # create, train, score
                     multilayer_perceptron = neural_network.MLPClassifier(hidden_layer_sizes=(hidden_layer_sizes,),
