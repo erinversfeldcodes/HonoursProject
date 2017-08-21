@@ -185,7 +185,6 @@ def combine_emg_and_imu(merged_imu_data_file, emg_data_file):
     output_title = str(merged_imu_data_file) + ' emg and imu '
     imu_rows = []
     emg_rows = []
-    combined_rows= []
 
     with open(merged_imu_data_file) as imu_data_file:
         imu_reader = csv.reader(imu_data_file)
@@ -198,18 +197,13 @@ def combine_emg_and_imu(merged_imu_data_file, emg_data_file):
             emg_rows.append(row)
 
     imu_row_num = 0
-    with open(output_title, 'w+') as output:
+    with open(output_title, 'w+', newline='') as output:
         for i in range(0, 401):
+            line = emg_rows[i] + imu_rows[imu_row_num][1:]
+            writer = csv.writer(output)
+            writer.writerow(line)
             if i % 4 == 0:
-                line = emg_rows[i] + imu_rows[imu_row_num][1:]
-                combined_rows.append(line)
                 imu_row_num += 1
-            else:
-                line = emg_rows[i] + ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
-                combined_rows.append(line)
-        writer = csv.writer(output, delimiter=',')
-        for row in combined_rows:
-            writer.writerow(row)
 
     emg_and_imu_data = pd.read_csv(output_title, skiprows=1, nrows=400, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8,
                                                                                                 9, 10, 11, 12, 13, 14,
@@ -262,7 +256,3 @@ def read_emg_and_imu():
                 Y.append(target)
 
     return (X, Y)
-
-
-
-
