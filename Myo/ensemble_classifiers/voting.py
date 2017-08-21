@@ -1,62 +1,38 @@
-from Myo.data_processing.processing import read_data
+from Myo.data_processing.processing import *
 
+import logging
 from mlxtend.classifier import EnsembleVoteClassifier
 from mlxtend.feature_selection import ColumnSelector
-from sklearn.neighbors import KNeighborsClassifier
-import sklearn.neural_network as neural_network
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 
 
-def voting_ensemble_classifier(spatial_classifier, spatial_params, gestural_classifier, gestural_params):
-    if spatial_classifier == "KNN":
+def voting_ensemble_classifier(imu_classifier, emg_classifier):
 
-        weights = spatial_params.get("Weight")
-        n_neighbours = spatial_params.get("Num neighbours")
-        leaf_size = spatial_params.get("Leaves")
+    msg = "Training with both spatial and gesture data."
+    print(msg)
+    logging.info(msg)
 
-        spatial_classifier = KNeighborsClassifier(weights, n_neighbours, leaf_size)
+    spatial_pipe = make_pipeline(ColumnSelector(cols=(1, 2, 3, 4, 5, 6, 7, 8)),
+                                 imu_classifier)
+    gestural_pipe = make_pipeline(ColumnSelector(cols=(9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21)),
+                                  emg_classifier)
 
-    elif spatial_classifier == "MLP":
-
-        hidden_layer_sizes = spatial_params.get("Layer sizes")
-        activation = spatial_params.get("Activation")
-        solver = spatial_params.get("Solver")
-        learning_rate = spatial_params.get("Learning rate")
-
-        spatial_classifier = neural_network.MLPClassifier(hidden_layer_sizes=(hidden_layer_sizes,),
-                                                          activation=activation, solver=solver, alpha=1e-5,
-                                                          learning_rate=learning_rate, early_stopping=True)
-    else:
-        print("Can't establish the spatial classifier type")
-
-    if gestural_classifier == "KNN":
-
-        weights = gestural_params.get("Weight")
-        n_neighbours = gestural_params.get("Num neighbours")
-        leaf_size = gestural_params.get("Leaves")
-
-        gestural_classifier = KNeighborsClassifier(weights, n_neighbours, leaf_size)
-
-    elif gestural_classifier == "MLP":
-
-        hidden_layer_sizes = gestural_params.get("Layer sizes")
-        activation = gestural_params.get("Activation")
-        solver = gestural_params.get("Solver")
-        learning_rate = gestural_params.get("Learning rate")
-
-        gestural_classifier = neural_network.MLPClassifier(hidden_layer_sizes=(hidden_layer_sizes,),
-                                                           activation=activation, solver=solver, alpha=1e-5,
-                                                           learning_rate=learning_rate, early_stopping=True)
-    else:
-        print("Can't establish the gestural classifier type")
-
-    spatial_pipe = make_pipeline(ColumnSelector(cols=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)),
-                                 spatial_classifier)
-    gestural_pipe = make_pipeline(ColumnSelector(cols=(15, 16, 17, 18, 19, 20, 21, 22)), gestural_classifier)
-
-    data = read_data(step=40)
+    data = read_emg_and_imu()
     X = data[0]
+    X = np.array(X)
+    x_nsamples, x_nx, x_ny = X.shape
+    X = X.reshape((x_nsamples, x_nx*x_ny))
+
     Y = data[1]
+    Y = np.array(Y)
+    Y = np.array(Y)
+    y_nsamples, _ = Y.shape
+    Y = Y.reshape((y_nsamples,))
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
 
     ensemble = EnsembleVoteClassifier(clfs=[spatial_pipe, gestural_pipe])
-    ensemble.fit(X, Y)
+    ensemble.fit(x_train, y_train)
+    accuracy = float(ensemble.score(x_test, y_test))
+
+    return accuracy
