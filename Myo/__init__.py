@@ -1,12 +1,11 @@
 from Myo.data_processing.processing import *
 from Myo.data_processing.utils import *
 from Myo.ensemble_classifiers.voting import *
-import k_nearest_neighbour.k_nearest_neighbour as knn
-import artificial_neural_networks.artificial_neural_network as ann
+import k_nearest_neighbour.k_nearest_neighbour as nearest_neighbour
+import artificial_neural_networks.artificial_neural_network as neural_network
 # import hidden_markov_models
 
 import logging
-import glob
 import os
 from sklearn.model_selection import train_test_split
 import time
@@ -33,143 +32,96 @@ def set_up():
     undo_renaming(path=path_to_data_files)
     rename_data_files(time_stamps, gesture_order, path_to_data_files)
 
-    # the spatial data
-    acc_regex = os.path.join(path_to_data_files, "*-accelerometer-*.csv")
-    accelerometer_files = glob.glob(acc_regex)
+    emg_data = read_emg_data()
+    imu_data = read_imu_data()
+    emg_and_imu_data = read_emg_and_imu()
 
-    gyro_regex = os.path.join(path_to_data_files, "*-gyro-*.csv")
-    gyro_files = glob.glob(gyro_regex)
+    print("=========================================================================================")
+    # find the best classifier of imu data
+    msg = str(time.time()) + ": Find best IMU classifier"
+    print(msg)
+    logging.info(msg)
+    best_imu_classifier, imu_accuracy, best_imu_classifier_params, best_imu_classifier_obj = find_best_classifier(imu_data)
+    msg = str(time.time()) + ": The best IMU classifier was a " + str(best_imu_classifier) + " with parameters " + str(best_imu_classifier_params) + " which produced an accuracy score of " + str(imu_accuracy)
+    print(msg)
+    logging.info(msg)
+    best_classifier = ('IMU data only', best_imu_classifier, imu_accuracy, best_imu_classifier_params)
+    print("=========================================================================================")
 
-    orientation_regex = os.path.join(path_to_data_files, "*-orientation-*.csv")
-    orientation_files = glob.glob(orientation_regex)
+    # find the best classifier of emg data
+    msg = str(time.time()) + ": Find best EMG classifier"
+    print(msg)
+    logging.info(msg)
+    best_emg_classifier, emg_accuracy, best_emg_classifier_params, best_emg_classifier_obj = find_best_classifier(emg_data)
+    msg = str(time.time()) + ": The best EMG classifier was a " + str(best_emg_classifier) + " with parameters " + str(best_emg_classifier_params) + " which produced an accuracy score of " + str(emg_accuracy)
+    print(msg)
+    logging.info(msg)
+    if emg_accuracy > best_classifier[2]:
+        best_classifier = ('EMG data only', best_emg_classifier, emg_accuracy, best_emg_classifier_params)
+    print("=========================================================================================")
 
-    orientation_euler_regex = os.path.join(path_to_data_files, "*-orientationEuler-*.csv")
-    orientation_euler_files = glob.glob(orientation_euler_regex)
+    # find the best classifier for the combination of the emg and imu data
+    msg = str(time.time()) + ": Find best combined data classifier"
+    print(msg)
+    logging.info(msg)
+    best_combo_classifier, combo_accuracy, best_combo_classifier_params, best_combo_classifier_obj = find_best_classifier(emg_and_imu_data, combined=True)
+    msg = str(time.time()) + ": The best combined data classifier was a " + str(best_combo_classifier) + " with parameters " + str(best_combo_classifier_params) + " which produced an accuracy score of " + str(combo_accuracy)
+    print(msg)
+    logging.info(msg)
+    if combo_accuracy > best_classifier[2]:
+        best_classifier = ('IMU and EMG data', best_combo_classifier, combo_accuracy, best_combo_classifier_params)
+    print("=========================================================================================")
 
-    best_spatial_classifier, spatial_params, spatial_accuracy = train_spatial_only(accelerometer_files, gyro_files,
-                                                                                   orientation_files,
-                                                                                   orientation_euler_files)
+    ensemble_accuracy = voting_ensemble_classifier(best_imu_classifier_obj, best_emg_classifier_obj)
+    if ensemble_accuracy > best_classifier[1]:
+        msg = str(time.time()) + ': An ensemble of ' + str(best_imu_classifier) + ' trained only on IMU data with params ' + str(best_imu_classifier_params) + ' and a ' + str(best_emg_classifier) + ' trained only on EMG data with params ' + str(best_emg_classifier_params) + ' performed best and produced an accuracy score of ' + str(ensemble_accuracy) + '.'
+        print(msg)
+        logging.info(msg)
 
-    print("Best spatial classifier was: " + str(best_spatial_classifier) + ' with parameters ' + str(spatial_params) + ' achieving an accuracy of ' + str(spatial_accuracy))
-
-    # the gestural data
-    emg_regex = os.path.join(path_to_data_files, "*-emg-*.csv")
-    emg_files = glob.glob(emg_regex)
-    best_gestural_classifier, gestural_params, gestural_accuracy = train_gestural_only(emg_files)
-    print("Best gestural classifier was: " + str(best_gestural_classifier) + ' with parameters ' + str(gestural_params) + ' achieving an accuracy of ' + str(spatial_accuracy))
-
-    spatial_msg = 'Spatial classifier ' + str(best_spatial_classifier) + ' with params ' + str(
-        spatial_params) + 'performed best with accuracy score of ' + str(spatial_accuracy)
-    gestural_msg = 'Gestural classifier ' + str(best_gestural_classifier) + ' with params ' + str(
-        gestural_params) + 'performed best with accuracy score of ' + str(gestural_accuracy)
-    best_data_classifier_combo = spatial_msg if spatial_accuracy > gestural_accuracy else gestural_msg
-    print(best_data_classifier_combo)
-
-    ensemble = voting_ensemble_classifier(best_spatial_classifier, spatial_params, best_gestural_classifier,
-                                          gestural_params)
-    print("Ensemble accuracy: " + ensemble)
-
-
-def train_ann(x_train, x_test, y_train, y_test):
-    max_accuracy = 0
-    best_algorithm = None
-    best_combo = None
-
-    # for i in range(10, 100):
-    #     print(str(i) + " of 100.")
-
-    ann_accuracy, algorithm, combo = ann.train(list(x_train), list(x_test), list(y_train), list(y_test))
-
-    if ann_accuracy > max_accuracy:
-        max_accuracy = ann_accuracy
-        best_algorithm = algorithm
-        best_combo = combo
-
-    logging.info(str(time.time()) + ": ANN accuracy: " + str(max_accuracy) + ", with combination: " + str(best_combo))
-    return max_accuracy, best_algorithm, best_combo
-
-
-def train_knn(x_train, x_test, y_train, y_test):
-    max_accuracy = 0
-    best_algorithm = None
-    best_combo = None
-
-    knn_accuracy, algorithm, combo = knn.train(list(x_train), list(x_test), list(y_train), list(y_test))
-
-    if knn_accuracy > max_accuracy:
-        max_accuracy = knn_accuracy
-        best_algorithm = algorithm
-        best_combo = combo
-
-    logging.info(str(time.time()) + ": KNN accuracy: " + str(max_accuracy) + ", with combination: " + str(best_combo))
-    return max_accuracy, best_algorithm, best_combo
+    else:
+        msg = str(time.time()) + ': A ' + str(best_classifier[1]) + ' trained on ' + str(best_classifier[0]) + ' with params ' + str(best_classifier[3]) + ' performed best and produced an accuracy score of ' + str(best_classifier[2])
+        print(msg)
+        logging.info(msg)
+    msg = str(time.time()) + ': A ' + str(best_classifier[1]) + ' trained on ' + str(best_classifier[0]) + ' with params ' + str(best_classifier[3]) + ' performed best and produced an accuracy score of ' + str(best_classifier[2])
+    print(msg)
+    logging.info(msg)
+    print("=========================================================================================")
 
 
-def train_gestural_only(emg_files):
-    max_accuracy = 0
-    best_algorithm = None
-    best_params = None
+def find_best_classifier(data, combined=False):
 
-    emg_data = read_emg_data(emg_files, step=80)
-    X = emg_data[0]
-    Y = emg_data[1]
+    if combined:
+        X = data[0]
+        X = np.array(X)
+        nsamples, nx, ny = X.shape
+        X = X.reshape((nsamples, nx*ny))
 
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, random_state=0)
+        Y = data[1]
+        Y = np.array(Y)
+        nsamples, _ = Y.shape
+        Y = Y.reshape((nsamples,))
 
-    ann_results = train_ann(x_train, x_test, y_train, y_test)
-    knn_results = train_knn(x_train, x_test, y_train, y_test)
+    else:
+        X = data[0]
+        Y = data[1]
 
-    if ann_results[0] > max_accuracy:
-        max_accuracy = ann_results[0]
-        best_algorithm = ann_results[1]
-        best_params = ann_results[2]
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
+    ann = neural_network.train(x_train, x_test, y_train, y_test)
+    knn = nearest_neighbour.train(x_train, x_test, y_train, y_test)
 
+    if ann.get('Accuracy') > knn.get('Accuracy'):
+        best_classifier = ann.get('Classifier type')
+        max_accuracy = ann.get('Accuracy')
+        classifier_params = ann.get('Params')
+        classifier_obj = ann.get('Classifier obj')
 
-    if knn_results[0] > max_accuracy:
-        max_accuracy = knn_results[0]
-        best_algorithm = knn_results[1]
-        best_params = knn_results[2]
+    else:
+        best_classifier = knn.get('Classifier type')
+        max_accuracy = knn.get('Accuracy')
+        classifier_params = knn.get('Params')
+        classifier_obj = knn.get('Classifier obj')
 
-    # hmm_results = train_hmm(emg_files)
-
-    logging.info(str(time.time()) + ": Best performance was: " + str(max_accuracy) + " from: " + str(best_algorithm))
-
-    return best_algorithm, best_params, max_accuracy
-
-
-def train_spatial_only(acc_files, gyro_files, orientation_files, orientation_euler_files):
-    max_accuracy = 0
-    best_algorithm = None
-    best_params = None
-
-    spatial_data = read_spatial_data(acc_files, gyro_files, orientation_files, orientation_euler_files, step=40)
-    X = spatial_data[0]
-    Y = spatial_data[1]
-
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, random_state=0)
-
-    ann_results = train_ann(x_train, x_test, y_train, y_test)
-    knn_results = train_knn(x_train, x_test, y_train, y_test)
-
-    if ann_results[0] > max_accuracy:
-        max_accuracy = ann_results[0]
-        best_algorithm = ann_results[1]
-        best_params = ann_results[2]
-
-    if knn_results[0] > max_accuracy:
-        max_accuracy = knn_results[0]
-        best_algorithm = knn_results[1]
-        best_params = knn_results[2]
-
-    # hmm_results = train_hmm(emg_files)
-    #     max_accuracy = knn_results[0]
-    #     best_algorithm = knn_results[1]
-    #     best_params = knn[2]
-
-    logging.info(str(time.time()) + ": Best performance was: " + str(max_accuracy) + " from: " + str(best_algorithm))
-
-    return best_algorithm, best_params, max_accuracy
-
+    return best_classifier, max_accuracy, classifier_params, classifier_obj
 
 if __name__ == "__main__":
     set_up()
