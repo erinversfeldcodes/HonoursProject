@@ -1,3 +1,4 @@
+import csv
 import glob
 import logging
 import numpy as np
@@ -12,48 +13,40 @@ path_to_log_file = os.path.join(path_to_logs, filename)
 logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
 logging.info("Loaded processing.py")
 
+path_to_data_files = 'data/myo_data'
 
-def read_emg_data(path_to_emg_files_list=None, step=180):
+
+def read_emg_data():
+    msg = "Reading EMG data"
+    print(msg)
+    logging.info(msg)
 
     X = []
     Y = []
-    processed_data_path = os.path.abspath("data/processed_data")
 
-    for path_to_file in path_to_emg_files_list:  # TODO: include checks for empty files
-        if check_gesture_contents(path_to_file) is False:
+    emg_regex = os.path.join(path_to_data_files, "*-emg-*.csv")
+    emg_files = glob.glob(emg_regex)
+
+    for emg_file in emg_files:
+
+        if check_gesture_contents(emg_file) is False:
             pass
 
         else:
-            emg_filename = os.path.basename(path_to_file)
+            file_basename = os.path.basename(emg_file)
+            letter = file_basename[0]
+            time_stamp = file_basename[-14:-4]
+            title = letter + ' ' + time_stamp
+            title_path = os.path.join('data/processed_data', title)
 
-            for i in range(0, 1000, step):
-                gesture = pd.read_csv(path_to_file, skiprows=[i], nrows=step, header=None).as_matrix(
-                [1, 2, 3, 4, 5, 6, 7, 8])  # returns a numpy array, which I can use in train_split
+            # TODO: If I've loaded the data before, just read that file and return it.
+            emg_data = pd.read_csv(emg_file, skiprows=1, nrows=400, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8])
+            gesture = emg_data.flatten()
+            gesture_name = letter
+            X.append(gesture)
+            Y.append(gesture_name)
 
-                gesture = gesture.flatten()
-
-                if len(gesture) == step * 8:
-                    gesture = gesture[8:]
-                    X.append(gesture)
-                    gesture_name = emg_filename[0]
-                    Y.append(gesture_name)
-
-    X_path = os.path.join(processed_data_path, "X.npy")
-    Y_path = os.path.join(processed_data_path, "Y.npy")
-    np.save(X_path, X)
-    np.save(Y_path, Y)
-
-    return X, Y
-
-
-def files_match(acc_filename, gyro_filename, orientation_filename, orientation_euler_filename):
-    gyro_replacement = acc_filename.replace("accelerometer", "gyro")
-    orientation_replacement = acc_filename.replace("accelerometer", "orientation")
-    orientation_euler_replacement = acc_filename.replace("accelerometer", "orientationEuler")
-
-    match = (gyro_replacement == gyro_filename) and (orientation_replacement == orientation_filename) and (orientation_euler_replacement == orientation_euler_filename)
-
-    return match
+    return (X, Y)
 
 
 def check_gesture_contents(emg_file):
@@ -68,6 +61,9 @@ def check_gesture_contents(emg_file):
             except Exception:
                 pass
             if len(lines) <= 1:
+                msg = str(time.time()) + ': ' + str(emg_file) + ' contains no data and should be removed.'
+                print(msg)
+                logging.error(msg)
                 return False
 
         except Exception:
@@ -76,7 +72,7 @@ def check_gesture_contents(emg_file):
     return True
 
 
-def check_spatial_contents(acc_filename, gyro_filename, orientation_filename, orientation_euler_filename):
+def check_imu_contents(acc_filename, gyro_filename, orientation_filename, orientation_euler_filename):
     with open(acc_filename) as file:
         contents = file.read()
 
@@ -128,101 +124,145 @@ def check_spatial_contents(acc_filename, gyro_filename, orientation_filename, or
     return True
 
 
-def read_spatial_data(acc_files, gyro_files, orientation_files, orientation_euler_files, step):
+def read_imu_data():
+    msg = "Reading IMU data"
+    print(msg)
+    logging.info(msg)
+
     X = []
     Y = []
 
-    for i in range(0, len(acc_files)):
+    acc_regex = os.path.join(path_to_data_files, "*-accelerometer-*.csv")
+    accelerometer_files = glob.glob(acc_regex)
+    gyro_regex = os.path.join(path_to_data_files, "*-gyro-*.csv")
+    gyro_files = glob.glob(gyro_regex)
+    orientation_regex = os.path.join(path_to_data_files, "*-orientation-*.csv")
+    orientation_files = glob.glob(orientation_regex)
+    orientation_euler_regex = os.path.join(path_to_data_files, "*-orientationEuler-*.csv")
+    orientation_euler_files = glob.glob(orientation_euler_regex)
 
-        acc_filename = acc_files[i]
-        gyro_filename = gyro_files[i]
-        orientation_filename = orientation_files[i]
-        orientation_euler_filename = orientation_euler_files[i]
+    for i in range(len(accelerometer_files)):
 
-        if check_spatial_contents(acc_filename, gyro_filename, orientation_filename, orientation_euler_filename) is False:
-            pass  # for whatever reason no data was recorded, so ignore it
+        a = accelerometer_files[i]
+        g = gyro_files[i]
+        o = orientation_files[i]
+        oe = orientation_euler_files[i]
+
+        if check_imu_contents(a, g, o, oe) is False:
+            pass
 
         else:
-            title = os.path.basename(acc_filename)[0] + ' ' + os.path.basename(acc_filename)[-14:-4]
+            file_basename = os.path.basename(a)
+            letter = file_basename[0]
+            timestamp = file_basename[-14:-4]
+            title = letter + ' ' + timestamp
             title_path = os.path.join('data/processed_data', title)
 
-            a = pd.read_csv(acc_filename)
-            g = pd.read_csv(gyro_filename)
-            o = pd.read_csv(orientation_filename)
-            oe = pd.read_csv(orientation_filename)
+            a = pd.read_csv(a)
+            g = pd.read_csv(g)
+            o = pd.read_csv(o)
+            oe = pd.read_csv(oe)
 
-            merged_data = ((a.merge(g, on='timestamp')).merge(o, on='timestamp')).merge(oe, on='timestamp')
-            merged_csv = merged_data.to_csv(title_path, index=False)
+            merged_data_file = ((a.merge(g, on='timestamp')).merge(o, on='timestamp')).merge(oe, on='timestamp')
+            merged_data_file.to_csv(title_path, index=False)
 
-            for j in range(0, 1000, step):
-                gesture = pd.read_csv(title_path, skiprows=[j], nrows=step, header=None).as_matrix(
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
+            imu_data = pd.read_csv(title_path, skiprows=1, nrows=100, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9,
+                                                                                              10, 11, 12, 13])
 
-                gesture = gesture.flatten()
+            gesture = imu_data.flatten()
+            X.append(gesture)
+            gesture_name = title[0]
+            Y.append(gesture_name)
 
-                if len(gesture) == step * 14:
-                    gesture = gesture[14:]
-                    X.append(gesture)
-                    gesture_name = title[0]
-                    Y.append(gesture_name)
-
-    X_path = os.path.join('data/processed_data', "X.npy")
-    Y_path = os.path.join('data/processed_data', "Y.npy")
-    np.save(X_path, X)
-    np.save(Y_path, Y)
-
-    return X, Y
+    return (X, Y)
 
 
-def read_data(step):
+def combine_emg_and_imu(merged_imu_data_file, emg_data_file):
+    X = []
+    Y = []
+    letter = os.path.basename(emg_data_file)[0]
+
+    output_title = str(merged_imu_data_file) + ' emg and imu '
+    imu_rows = []
+    emg_rows = []
+    combined_rows= []
+
+    with open(merged_imu_data_file) as imu_data_file:
+        imu_reader = csv.reader(imu_data_file)
+        for row in imu_reader:
+            imu_rows.append(row)
+
+    with open(emg_data_file) as emg_data_file:
+        emg_reader = csv.reader(emg_data_file)
+        for row in emg_reader:
+            emg_rows.append(row)
+
+    imu_row_num = 0
+    with open(output_title, 'w+') as output:
+        for i in range(0, 401):
+            if i % 4 == 0:
+                line = emg_rows[i] + imu_rows[imu_row_num][1:]
+                combined_rows.append(line)
+                imu_row_num += 1
+            else:
+                line = emg_rows[i] + ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+                combined_rows.append(line)
+        writer = csv.writer(output, delimiter=',')
+        for row in combined_rows:
+            writer.writerow(row)
+
+    emg_and_imu_data = pd.read_csv(output_title, skiprows=1, nrows=400, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8,
+                                                                                                9, 10, 11, 12, 13, 14,
+                                                                                                15, 16, 17, 18, 19, 20,
+                                                                                                21])
+    gesture = emg_and_imu_data.flatten()
+    X.append(gesture)
+    Y.append(letter)
+
+    return (X, Y)
+
+
+def read_emg_and_imu():
+    msg = "Reading EMG and IMU data"
+    print(msg)
+    logging.info(msg)
+
     X = []
     Y = []
 
-    path_to_data_files = os.path.abspath('data/myo_data')
-    path_to_merged_files = os.path.abspath('data/processed_data')
-
+    acc_regex = os.path.join(path_to_data_files, "*-accelerometer-*.csv")
+    accelerometer_files = glob.glob(acc_regex)
     emg_regex = os.path.join(path_to_data_files, "*-emg-*.csv")
     emg_files = glob.glob(emg_regex)
 
-    for i in range(0, len(emg_files)):
+    for i in range(len(accelerometer_files)):
+        acc_file = accelerometer_files[i]
+        emg_file = emg_files[i]
+        file_basename = os.path.basename(acc_file)
+        letter = file_basename[0]
+        timestamp = file_basename[-14:-4]
+        title = letter + ' ' + timestamp
+        title_path = os.path.join('data/processed_data', title)
 
-        emg_file_path = emg_files[i]
-        emg_filename = os.path.basename(emg_file_path)
-        letter = emg_filename[0]
-        time_stamp = emg_filename[-14:-4]
-
-        merged_regex = os.path.join(path_to_merged_files, str(letter) + ' ' + str(time_stamp))
-        merged_file = glob.glob(merged_regex)
-
-        if check_gesture_contents(emg_file_path) is False:
-            pass  # for whatever reason no data was recorded, so ignore it
+        if check_gesture_contents(emg_file) is False:
+            pass
 
         else:
+            try:
+                gesture, target = combine_emg_and_imu(title_path, emg_file)
+                X.append(gesture)
+                Y.append(target)
 
-            title = os.path.basename(merged_file) + ' with emg'
-            title_path = os.path.join('data/processed_data', title)
+            except Exception as e:
+                logging.error(e.message)
 
-            m = pd.read_csv(merged_file)
-            e = pd.read_csv(emg_file_path)
+                read_imu_data()
+                gesture, target = combine_emg_and_imu(title_path, emg_file)
+                X.append(gesture)
+                Y.append(target)
 
-            merged_data = m.merge(e, on='timestamp')
-            merged_csv = merged_data.to_csv(title_path, index=False)
+    return (X, Y)
 
-            for j in range(0, 1000, step):
-                gesture = pd.read_csv(title_path, skiprows=[j], nrows=step, header=None).as_matrix(
-                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
 
-                gesture = gesture.flatten()
 
-                if len(gesture) == step * 22:
-                    gesture = gesture[22:]
-                    X.append(gesture)
-                    gesture_name = title[0]
-                    Y.append(gesture_name)
 
-    X_path = os.path.join('data/processed_data', "X.npy")
-    Y_path = os.path.join('data/processed_data', "Y.npy")
-    np.save(X_path, X)
-    np.save(Y_path, Y)
-
-    return X, Y
