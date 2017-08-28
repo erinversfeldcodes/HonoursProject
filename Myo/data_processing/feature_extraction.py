@@ -1,33 +1,37 @@
 import logging
+import glob
 import os
+
+from pandas import Series
+from statsmodels.tsa.ar_model import AR
 import time
 
-filename = "feature_extraction.log"
-path_to_logs = os.path.abspath("log/")
-path_to_log_file = os.path.join(path_to_logs, filename)
-
-logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
-logging.info(str(time.time()) + ": Loaded pre_processing.py")
-
-
-def mean_absolute_value(window_length, data_in_window):
-    total = 0
-
-    for w in range(1, window_length):
-        total += abs(data_in_window)
-
-    mav = total/window_length
-
-    return mav
+# filename = "feature_extraction.log"
+# path_to_logs = os.path.abspath("log/")
+# path_to_log_file = os.path.join(path_to_logs, filename)
+#
+# logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
+# logging.info(str(time.time()) + ": Loaded pre_processing.py")
 
 
-def moving_variance(window_length, data_in_window, mean_data_in_window):
-    total = 0
+def calculate_ar_coefficients(data):
+    # try:
+    model = AR(data)
+    fitted_model = model.fit()
+    coefficients = fitted_model.params
 
-    for w in range(1, window_length):
-        data_less_mean = data_in_window - mean_data_in_window
-        total += data_less_mean ** 2
+    third, fourth, fifth, sixth = coefficients[2], coefficients[3], coefficients[4], coefficients[5]
 
-    mv = total / window_length
+    return [third, fourth, fifth, sixth]
+    # except ValueError:
+    #     return False
 
-    return mv
+
+def emg_features(data):
+    ar_coefficients = calculate_ar_coefficients(data)
+
+    return ar_coefficients
+
+# emg_files = glob.glob(os.path.join("../data/myo_data", "*-emg-*.csv"))
+# for file in emg_files:
+#     emg_features(file)

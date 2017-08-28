@@ -1,3 +1,6 @@
+import Myo.data_processing.pre_processing as preproc
+import Myo.data_processing.feature_extraction as feat_extr
+
 import csv
 import glob
 import logging
@@ -29,22 +32,13 @@ def read_emg_data():
 
     for emg_file in emg_files:
 
-        if check_gesture_contents(emg_file) is False:
-            pass
-
-        else:
-            file_basename = os.path.basename(emg_file)
-            letter = file_basename[0]
-            time_stamp = file_basename[-14:-4]
-            title = letter + ' ' + time_stamp
-            title_path = os.path.join('data/processed_data', title)
-
-            # TODO: If I've loaded the data before, just read that file and return it.
-            emg_data = pd.read_csv(emg_file, skiprows=1, nrows=400, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8])
-            gesture = emg_data.flatten()
-            gesture_name = letter
-            X.append(gesture)
-            Y.append(gesture_name)
+        # TODO: If I've loaded the data before, just read that file and return it.
+        letter = os.path.basename(emg_file)[0]
+        emg_data = preproc.preprocess_emg(emg_file)
+        # gesture = emg_data.flatten()  # feat_extr.emg_features(emg_data)
+        gesture_name = letter
+        X.append(emg_data)  # gesture)
+        Y.append(gesture_name)
 
     return (X, Y)
 
@@ -60,10 +54,7 @@ def check_gesture_contents(emg_file):
                 lines.remove('')
             except Exception:
                 pass
-            if len(lines) <= 1:
-                msg = str(time.time()) + ': ' + str(emg_file) + ' contains no data and should be removed.'
-                print(msg)
-                logging.error(msg)
+            if len(lines) <= 200:
                 return False
 
         except Exception:
@@ -82,7 +73,7 @@ def check_imu_contents(acc_filename, gyro_filename, orientation_filename, orient
                 lines.remove('')
             except Exception:
                 pass
-            if len(lines) <= 1:
+            if len(lines) <= 50:
                 return False
 
         except Exception:
@@ -93,7 +84,7 @@ def check_imu_contents(acc_filename, gyro_filename, orientation_filename, orient
 
         try:
             lines = contents.split('\n')
-            if len(lines) <= 1:
+            if len(lines) <= 50:
                 return False
 
         except Exception:
@@ -104,7 +95,7 @@ def check_imu_contents(acc_filename, gyro_filename, orientation_filename, orient
 
         try:
             lines = contents.split('\n')
-            if len(lines) <= 1:
+            if len(lines) <= 50:
                 return False
 
         except Exception:
@@ -115,7 +106,7 @@ def check_imu_contents(acc_filename, gyro_filename, orientation_filename, orient
 
         try:
             lines = contents.split('\n')
-            if len(lines) <= 1:
+            if len(lines) <= 50:
                 return False
 
         except Exception:
@@ -166,8 +157,8 @@ def read_imu_data():
             merged_data_file = ((a.merge(g, on='timestamp')).merge(o, on='timestamp')).merge(oe, on='timestamp')
             merged_data_file.to_csv(title_path, index=False)
 
-            imu_data = pd.read_csv(title_path, skiprows=1, nrows=100, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9,
-                                                                                              10, 11, 12, 13])
+            imu_data = pd.read_csv(title_path, skiprows=1, nrows=50, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9,
+                                                                                             10, 11, 12, 13])
 
             gesture = imu_data.flatten()
             X.append(gesture)
@@ -182,7 +173,7 @@ def combine_emg_and_imu(merged_imu_data_file, emg_data_file):
     Y = []
     letter = os.path.basename(emg_data_file)[0]
 
-    output_title = str(merged_imu_data_file) + ' emg and imu '
+    output_title = str(merged_imu_data_file) + ' emg and imu.csv'
     imu_rows = []
     emg_rows = []
 
@@ -198,12 +189,15 @@ def combine_emg_and_imu(merged_imu_data_file, emg_data_file):
 
     imu_row_num = 0
     with open(output_title, 'w+', newline='') as output:
-        for i in range(0, 401):
-            line = emg_rows[i] + imu_rows[imu_row_num][1:]
-            writer = csv.writer(output)
-            writer.writerow(line)
-            if i % 4 == 0:
-                imu_row_num += 1
+        for i in range(0, 201):
+            try:
+                line = emg_rows[i] + imu_rows[imu_row_num][1:]
+                writer = csv.writer(output)
+                writer.writerow(line)
+                if i % 4 == 0:
+                    imu_row_num += 1
+            except IndexError:
+                print('IMU data file ' + str(merged_imu_data_file) + ' has fewer than ' + str(imu_row_num) + ' lines or EMG data file ' + str(emg_data_file) + ' has fewer than ' + str(i) + ' lines.')
 
     emg_and_imu_data = pd.read_csv(output_title, skiprows=1, nrows=400, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8,
                                                                                                 9, 10, 11, 12, 13, 14,
@@ -248,8 +242,6 @@ def read_emg_and_imu():
                 Y.append(target)
 
             except Exception as e:
-                logging.error(e.message)
-
                 read_imu_data()
                 gesture, target = combine_emg_and_imu(title_path, emg_file)
                 X.append(gesture)
