@@ -1,52 +1,49 @@
 import logging
-import numpy
-import os
-import string
+import numpy as np
+import seqlearn.hmm as hmm
 import time
-
-from Myo.hmmlearn import hmm
-filename = "hmm_" + str(time.time())
-path_to_logs = os.path.abspath("log/")
-path_to_log_file = os.path.join(path_to_logs, filename)
-
-logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
-logging.info("Loaded the Myo directory's __init__ script")
 
 def train(x_train, x_test, y_train, y_test):
 
-    states = list(string.asciilowercase)
-    n_components = len(states)
+    algorithm_options = {"bestfirst", "viterbi"}
+    alpha_options = [x / 1000.0 for x in range(10, 1000)]
 
     max_accuracy = 0
-    algorithm = None
-    best_combo = None
+    best_params = None
+    classifier = "MNHMM"
+    classifier_obj = None
 
-    numpy.random.seed(42)
+    lengths = get_lengths(y_train)
 
-    number_of_states = None
+    for algorithm in algorithm_options:
+        for alpha in alpha_options:
+            mnhmm = hmm.MultinomialHMM(decode=algorithm, alpha=alpha)
+            mnhmm.fit(np.array(x_train).T, y_train, lengths=lengths)
 
-    gaussian = hmm.GaussianHMM(n_components=number_of_states)
-    gaussian.fit(list(x_train), list(y_train))
-    gaussian_accuracy = gaussian.score(list(x_test), list(y_test))
+            accuracy = mnhmm.score(x_test, y_test)
 
-    if gaussian_accuracy > max_accuracy:
-        max_accuracy = gaussian_accuracy
-        algorithm = "Gaussian"
+            msg = str(time.time()) + ": Trained an MDHMM with options decode " + str(algorithm) +\
+                  ", alpha " + str(alpha) + ", and it produced an accuracy score of " + str(accuracy) + '.'
+            logging.info(msg)
 
-    gmm = hmm.GMMHMM(n_components=number_of_states)
-    gmm.fit(list(x_train), list(y_train))
-    gmm_accuracy = gmm.score(list(x_test), list(y_test))
+            if accuracy > max_accuracy:
+                max_accuracy = accuracy
+                best_params = {"Decoder": algorithm, "Alpha": alpha}
+                classifier = "MNHMM"
+                classifier_obj = mnhmm
 
-    if gmm_accuracy > max_accuracy:
-        max_accuracy = gmm_accuracy
-        algorithm = "GMM"
+    print("The best HMM was one trained with the parameters " + str(best_params) +
+          " which produced an accuracy score of " + str(max_accuracy))
+    return {'Accuracy': max_accuracy, 'Classifier type': classifier, 'Params': best_params,
+            'Classifier obj': classifier_obj}
 
-    mn = hmm.MultinomialHMM(n_components=number_of_states)
-    mn.fit(list(x_train), list(y_train))
-    mn_accuracy = gmm.score(list(x_test), list(y_test))
 
-    if mn > max_accuracy:
-        max_accuracy = mn_accuracy
-        algorithm = "Multinomial"
+def get_lengths(X):
+    length = []
 
-    return max_accuracy, algorithm, best_combo
+    for d in X:
+        l = len(d)
+        length.append(l)
+
+    return np.array(length)
+
