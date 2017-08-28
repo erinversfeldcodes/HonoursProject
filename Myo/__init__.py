@@ -3,7 +3,8 @@ from Myo.data_processing.utils import *
 from Myo.ensemble_classifiers.voting import *
 import Myo.k_nearest_neighbour.k_nearest_neighbour as nearest_neighbour
 import Myo.artificial_neural_networks.artificial_neural_network as neural_network
-# import hidden_markov_models
+import Myo.discriminant_analysis.linear_discriminant_analysis as linear_discriminant_analysis
+import Myo.hidden_markov_models.hidden_markov_model as hmm
 
 import logging
 import os
@@ -19,21 +20,10 @@ logging.info("Loaded the Myo directory's __init__ script")
 
 
 def set_up():
-    # path_to_gesture_order = os.path.abspath("data/small_set/gesture_orders/")
-    # gesture_order = generate_order_of_gestures(path_to_files=path_to_gesture_order, total_participants=1, total_rounds=1)
-    gesture_order = generate_order_of_gestures(total_participants=1)
-    logging.info(str(time.time()) + "Generated order of gestures: " + str(gesture_order))
-
-    # path_to_data_files = os.path.abspath("data/small_set/myo_data/")
-    path_to_data_files = os.path.abspath("data/myo_data/")
-    # time_stamps = get_performance_time_stamps(path_to_files=path_to_data_files)
-    time_stamps = get_performance_time_stamps()
-
-    undo_renaming(path=path_to_data_files)
-    rename_data_files(time_stamps, gesture_order, path_to_data_files)
-
     emg_data = read_emg_data()
-    imu_data = read_imu_data()
+    emg_x_train, emg_x_test, emg_y_train, emg_y_test = train_test_split(emg_data[0], emg_data[1])
+    hmm.train(emg_x_train, emg_x_test, emg_y_train, emg_y_test)
+    # imu_data = read_imu_data()
     # emg_and_imu_data = read_emg_and_imu()
 
     # TODO: accomodate for 2+ classifiers producing the same value
@@ -43,6 +33,11 @@ def set_up():
     print(msg)
     logging.info(msg)
     best_imu_classifier, imu_accuracy, best_imu_classifier_params, best_imu_classifier_obj = find_best_classifier(imu_data)
+    # find_best_classifier(imu_data)
+    # best_imu_classifier = 'none'
+    # imu_accuracy = 'none'
+    # best_imu_classifier_params = 'none'
+    # best_imu_classifier_obj = 'none'
     msg = str(time.time()) + ": The best IMU classifier was a " + str(best_imu_classifier) + " with parameters " + str(best_imu_classifier_params) + " which produced an accuracy score of " + str(imu_accuracy)
     print(msg)
     logging.info(msg)
@@ -54,6 +49,11 @@ def set_up():
     print(msg)
     logging.info(msg)
     best_emg_classifier, emg_accuracy, best_emg_classifier_params, best_emg_classifier_obj = find_best_classifier(emg_data)
+    # find_best_classifier(emg_data)
+    # best_emg_classifier = 'none'
+    # emg_accuracy = 'none'
+    # best_emg_classifier_params = 'none'
+    # best_emg_classifier_obj = 'none'
     msg = str(time.time()) + ": The best EMG classifier was a " + str(best_emg_classifier) + " with parameters " + str(best_emg_classifier_params) + " which produced an accuracy score of " + str(emg_accuracy)
     print(msg)
     logging.info(msg)
@@ -66,6 +66,11 @@ def set_up():
     print(msg)
     logging.info(msg)
     best_combo_classifier, combo_accuracy, best_combo_classifier_params, best_combo_classifier_obj = find_best_classifier(emg_and_imu_data, combined=True)
+    # find_best_classifier(emg_and_imu_data)
+    # best_combo_classifier = 'none'
+    # combo_accuracy = 'none'
+    # best_combo_classifier_params = 'none'
+    # best_combo_classifier_obj = 'none'
     msg = str(time.time()) + ": The best combined data classifier was a " + str(best_combo_classifier) + " with parameters " + str(best_combo_classifier_params) + " which produced an accuracy score of " + str(combo_accuracy)
     print(msg)
     logging.info(msg)
@@ -114,20 +119,33 @@ def find_best_classifier(data, combined=False):
         Y = data[1]
 
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
+
     ann = neural_network.train(x_train, x_test, y_train, y_test)
     knn = nearest_neighbour.train(x_train, x_test, y_train, y_test)
+    lda = linear_discriminant_analysis.train(x_train, x_test, y_train, y_test)
 
-    if ann.get('Accuracy') > knn.get('Accuracy'):
-        best_classifier = ann.get('Classifier type')
-        max_accuracy = ann.get('Accuracy')
-        classifier_params = ann.get('Params')
-        classifier_obj = ann.get('Classifier obj')
+    best_classifier = ann.get('Classifier type')  # it doesn't really matter what we initialise these values to, but this saves a check
+    max_accuracy = ann.get('Accuracy')
+    classifier_params = ann.get('Params')
+    classifier_obj = ann.get('Classifier obj')
 
-    else:
+    if knn.get('Accuracy') > max_accuracy:
         best_classifier = knn.get('Classifier type')
         max_accuracy = knn.get('Accuracy')
         classifier_params = knn.get('Params')
         classifier_obj = knn.get('Classifier obj')
+
+    if lda.get('Accuracy') > max_accuracy:
+        best_classifier = lda.get('Classifier type')
+        max_accuracy = lda.get('Accuracy')
+        classifier_params = lda.get('Params')
+        classifier_obj = lda.get('Classifier obj')
+
+    # if hmm.get('Accuracy') > max_accuracy:
+    # best_classifier = lda.get('Classifier type')
+    # max_accuracy = lda.get('Accuracy')
+    # classifier_params = lda.get('Params')
+    # classifier_obj = lda.get('Classifier obj')
 
     return best_classifier, max_accuracy, classifier_params, classifier_obj
 
