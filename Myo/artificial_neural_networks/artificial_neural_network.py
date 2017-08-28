@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 import os
 import sklearn.neural_network as neural_network
 import time
@@ -27,7 +28,7 @@ def train(x_train, x_test, y_train, y_test):
     activation_options = {'identity', 'logistic', 'tanh', 'relu'}
     solver_options = {'lbfgs', 'sgd', 'adam'}
     learning_rate_options = {'constant', 'invscaling', 'adaptive'}
-    # TODO: Experiment with different alpha and hidden layer values
+    # TODO: Experiment with different alpha values
 
     max_accuracy = 0
     best_params = None
@@ -48,18 +49,13 @@ def train(x_train, x_test, y_train, y_test):
                     mlp_accuracy = multilayer_perceptron.score(list(x_test), list(y_test))
 
                     # log results
-                    msg = str(time.time()) + ": Trained an ANN with options " + str(
-                        {"Hidden layer sizes: " + str(hidden_layer_sizes), "activation: " + str(activation),
-                         "solver: " + str(solver),
-                         " learning rate: " + str(learning_rate) + ", and it produced an accuracy score of " + str(
-                             mlp_accuracy) + '.'})
+                    msg = str(time.time()) + ": Trained an ANN with options hidden layer sizes " + str(hidden_layer_sizes) + ", activation " + str(activation) + ", solver " + str(solver) + ", learning rate: " + str(learning_rate) + ", and it produced an accuracy score of " + str(mlp_accuracy) + '.'
                     logging.info(msg)
 
                     # establish if there was an improvement, and document if necessary
                     if mlp_accuracy > max_accuracy:
                         max_accuracy = mlp_accuracy
-                        best_params = {"Layer sizes": hidden_layer_sizes, "Activation": activation,
-                                        "Solver": solver,
+                        best_params = {"Layer sizes": hidden_layer_sizes, "Activation": activation, "Solver": solver,
                                         "Learning rate": learning_rate}
                         classifier = "MLP"
                         classifier_obj = multilayer_perceptron
@@ -68,4 +64,5 @@ def train(x_train, x_test, y_train, y_test):
     msg = str(time.time()) + ': The best ANN was an MLP trained with the parameters' + str(best_params) + ' which produced an accuracy score of: ' + str(max_accuracy)
     print(msg)
     logging.info(msg)
+
     return {'Accuracy': max_accuracy, 'Classifier type': classifier, 'Params': best_params, 'Classifier obj': classifier_obj}
