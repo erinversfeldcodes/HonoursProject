@@ -1,24 +1,28 @@
+from Myo.data_processing.processing import get_data_conll
+
 import logging
-import numpy as np
 import seqlearn.hmm as hmm
 import time
 
-def train(x_train, x_test, y_train, y_test):
+
+def train(x_train, x_test, y_train, y_test, lengths):
+    msg = str(time.time()) + ": Experimenting with HMMs"
+    print(msg)
+    logging.info(msg)
 
     algorithm_options = {"bestfirst", "viterbi"}
-    alpha_options = [x / 1000.0 for x in range(10, 1000)]
+    alpha_options = [x / 1000.0 for x in range(10, 11)]  # 1000)]
 
     max_accuracy = 0
     best_params = None
     classifier = "MNHMM"
     classifier_obj = None
 
-    lengths = get_lengths(y_train)
 
     for algorithm in algorithm_options:
         for alpha in alpha_options:
             mnhmm = hmm.MultinomialHMM(decode=algorithm, alpha=alpha)
-            mnhmm.fit(np.array(x_train).T, y_train, lengths=lengths)
+            mnhmm.fit(x_train, y_train, lengths)
 
             accuracy = mnhmm.score(x_test, y_test)
 
@@ -36,14 +40,3 @@ def train(x_train, x_test, y_train, y_test):
           " which produced an accuracy score of " + str(max_accuracy))
     return {'Accuracy': max_accuracy, 'Classifier type': classifier, 'Params': best_params,
             'Classifier obj': classifier_obj}
-
-
-def get_lengths(X):
-    length = []
-
-    for d in X:
-        l = len(d)
-        length.append(l)
-
-    return np.array(length)
-

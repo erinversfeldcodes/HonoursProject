@@ -1,8 +1,11 @@
+from Myo.data_processing.processing import get_data
+
 import logging
 import numpy as np
 import random
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 import time
+
 
 def train(x_train, x_test, y_train, y_test):
     print("Experimenting with LDAs")
@@ -31,7 +34,8 @@ def train(x_train, x_test, y_train, y_test):
                     lda.fit(x_train, y_train)
                     accuracy = lda.score(x_test, y_test)
 
-                    msg = str(time.time()) + ": Trained an LDA with options solver " + str(solver) + ", shrinkage " + str(s) + ", and it produced an accuracy score of " + str(accuracy) + '.'
+                    msg = str(time.time()) + ": Trained an LDA with options solver " + str(solver) + ", shrinkage " +\
+                          str(s) + ", and it produced an accuracy score of " + str(accuracy) + '.'
                     logging.info(msg)
 
                     if accuracy > max_accuracy:
@@ -49,7 +53,9 @@ def train(x_train, x_test, y_train, y_test):
             lda.fit(x_train, y_train)
             accuracy = lda.score(x_test, y_test)
 
-            msg = str(time.time()) + ": Trained an LDA with options solver " + str(solver) + ", and it produced an accuracy score of " + str(accuracy) + '.'
+            msg = str(time.time()) + ": Trained an LDA with options solver " + str(solver) + ", and it produced an" \
+                                                                                             " accuracy score of " +\
+                  str(accuracy) + '.'
             logging.info(msg)
 
             if accuracy > max_accuracy:
@@ -58,6 +64,8 @@ def train(x_train, x_test, y_train, y_test):
                 classifier = "LDA"
                 classifier_obj = lda
 
-    print("The best LDA was one trained with the parameters " + str(best_params) + " which produced an accuracy score of " + str(max_accuracy))
-    return {'Accuracy': max_accuracy, 'Classifier type': classifier, 'Params': best_params, 'Classifier obj': classifier_obj}
+    print("The best LDA was one trained with the parameters " + str(best_params) + " which produced an accuracy score"
+                                                                                   " of " + str(max_accuracy))
+    return {'Accuracy': max_accuracy, 'Classifier type': classifier, 'Params': best_params,
+            'Classifier obj': classifier_obj}
 

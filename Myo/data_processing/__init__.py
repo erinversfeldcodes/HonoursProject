@@ -1,8 +1,7 @@
-# import glob
 # import os
 #
 # def get_participant_order():
-#     dirs = os.listdir("H:\\data\\Participant 23\\Kinect")
+#     dirs = os.listdir("H:\\data\\Participant 21\\Kinect")
 #     gesture_time = []
 #
 #     for dir_name in dirs:
@@ -22,7 +21,7 @@
 #     order = get_participant_order()
 #
 #     time_stamps = []
-#     files = os.listdir("H:\\data\\Participant 23\\Myo")
+#     files = os.listdir("H:\\data\\Participant 21\\Myo")
 #
 #     for file in files:
 #         time_stamps.append(file[-14:-4])
@@ -36,10 +35,10 @@
 #
 #         for file in files:
 #             if time_stamp in file:
-#                 path = "H:\\data\\Participant 23\\Myo"
+#                 path = "H:\\data\\Participant 21\\Myo"
 #                 file_name = os.path.basename(file)#[5:]
 #                 new_file_name = str(gesture) + "-" + str(file_name)
 #                 os.rename(os.path.join(path, file), os.path.join(path, new_file_name))
 #
-#     renamed_files = os.listdir("H:\\data\\Participant 23\\Myo")
+#     renamed_files = os.listdir("H:\\data\\Participant 21\\Myo")
 

@@ -1,12 +1,11 @@
-import Myo.data_processing.pre_processing as preproc
-import Myo.data_processing.feature_extraction as feat_extr
+from Myo.data_processing.feature_extraction import *
+from Myo.data_processing.pre_processing import *
+from Myo.data_processing.utils import *
 
-import csv
 import glob
 import logging
-import numpy as np
+from sklearn.model_selection import train_test_split
 import os
-import pandas as pd
 import time
 
 filename = "processing_" + str(time.time())
@@ -16,235 +15,233 @@ path_to_log_file = os.path.join(path_to_logs, filename)
 logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
 logging.info("Loaded processing.py")
 
-path_to_data_files = 'data/myo_data'
+myo_data_folder = "data\\Participant *\\Myo"
+conll_folder = os.path.abspath('data\\conll')
+reduced_folder = os.path.abspath('data\\reduced')
+processed_folder = os.path.abspath('data\\processed_data')
+
+def test_user_emg(test_user, preproc=False, feat_extr=False):
+    participant_data_folder = os.path.abspath(myo_data_folder.replace("*", str(test_user)))
+    emg_regex = os.path.join(os.path.abspath(participant_data_folder), "*-emg-*.csv")
+    emg_files = glob.glob(emg_regex)
+
+    X, Y = get_emg_x_y(emg_files, preproc=preproc, feat_extr=feat_extr)
+
+    return [X, Y]
 
 
-def read_emg_data():
+def test_user_imu(test_user, preproc=False, feat_extr=False):
+    participant_data_folder = os.path.abspath(myo_data_folder.replace("*", str(test_user)))
+    accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(participant_data_folder)
+
+    X, Y = get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files, preproc=preproc,
+                       feat_extr=feat_extr)
+
+    return X, Y
+
+
+def test_user_emg_and_imu(test_user, preproc=False, feat_extr=False):
+    X, Y = [], []
+    participant_data_folder = os.path.abspath(myo_data_folder.replace("*", str(test_user)))
+    accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_imu_data_files(participant_data_folder, emg=True)
+
+    for i in range(len(accelerometer_files)):
+        title_path = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i],
+                                     orientation_euler_files[i])
+        if check_sufficient_data(title_path) and check_sufficient_data(emg_files[i]):
+            combined_data = combine_emg_and_imu(title_path, emg_files[i])
+            gesture, label = get_emg_imu_x_y(combined_data, preproc=preproc, feat_extr=feat_extr)
+            X += gesture
+            Y += label
+        else:
+            pass
+
+    return X, Y
+
+
+def get_emg_x_y(files, preproc=False, feat_extr=False):
+    X, Y = [], []
+
+    for file in files:
+        # TODO: If I've loaded the data before, just read that file and return it.
+        data = get_preprocessed_data(file, max_num_lines=200, columns=[1, 2, 3, 4, 5, 6, 7, 8], preproc=preproc,
+                                     feat_extr=feat_extr)
+        gesture = get_data_features(data, feat_extr=feat_extr)
+
+        if gesture is None:
+            pass
+        else:
+            letter = os.path.basename(file)[0]
+            X.append(gesture)
+            Y.append(letter)
+
+    return X, Y
+
+
+def get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files, preproc=False, feat_extr=False):
+    X, Y = [], []
+
+    for i in range(len(accelerometer_files)):
+
+        file = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i], orientation_euler_files[i])
+        data = get_preprocessed_data(file, max_num_lines=50, columns=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                                     preproc=preproc, feat_extr=feat_extr)
+        gesture = get_data_features(data, feat_extr)
+
+        if gesture is None:
+            pass
+        else:
+            letter = os.path.basename(file)[0]
+            X.append(gesture)
+            Y.append(letter)
+
+    return X, Y
+
+
+def get_emg_imu_x_y(merged_files, preproc=False, feat_extr=False):
+    if type(merged_files) != list:
+        merged_files = [merged_files]
+    X, Y = [], []
+
+    for file in merged_files:
+        data = get_preprocessed_data(file, max_num_lines=200,
+                                     columns=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                                     preproc=preproc, feat_extr=feat_extr)
+        gesture = get_data_features(data, feat_extr)
+        if gesture is None:
+            pass
+        else:
+            letter = os.path.basename(file)[0]
+            X.append(gesture)
+            Y.append(letter)
+
+    return (X, Y)
+
+
+def read_emg_data(test_user=None, preproc=False, feat_extr=False):
     msg = "Reading EMG data"
     print(msg)
     logging.info(msg)
 
-    X = []
-    Y = []
+    if test_user:
+        x_test, y_test = test_user_emg(test_user, preproc=preproc, feat_extr=feat_extr)
 
-    emg_regex = os.path.join(path_to_data_files, "*-emg-*.csv")
-    emg_files = glob.glob(emg_regex)
+        participant_folders = glob.glob(myo_data_folder)
+        test_user_path = myo_data_folder.replace("*", str(test_user))
+        participant_folders.remove(test_user_path)
+        emg_file_paths = get_emg_data_files(participant_folders)
 
-    for emg_file in emg_files:
+        x_train, y_train = get_emg_x_y(emg_file_paths, preproc=preproc, feat_extr=feat_extr)
 
-        # TODO: If I've loaded the data before, just read that file and return it.
-        letter = os.path.basename(emg_file)[0]
-        emg_data = preproc.preprocess_emg(emg_file)
-        # gesture = emg_data.flatten()  # feat_extr.emg_features(emg_data)
-        gesture_name = letter
-        X.append(emg_data)  # gesture)
-        Y.append(gesture_name)
+    else:
+        participant_folders = glob.glob(myo_data_folder)
+        emg_file_paths = get_emg_data_files(participant_folders)
 
-    return (X, Y)
+        X, Y = get_emg_x_y(emg_file_paths, preproc=preproc, feat_extr=feat_extr)
+        x_train, x_test, y_train, y_test = train_test_split(X, Y, 0.1)
 
-
-def check_gesture_contents(emg_file):
-    with open(emg_file) as file:
-        contents = file.read()
-
-        try:
-            lines = contents.split('\n')
-
-            try:
-                lines.remove('')
-            except Exception:
-                pass
-            if len(lines) <= 200:
-                return False
-
-        except Exception:
-            return False
-
-    return True
+    return [x_train, x_test, y_train, y_test]
 
 
-def check_imu_contents(acc_filename, gyro_filename, orientation_filename, orientation_euler_filename):
-    with open(acc_filename) as file:
-        contents = file.read()
-
-        try:
-            lines = contents.split('\n')
-            try:
-                lines.remove('')
-            except Exception:
-                pass
-            if len(lines) <= 50:
-                return False
-
-        except Exception:
-            return False
-
-    with open(gyro_filename) as file:
-        contents = file.read()
-
-        try:
-            lines = contents.split('\n')
-            if len(lines) <= 50:
-                return False
-
-        except Exception:
-            return False
-
-    with open(orientation_filename) as file:
-        contents = file.read()
-
-        try:
-            lines = contents.split('\n')
-            if len(lines) <= 50:
-                return False
-
-        except Exception:
-            return False
-
-    with open(orientation_euler_filename) as file:
-        contents = file.read()
-
-        try:
-            lines = contents.split('\n')
-            if len(lines) <= 50:
-                return False
-
-        except Exception:
-            return False
-
-    return True
-
-
-def read_imu_data():
+def read_imu_data(test_user=None, preproc=False, feat_extr=False):
     msg = "Reading IMU data"
     print(msg)
     logging.info(msg)
 
-    X = []
-    Y = []
+    if test_user:
+        x_test, y_test = test_user_imu(test_user, preproc=preproc, feat_extr=feat_extr)
 
-    acc_regex = os.path.join(path_to_data_files, "*-accelerometer-*.csv")
-    accelerometer_files = glob.glob(acc_regex)
-    gyro_regex = os.path.join(path_to_data_files, "*-gyro-*.csv")
-    gyro_files = glob.glob(gyro_regex)
-    orientation_regex = os.path.join(path_to_data_files, "*-orientation-*.csv")
-    orientation_files = glob.glob(orientation_regex)
-    orientation_euler_regex = os.path.join(path_to_data_files, "*-orientationEuler-*.csv")
-    orientation_euler_files = glob.glob(orientation_euler_regex)
+        participant_folders = glob.glob(myo_data_folder)
+        test_user_path = myo_data_folder.replace("*", str(test_user))
+        participant_folders.remove(test_user_path)
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(participant_folders)
 
-    for i in range(len(accelerometer_files)):
+        x_train, y_train = get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files,
+                                       preproc=preproc, feat_extr=feat_extr)
 
-        a = accelerometer_files[i]
-        g = gyro_files[i]
-        o = orientation_files[i]
-        oe = orientation_euler_files[i]
+    else:
+        participant_folders = glob.glob(myo_data_folder)
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(participant_folders)
 
-        if check_imu_contents(a, g, o, oe) is False:
-            pass
+        X, Y = get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files,
+                           preproc=preproc, feat_extr=feat_extr)
+        x_train, x_test, y_train, y_test = train_test_split(X, Y, 0.1)
 
-        else:
-            file_basename = os.path.basename(a)
-            letter = file_basename[0]
-            timestamp = file_basename[-14:-4]
-            title = letter + ' ' + timestamp
-            title_path = os.path.join('data/processed_data', title)
-
-            a = pd.read_csv(a)
-            g = pd.read_csv(g)
-            o = pd.read_csv(o)
-            oe = pd.read_csv(oe)
-
-            merged_data_file = ((a.merge(g, on='timestamp')).merge(o, on='timestamp')).merge(oe, on='timestamp')
-            merged_data_file.to_csv(title_path, index=False)
-
-            imu_data = pd.read_csv(title_path, skiprows=1, nrows=50, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8, 9,
-                                                                                             10, 11, 12, 13])
-
-            gesture = imu_data.flatten()
-            X.append(gesture)
-            gesture_name = title[0]
-            Y.append(gesture_name)
-
-    return (X, Y)
+    return [x_train, x_test, y_train, y_test]
 
 
-def combine_emg_and_imu(merged_imu_data_file, emg_data_file):
-    X = []
-    Y = []
-    letter = os.path.basename(emg_data_file)[0]
-
-    output_title = str(merged_imu_data_file) + ' emg and imu.csv'
-    imu_rows = []
-    emg_rows = []
-
-    with open(merged_imu_data_file) as imu_data_file:
-        imu_reader = csv.reader(imu_data_file)
-        for row in imu_reader:
-            imu_rows.append(row)
-
-    with open(emg_data_file) as emg_data_file:
-        emg_reader = csv.reader(emg_data_file)
-        for row in emg_reader:
-            emg_rows.append(row)
-
-    imu_row_num = 0
-    with open(output_title, 'w+', newline='') as output:
-        for i in range(0, 201):
-            try:
-                line = emg_rows[i] + imu_rows[imu_row_num][1:]
-                writer = csv.writer(output)
-                writer.writerow(line)
-                if i % 4 == 0:
-                    imu_row_num += 1
-            except IndexError:
-                print('IMU data file ' + str(merged_imu_data_file) + ' has fewer than ' + str(imu_row_num) + ' lines or EMG data file ' + str(emg_data_file) + ' has fewer than ' + str(i) + ' lines.')
-
-    emg_and_imu_data = pd.read_csv(output_title, skiprows=1, nrows=400, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8,
-                                                                                                9, 10, 11, 12, 13, 14,
-                                                                                                15, 16, 17, 18, 19, 20,
-                                                                                                21])
-    gesture = emg_and_imu_data.flatten()
-    X.append(gesture)
-    Y.append(letter)
-
-    return (X, Y)
-
-
-def read_emg_and_imu():
+def read_emg_and_imu_data(test_user=None, preproc=False, feat_extr=False):
     msg = "Reading EMG and IMU data"
     print(msg)
     logging.info(msg)
 
-    X = []
-    Y = []
+    if test_user:
+        participant_folders = glob.glob(myo_data_folder)
+        test_user_path = myo_data_folder.replace("*", str(test_user))
+        participant_folders.remove(test_user_path)
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_imu_data_files(participant_folders, emg=True)
 
-    acc_regex = os.path.join(path_to_data_files, "*-accelerometer-*.csv")
-    accelerometer_files = glob.glob(acc_regex)
-    emg_regex = os.path.join(path_to_data_files, "*-emg-*.csv")
-    emg_files = glob.glob(emg_regex)
+    else:
+        participant_folders = glob.glob(myo_data_folder)
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_imu_data_files(participant_folders, emg=True)
 
+    merged_files = []
     for i in range(len(accelerometer_files)):
-        acc_file = accelerometer_files[i]
-        emg_file = emg_files[i]
-        file_basename = os.path.basename(acc_file)
-        letter = file_basename[0]
-        timestamp = file_basename[-14:-4]
-        title = letter + ' ' + timestamp
-        title_path = os.path.join('data/processed_data', title)
-
-        if check_gesture_contents(emg_file) is False:
+        print(i)
+        title_path = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i],
+                                     orientation_euler_files[i])
+        if check_sufficient_data(title_path) and check_sufficient_data(emg_files[i]):
+            merged_file = combine_emg_and_imu(title_path, emg_files[i])
+            merged_files.append(merged_file)
+        else:
             pass
 
-        else:
-            try:
-                gesture, target = combine_emg_and_imu(title_path, emg_file)
-                X.append(gesture)
-                Y.append(target)
+    X, Y = get_emg_imu_x_y(merged_files, preproc, feat_extr)
 
-            except Exception as e:
-                read_imu_data()
-                gesture, target = combine_emg_and_imu(title_path, emg_file)
-                X.append(gesture)
-                Y.append(target)
+    if test_user:
+        x_train, y_train = X, Y
+        x_test, y_test = test_user_emg_and_imu(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
 
-    return (X, Y)
+    else:
+        x_train, x_test, y_train, y_test = train_test_split(X, Y)
+    return x_train, x_test, y_train, y_test
+
+
+def read_emg_data_conll(test_user=None, preproc=False, feat_extr=False):
+    x_train, x_test, y_train, y_test = read_emg_data(test_user, preproc, feat_extr)
+    x_train, y_train, x_test, y_test, lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
+    return x_train, x_test, y_train, y_test, lengths
+
+
+def read_imu_data_conll(test_user=None, preproc=False, feat_extr=False):
+    x_train, x_test, y_train, y_test = read_imu_data(test_user, preproc, feat_extr)
+    x_train, y_train, x_test, y_test, lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
+    return x_train, x_test, y_train, y_test, lengths
+
+
+def read_emg_and_imu_data_conll(test_user=None, preproc=False, feat_extr=False):
+    x_train, x_test, y_train, y_test = read_emg_and_imu_data(test_user, preproc, feat_extr)
+    x_train, y_train, x_test, y_test, lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
+    return x_train, x_test, y_train, y_test, lengths
+
+
+def get_data(sensor_data="both", test_user=None, preproc=False, feat_extr=False):
+    if sensor_data == "both":
+        return read_emg_and_imu_data(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+
+    elif sensor_data == "emg":
+        return read_emg_data(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+
+    elif sensor_data == "imu":
+        return read_imu_data(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+
+
+def get_data_conll(sensor_data="both", test_user=None, preproc=False, feat_extr=False):
+    if sensor_data == "both":
+        return read_emg_and_imu_data_conll(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+
+    elif sensor_data == "emg":
+        return read_emg_data_conll(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+
+    elif sensor_data == "imu":
+        return read_imu_data_conll(test_user=test_user, preproc=preproc, feat_extr=feat_extr)

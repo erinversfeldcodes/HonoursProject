@@ -1,14 +1,11 @@
-import logging
+import csv
+import glob
 import os
+import pandas as pd
 import re
-import time
 
-filename = "pre_processing.log"
-path_to_logs = os.path.abspath("log/")
-path_to_log_file = os.path.join(path_to_logs, filename)
-
-logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
-logging.info(str(time.time()) + ": Loaded pre_processing.py")
+processed_folder = os.path.abspath('data\\processed_data')
+reduced_folder = os.path.abspath('data\\reduced')
 
 
 def undo_renaming(path=None):
@@ -102,3 +99,134 @@ def get_performance_time_stamps(path_to_files=None):
 
     return list(time_stamps)
 
+
+def get_imu_data_files(folders, emg=False):
+    if type(folders) != list:
+        folders = [folders]
+    accelerometer_files, gyro_files, orientation_files, orientation_euler_files = [], [], [], []
+    for folder in folders:
+        folder = os.path.abspath(folder)
+        acc_regex = os.path.join(folder, "*-accelerometer-*.csv")
+        accelerometer_files += glob.glob(acc_regex)
+        gyro_regex = os.path.join(folder, "*-gyro-*.csv")
+        gyro_files += glob.glob(gyro_regex)
+        orientation_regex = os.path.join(folder, "*-orientation-*.csv")
+        orientation_files += glob.glob(orientation_regex)
+        orientation_euler_regex = os.path.join(folder, "*-orientationEuler-*.csv")
+        orientation_euler_files += glob.glob(orientation_euler_regex)
+
+    if emg is True:
+        emg_files = []
+        for folder in folders:
+            folder = os.path.abspath(folder)
+            emg_regex = os.path.join(folder, "*-emg-*.csv")
+            emg_files += glob.glob(emg_regex)
+        return accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files
+
+    return accelerometer_files, gyro_files, orientation_files, orientation_euler_files
+
+
+def get_emg_data_files(folders):
+    file_paths = []
+    base_regex = "*-emg-*.csv"
+    for folder in folders:
+        regex = os.path.join(folder, base_regex)
+        files = glob.glob(regex)
+        file_paths += files
+
+    return file_paths
+
+
+def read_csv(file, max_num_lines):
+    contents = []
+    row_num = 0
+    with open(file, newline='') as f:
+        file_reader = csv.reader(f)
+        for row in file_reader:
+            if row_num < max_num_lines:
+                contents.append(row)
+            else:
+                break
+
+    return contents
+
+
+def write_csv(title, max_num_lines, contents_1, contents_2=None):
+    row_num = 0
+    with open(title, 'w+', newline='') as output:
+        for i in range(0, max_num_lines):
+            if contents_2:
+                line = contents_1[i] + contents_2[row_num][1:]
+            else:
+                line = contents_1[i] + contents_1[row_num][1:]
+            writer = csv.writer(output)
+            writer.writerow(line)
+            if i % 4 == 0:
+                row_num += 1
+
+
+def merge_imu_files(a, g, o, oe):
+    file_basename = os.path.basename(a)
+    letter = file_basename[0]
+    timestamp = file_basename[-14:-4]
+    title = letter + ' ' + timestamp
+    title_path = os.path.join(processed_folder, title)
+
+    if title in os.listdir(processed_folder):
+        pass
+    else:
+        a = pd.read_csv(a)
+        g = pd.read_csv(g)
+        o = pd.read_csv(o)
+        oe = pd.read_csv(oe)
+
+        merged_data_file = ((a.merge(g, on='timestamp')).merge(o, on='timestamp')).merge(oe, on='timestamp')
+        merged_data_file.to_csv(title_path, index=False)
+
+    return title_path
+
+
+def combine_emg_and_imu(merged_imu_data_file, emg_data_file):
+    output_title = str(merged_imu_data_file) + ' emg and imu.csv'
+    imu_rows = []
+    emg_rows = []
+
+    with open(merged_imu_data_file) as imu_data_file:
+        imu_reader = csv.reader(imu_data_file)
+        for row in imu_reader:
+            imu_rows.append(row)
+
+    with open(emg_data_file) as emg_data_file:
+        emg_reader = csv.reader(emg_data_file)
+        for row in emg_reader:
+            emg_rows.append(row)
+
+    write_csv(output_title, contents_1=emg_rows, contents_2=imu_rows, max_num_lines=200)
+
+    return output_title
+
+
+def check_sufficient_data(file):
+    with open(file) as f:
+        contents = f.read()
+        lines = contents.split("\n")
+        try:
+            lines.remove("")
+        except ValueError:
+            pass
+        if "emg" in file:
+            if len(lines) < 200:
+                return False
+        else:
+            if len(lines) < 50:
+                return False
+    return True
+
+
+def reduce_file(file, max_num_lines):
+    contents = read_csv(file, max_num_lines)
+    file_name = os.path.basename(file)
+    output_title = os.path.join(reduced_folder, file_name)
+    write_csv(output_title, contents_1=contents, max_num_lines=max_num_lines)
+
+    return output_title
