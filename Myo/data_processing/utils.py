@@ -230,3 +230,15 @@ def reduce_file(file, max_num_lines):
     write_csv(output_title, contents_1=contents, max_num_lines=max_num_lines)
 
     return output_title
+
+
+def check_file_not_empty(file):
+    with open(file) as f:
+        contents = f.read()
+        lines = contents.split("\n")
+        lines.remove("")
+
+        if len(lines) > 1:
+            return True
+
+        return False

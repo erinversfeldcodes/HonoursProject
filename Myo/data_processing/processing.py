@@ -1,9 +1,12 @@
+from numpy.lib.stride_tricks import as_strided
+
 from Myo.data_processing.feature_extraction import *
 from Myo.data_processing.pre_processing import *
 from Myo.data_processing.utils import *
 
 import glob
 import logging
+import numpy as np
 from sklearn.model_selection import train_test_split
 import os
 import time
@@ -50,7 +53,8 @@ def test_user_emg_and_imu(test_user, preproc=False, feat_extr=False):
                                      orientation_euler_files[i])
         if check_sufficient_data(title_path) and check_sufficient_data(emg_files[i]):
             combined_data = combine_emg_and_imu(title_path, emg_files[i])
-            gesture, label = get_emg_imu_x_y(combined_data, preproc=preproc, feat_extr=feat_extr)
+            overlapped_data = as_strided(combined_data)
+            gesture, label = get_emg_imu_x_y(overlapped_data, preproc=preproc, feat_extr=feat_extr)
             X += gesture
             Y += label
         else:
@@ -66,9 +70,10 @@ def get_emg_x_y(files, preproc=False, feat_extr=False):
         # TODO: If I've loaded the data before, just read that file and return it.
         data = get_preprocessed_data(file, max_num_lines=200, columns=[1, 2, 3, 4, 5, 6, 7, 8], preproc=preproc,
                                      feat_extr=feat_extr)
-        gesture = get_data_features(data, feat_extr=feat_extr)
+        overlapped_data = as_strided(data)
+        gesture = get_data_features(overlapped_data, feat_extr=feat_extr)
 
-        if gesture is None:
+        if gesture is None or len(gesture) == 1:
             pass
         else:
             letter = os.path.basename(file)[0]
@@ -86,7 +91,8 @@ def get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_
         file = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i], orientation_euler_files[i])
         data = get_preprocessed_data(file, max_num_lines=50, columns=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                                      preproc=preproc, feat_extr=feat_extr)
-        gesture = get_data_features(data, feat_extr)
+        overlapped_data = as_strided(data)
+        gesture = get_data_features(overlapped_data, feat_extr)
 
         if gesture is None:
             pass
@@ -107,7 +113,8 @@ def get_emg_imu_x_y(merged_files, preproc=False, feat_extr=False):
         data = get_preprocessed_data(file, max_num_lines=200,
                                      columns=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                                      preproc=preproc, feat_extr=feat_extr)
-        gesture = get_data_features(data, feat_extr)
+        overlapped_data = as_strided(data)
+        gesture = get_data_features(overlapped_data, feat_extr)
         if gesture is None:
             pass
         else:
@@ -119,9 +126,9 @@ def get_emg_imu_x_y(merged_files, preproc=False, feat_extr=False):
 
 
 def read_emg_data(test_user=None, preproc=False, feat_extr=False):
-    msg = "Reading EMG data"
+    msg = str(time.time()) + ": Reading EMG data"
     print(msg)
-    logging.info(msg)
+    logging.info(str(time.time()) + ": " + msg)
 
     if test_user:
         x_test, y_test = test_user_emg(test_user, preproc=preproc, feat_extr=feat_extr)
@@ -144,7 +151,7 @@ def read_emg_data(test_user=None, preproc=False, feat_extr=False):
 
 
 def read_imu_data(test_user=None, preproc=False, feat_extr=False):
-    msg = "Reading IMU data"
+    msg = str(time.time()) + ": Reading IMU data"
     print(msg)
     logging.info(msg)
 
@@ -171,7 +178,7 @@ def read_imu_data(test_user=None, preproc=False, feat_extr=False):
 
 
 def read_emg_and_imu_data(test_user=None, preproc=False, feat_extr=False):
-    msg = "Reading EMG and IMU data"
+    msg = str(time.time()) + ": Reading EMG and IMU data"
     print(msg)
     logging.info(msg)
 
@@ -187,7 +194,6 @@ def read_emg_and_imu_data(test_user=None, preproc=False, feat_extr=False):
 
     merged_files = []
     for i in range(len(accelerometer_files)):
-        print(i)
         title_path = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i],
                                      orientation_euler_files[i])
         if check_sufficient_data(title_path) and check_sufficient_data(emg_files[i]):
@@ -209,20 +215,20 @@ def read_emg_and_imu_data(test_user=None, preproc=False, feat_extr=False):
 
 def read_emg_data_conll(test_user=None, preproc=False, feat_extr=False):
     x_train, x_test, y_train, y_test = read_emg_data(test_user, preproc, feat_extr)
-    x_train, y_train, x_test, y_test, lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
-    return x_train, x_test, y_train, y_test, lengths
+    x_train, y_train, x_test, y_test, train_lengths, test_lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
+    return x_train, x_test, y_train, y_test, train_lengths, test_lengths
 
 
 def read_imu_data_conll(test_user=None, preproc=False, feat_extr=False):
     x_train, x_test, y_train, y_test = read_imu_data(test_user, preproc, feat_extr)
-    x_train, y_train, x_test, y_test, lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
-    return x_train, x_test, y_train, y_test, lengths
+    x_train, y_train, x_test, y_test, train_lengths, test_lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
+    return x_train, x_test, y_train, y_test, train_lengths, test_lengths
 
 
 def read_emg_and_imu_data_conll(test_user=None, preproc=False, feat_extr=False):
     x_train, x_test, y_train, y_test = read_emg_and_imu_data(test_user, preproc, feat_extr)
-    x_train, y_train, x_test, y_test, lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
-    return x_train, x_test, y_train, y_test, lengths
+    x_train, y_train, x_test, y_test, train_lengths, test_lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
+    return x_train, x_test, y_train, y_test, train_lengths, test_lengths
 
 
 def get_data(sensor_data="both", test_user=None, preproc=False, feat_extr=False):

@@ -3,6 +3,7 @@ from Myo.data_processing.processing import *
 import logging
 import os
 import sklearn.neural_network as neural_network
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import time
 
 filename = "ann_" + str(time.time())
@@ -13,48 +14,58 @@ logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
 logging.info(str(time.time()) + " Loaded ann.py")
 
 
-def train(x_train, x_test, y_train, y_test):
+def mlp(x_train, x_test, y_train, y_test, sensor_data):
+    msg = str(time.time()) + ": Experimenting with MLPs"
+    print(msg)
+    logging.info(msg)
+
+    m = neural_network.MLPClassifier()
+    m.fit(x_train, y_train)
+    max_accuracy = m.score(x_test, y_test)
+    best_params = "Default"
+    y_score = m.predict(x_test)
+
+    if 26 > len(x_train):
+        nodes_per_layer_range = range(len(x_train), 26, 5)
+    else:
+        nodes_per_layer_range = range(26, len(x_train), 5)
+
+    parameters = {'hidden_layer_sizes': [(x,) for x in nodes_per_layer_range],
+                  'activation': ('logistic', 'relu', 'identity'),
+                  'max_iter': [1000],
+                  'learning_rate': ['constant', 'invscaling', 'adaptive']}
+    mlp = get_parameters(parameters, x_train, y_train)
+    if mlp.score(x_test, y_test) > max_accuracy:
+        m = mlp
+        max_accuracy = mlp.score(x_test, y_test)
+        best_params = mlp.best_params_
+        y_score = mlp.predict(x_test)
+
+    msg = '{0}: The best MLP classifier was trained with the parameters {1} which produced an accuracy score of: {2}' \
+          ' for {3} data'.format(str(time.time()), str(best_params), str(max_accuracy), str(sensor_data))
+    print(msg)
+    logging.info(str(time.time()) + ": " + msg)
+
+    return {'Accuracy': max_accuracy, 'Classifier type': 'MLP', 'Params': best_params,
+            'Classifier obj': m, 'y_train': y_test, 'y_score': y_score}
+
+
+def get_parameters(parameters, x_train, y_train):
+    try:
+        randomised = RandomizedSearchCV(neural_network.MLPClassifier(), parameters, n_iter=40, n_jobs=-1)
+        return randomised.fit(x_train, y_train)
+    except ValueError:
+        grid = GridSearchCV(neural_network.MLPClassifier(), parameters)
+    return grid.fit(x_train, y_train)
+
+
+def best_ann(x_train, x_test, y_train, y_test, sensor_data, return_values):
     msg = str(time.time()) + ": Experimenting with ANNs"
     print(msg)
-    logging.info(msg)
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
-    activation_options = {'identity', 'logistic', 'tanh', 'relu'}
-    solver_options = {'lbfgs', 'sgd', 'adam'}
-    learning_rate_options = {'constant', 'invscaling', 'adaptive'}
+    logging.info(str(time.time()) + ": " + msg)
+    m = mlp(x_train, x_test, y_train, y_test, sensor_data)
+    return_values[0] = m
 
-    max_accuracy = 0
-    best_params = None
-    classifier = "MLP"
-    classifier_obj = None
-    alpha_options = [x / 1000.0 for x in range(10, 11)]  # 000)]
-
-    for activation in activation_options:
-        for solver in solver_options:
-            for learning_rate in learning_rate_options:
-                for hidden_layer_sizes in range(1, 2):  # 110):
-                    for alpha in alpha_options:
-
-                        # create, train, score
-                        multilayer_perceptron = neural_network.MLPClassifier(hidden_layer_sizes=(hidden_layer_sizes,),
-                                                                             activation=activation, solver=solver,
-                                                                             alpha=alpha, learning_rate=learning_rate,
-                                                                             early_stopping=True)
-                        multilayer_perceptron.fit(list(x_train), list(y_train))
-                        mlp_accuracy = multilayer_perceptron.score(list(x_test), list(y_test))
-
-                        # establish if there was an improvement, and document if necessary
-                        if mlp_accuracy > max_accuracy:
-                            max_accuracy = mlp_accuracy
-                            best_params = {"Layer sizes": hidden_layer_sizes, "Activation": activation,
-                                           "Solver": solver, "Learning rate": learning_rate, "Alpha": alpha}
-                            classifier = "MLP"
-                            classifier_obj = multilayer_perceptron
-
-    # document which was best
-    msg = str(time.time()) + ': The best ANN was an MLP trained with the parameters' + str(best_params) + \
-          ' which produced an accuracy score of: ' + str(max_accuracy)
-    print(msg)
-    logging.info(msg)
-
-    return {'Accuracy': max_accuracy, 'Classifier type': classifier, 'Params': best_params,
-            'Classifier obj': classifier_obj}
+    return return_values
