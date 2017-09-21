@@ -1,14 +1,14 @@
-from numpy.lib.stride_tricks import as_strided
+import string
 
-from Myo.data_processing.feature_extraction import *
-from Myo.data_processing.pre_processing import *
-from Myo.data_processing.utils import *
+from data_processing.feature_extraction import *
+from data_processing.pre_processing import *
+from data_processing.utils import *
 
 import glob
 import logging
-import numpy as np
 from sklearn.model_selection import train_test_split
 import os
+import pandas as pd
 import time
 
 filename = "processing_" + str(time.time())
@@ -18,236 +18,373 @@ path_to_log_file = os.path.join(path_to_logs, filename)
 logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
 logging.info("Loaded processing.py")
 
-myo_data_folder = "data\\Participant *\\Myo"
-conll_folder = os.path.abspath('data\\conll')
-reduced_folder = os.path.abspath('data\\reduced')
-processed_folder = os.path.abspath('data\\processed_data')
-
-def test_user_emg(test_user, preproc=False, feat_extr=False):
-    participant_data_folder = os.path.abspath(myo_data_folder.replace("*", str(test_user)))
-    emg_regex = os.path.join(os.path.abspath(participant_data_folder), "*-emg-*.csv")
-    emg_files = glob.glob(emg_regex)
-
-    X, Y = get_emg_x_y(emg_files, preproc=preproc, feat_extr=feat_extr)
-
-    return [X, Y]
+myo_data_folder = os.path.abspath("data/Participant */Myo")
+conll_folder = os.path.abspath('data/conll')
+feat_extr_preproc_folder = os.path.abspath('data/feature_extracted_preprocessed')
+preproc_folder = os.path.abspath('data/preprocessed')
+feat_extr_folder = os.path.abspath('data/feature_extracted')
 
 
-def test_user_imu(test_user, preproc=False, feat_extr=False):
-    participant_data_folder = os.path.abspath(myo_data_folder.replace("*", str(test_user)))
-    accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(participant_data_folder)
+def get_emg_x_y(files, fp_flag=False):
+    X, Y = [], []
 
-    X, Y = get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files, preproc=preproc,
-                       feat_extr=feat_extr)
+    if fp_flag:
+        no_columns = len(read_csv(files[0], max_num_lines=2)[0])
+        columns = list(range(0, no_columns))
+        no_rows = 2
+        skip = 0
+        files_to_read = files
+    else:
+        columns = [1, 2, 3, 4, 5, 6, 7, 8]
+        no_rows = 200
+        skip = 1
+        files_to_read = []
+        for file in files:
+            if check_sufficient_data(file):
+                files_to_read.append(file)
+
+    # t = pd.read_csv(files_to_read[0], skiprows=skip, nrows=no_rows, header=None).as_matrix(columns)
+    # l = len(t)
+    # print(str(l) + ': ' + files_to_read[0])
+    for file in files_to_read:
+        try:
+            gesture = pd.read_csv(file, skiprows=skip, nrows=no_rows, header=None).as_matrix(columns)
+            gesture.flags.writeable = True
+            # if len(gesture) != l:
+            #     print(str(len(gesture)) + ': ' + file)
+            #     i = input('proceed?')
+            #     raise Exception
+
+            if contains_nans(gesture):
+                gesture = remove_nans(gesture, delete=False)
+
+            if gesture is None or len(gesture) < no_rows:
+                pass
+            else:
+                file_name = os.path.basename(file)
+                if fp_flag is False:
+                    letter = file_name[0]
+                else:
+                    if file_name[2] != '-':
+                        letter = file_name[2]
+                    else:
+                        letter = file_name[3]
+                X.append(gesture)
+                Y.append(letter)
+        except EmptyDataError:
+            pass
+
+    X, Y = np.array(X), np.array(Y)
+    if X.ndim == 3:
+        n_samples, n_row, n_features = X.shape
+        X = X.reshape((n_samples, n_row * n_features))
 
     return X, Y
 
 
-def test_user_emg_and_imu(test_user, preproc=False, feat_extr=False):
+def get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files, fp_flag=False):
     X, Y = [], []
-    participant_data_folder = os.path.abspath(myo_data_folder.replace("*", str(test_user)))
-    accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_imu_data_files(participant_data_folder, emg=True)
 
     for i in range(len(accelerometer_files)):
-        title_path = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i],
-                                     orientation_euler_files[i])
-        if check_sufficient_data(title_path) and check_sufficient_data(emg_files[i]):
-            combined_data = combine_emg_and_imu(title_path, emg_files[i])
-            overlapped_data = as_strided(combined_data)
-            gesture, label = get_emg_imu_x_y(overlapped_data, preproc=preproc, feat_extr=feat_extr)
-            X += gesture
-            Y += label
+        file_name = os.path.basename(accelerometer_files[i])
+        letter = ''
+        for c in file_name[:5]:
+            if c in string.ascii_lowercase:
+                letter = c
+            break
+        if fp_flag is False:
+            file = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i], orientation_euler_files[i], letter, max_num_lines=50)
         else:
-            pass
+            file = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i], orientation_euler_files[i], letter)
+
+        if file:
+            if fp_flag:
+                no_columns = len(read_csv(file, max_num_lines=2)[0])
+                columns = list(range(no_columns))
+                no_rows = 2
+                skip = 0
+            else:
+                columns = [1, 2, 3, 4, 5, 6, 7, 8]
+                no_rows = 50
+                skip = 1
+
+            gesture = pd.read_csv(file, skiprows=skip, nrows=no_rows, header=None).as_matrix(columns)
+            gesture.flags.writeable = True
+
+            if contains_nans(gesture):
+                gesture = remove_nans(gesture, delete=False)
+
+            if gesture is None or gesture == []:
+                pass
+            else:
+                letter = os.path.basename(file)[0]
+                X.append(gesture)
+                Y.append(letter)
+
+    X, Y = np.array(X), np.array(Y)
+    if X.ndim == 3:
+        n_samples, n_row, n_features = X.shape
+        X = X.reshape((n_samples, n_row * n_features))
 
     return X, Y
 
 
-def get_emg_x_y(files, preproc=False, feat_extr=False):
-    X, Y = [], []
-
-    for file in files:
-        # TODO: If I've loaded the data before, just read that file and return it.
-        data = get_preprocessed_data(file, max_num_lines=200, columns=[1, 2, 3, 4, 5, 6, 7, 8], preproc=preproc,
-                                     feat_extr=feat_extr)
-        overlapped_data = as_strided(data)
-        gesture = get_data_features(overlapped_data, feat_extr=feat_extr)
-
-        if gesture is None or len(gesture) == 1:
-            pass
-        else:
-            letter = os.path.basename(file)[0]
-            X.append(gesture)
-            Y.append(letter)
-
-    return X, Y
-
-
-def get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files, preproc=False, feat_extr=False):
-    X, Y = [], []
-
-    for i in range(len(accelerometer_files)):
-
-        file = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i], orientation_euler_files[i])
-        data = get_preprocessed_data(file, max_num_lines=50, columns=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-                                     preproc=preproc, feat_extr=feat_extr)
-        overlapped_data = as_strided(data)
-        gesture = get_data_features(overlapped_data, feat_extr)
-
-        if gesture is None:
-            pass
-        else:
-            letter = os.path.basename(file)[0]
-            X.append(gesture)
-            Y.append(letter)
-
-    return X, Y
-
-
-def get_emg_imu_x_y(merged_files, preproc=False, feat_extr=False):
+def get_emg_imu_x_y(merged_files, fp_flag=False):
     if type(merged_files) != list:
         merged_files = [merged_files]
     X, Y = [], []
 
+    if fp_flag:
+        no_columns = len(read_csv(merged_files[0], 2)[0])
+        columns = list(range(no_columns))
+        no_rows = 2
+        skip = 0
+    else:
+        columns = [1, 2, 3, 4, 5, 6, 7, 8]
+        no_rows = 50
+        skip = 1
+
     for file in merged_files:
-        data = get_preprocessed_data(file, max_num_lines=200,
-                                     columns=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-                                     preproc=preproc, feat_extr=feat_extr)
-        overlapped_data = as_strided(data)
-        gesture = get_data_features(overlapped_data, feat_extr)
-        if gesture is None:
+        gesture = pd.read_csv(file, skiprows=skip, nrows=no_rows, header=None).as_matrix(columns)
+        if gesture is None or gesture == []:
             pass
         else:
             letter = os.path.basename(file)[0]
             X.append(gesture)
             Y.append(letter)
 
+    X, Y = np.array(X), np.array(Y)
+    if X.ndim == 3:
+        n_samples, n_row, n_features = X.shape
+        X = X.reshape((n_samples, n_row * n_features))
+
     return (X, Y)
 
 
-def read_emg_data(test_user=None, preproc=False, feat_extr=False):
+def read_emg_data(test_user=None, fp_flag=False):
     msg = str(time.time()) + ": Reading EMG data"
     print(msg)
     logging.info(str(time.time()) + ": " + msg)
 
-    if test_user:
-        x_test, y_test = test_user_emg(test_user, preproc=preproc, feat_extr=feat_extr)
+    if fp_flag == 'fp':
+        emg_folder = os.path.join(feat_extr_preproc_folder, 'emg')
+        emg_file_paths = get_emg_data_files(emg_folder, fp_flag=fp_flag)
+    elif fp_flag == 'p':
+        emg_folder = os.path.join(preproc_folder, 'emg')
+        emg_file_paths = get_emg_data_files(emg_folder, fp_flag=fp_flag)
+    elif fp_flag == 'f':
+        emg_folder = os.path.join(feat_extr_folder, 'emg')
+        emg_file_paths = get_emg_data_files(emg_folder, fp_flag=fp_flag)
+    else:
+        emg_folder = glob.glob(myo_data_folder)
+        emg_file_paths = get_emg_data_files(emg_folder, fp_flag=fp_flag)
+        if test_user:
+            emg_folder = myo_data_folder.replace('*', str(test_user))
 
-        participant_folders = glob.glob(myo_data_folder)
-        test_user_path = myo_data_folder.replace("*", str(test_user))
-        participant_folders.remove(test_user_path)
-        emg_file_paths = get_emg_data_files(participant_folders)
-
-        x_train, y_train = get_emg_x_y(emg_file_paths, preproc=preproc, feat_extr=feat_extr)
+    if test_user is not None:
+        # print(emg_file_paths)
+        test_user_emg_file_paths = get_emg_data_files(emg_folder, test_user=test_user, fp_flag=fp_flag)
+        emg_file_paths = remove_test_user_files(emg_file_paths, test_user=test_user, fp_flag=fp_flag)
+        # print(test_user_emg_file_paths)
+        x_test, y_test = get_emg_x_y(test_user_emg_file_paths, fp_flag=fp_flag)
+        x_train, y_train = get_emg_x_y(emg_file_paths, fp_flag=fp_flag)
 
     else:
-        participant_folders = glob.glob(myo_data_folder)
-        emg_file_paths = get_emg_data_files(participant_folders)
-
-        X, Y = get_emg_x_y(emg_file_paths, preproc=preproc, feat_extr=feat_extr)
-        x_train, x_test, y_train, y_test = train_test_split(X, Y, 0.1)
+        X, Y = get_emg_x_y(emg_file_paths, fp_flag=fp_flag)
+        x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
 
     return [x_train, x_test, y_train, y_test]
 
 
-def read_imu_data(test_user=None, preproc=False, feat_extr=False):
+def read_imu_data(test_user=None, fp_flag=False):
     msg = str(time.time()) + ": Reading IMU data"
     print(msg)
     logging.info(msg)
 
-    if test_user:
-        x_test, y_test = test_user_imu(test_user, preproc=preproc, feat_extr=feat_extr)
+    if fp_flag == 'fp':
+        imu_folder = os.path.join(feat_extr_preproc_folder, 'imu')
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(imu_folder,
+                                                                                                         fp_flag=fp_flag)
+    elif fp_flag == 'p':
+        imu_folder = os.path.join(preproc_folder, 'imu')
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(imu_folder,
+                                                                                                         fp_flag=fp_flag)
+    elif fp_flag == 'f':
+        imu_folder = os.path.join(feat_extr_folder, 'imu')
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(imu_folder,
+                                                                                                         fp_flag=fp_flag)
+    else:
+        imu_folder = glob.glob(myo_data_folder)
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(imu_folder,
+                                                                                                         fp_flag=fp_flag)
+        if test_user:
+            imu_folder = myo_data_folder.replace('*', str(test_user))
 
-        participant_folders = glob.glob(myo_data_folder)
-        test_user_path = myo_data_folder.replace("*", str(test_user))
-        participant_folders.remove(test_user_path)
-        accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(participant_folders)
-
+    if test_user is not None:
+        test_user_accelerometer_files, test_user_gyro_files, test_user_orientation_files,\
+        test_user_orientation_euler_files = get_imu_data_files(imu_folder, test_user=test_user, fp_flag=fp_flag)
+        accelerometer_files = remove_test_user_files(accelerometer_files, test_user, fp_flag)
+        gyro_files = remove_test_user_files(gyro_files, test_user, fp_flag)
+        orientation_files = remove_test_user_files(orientation_files, test_user, fp_flag)
+        orientation_euler_files = remove_test_user_files(orientation_euler_files, test_user, fp_flag)
+        x_test, y_test = get_imu_x_y(test_user_accelerometer_files, test_user_gyro_files, test_user_orientation_files,
+                                     test_user_orientation_euler_files, fp_flag=fp_flag)
         x_train, y_train = get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files,
-                                       preproc=preproc, feat_extr=feat_extr)
+                                       fp_flag=fp_flag)
+        # print(test_user_accelerometer_files)
+        # print(accelerometer_files)
 
     else:
-        participant_folders = glob.glob(myo_data_folder)
-        accelerometer_files, gyro_files, orientation_files, orientation_euler_files = get_imu_data_files(participant_folders)
-
-        X, Y = get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files,
-                           preproc=preproc, feat_extr=feat_extr)
-        x_train, x_test, y_train, y_test = train_test_split(X, Y, 0.1)
+        X, Y = get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_euler_files, fp_flag=fp_flag)
+        x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
 
     return [x_train, x_test, y_train, y_test]
 
 
-def read_emg_and_imu_data(test_user=None, preproc=False, feat_extr=False):
+def read_emg_and_imu_data(test_user=None, fp_flag=False):
     msg = str(time.time()) + ": Reading EMG and IMU data"
     print(msg)
     logging.info(msg)
 
-    if test_user:
-        participant_folders = glob.glob(myo_data_folder)
-        test_user_path = myo_data_folder.replace("*", str(test_user))
-        participant_folders.remove(test_user_path)
-        accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_imu_data_files(participant_folders, emg=True)
-
+    if fp_flag == 'fp':
+        imu_folder = os.path.join(feat_extr_preproc_folder, 'imu')
+        emg_folder = os.path.join(feat_extr_preproc_folder, 'emg')
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_emg_and_imu_data_files(
+            imu_folder, emg_folder)
+    elif fp_flag == 'p':
+        imu_folder = os.path.join(preproc_folder, 'imu')
+        emg_folder = os.path.join(preproc_folder, 'emg')
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_emg_and_imu_data_files(
+            imu_folder, emg_folder)
+    elif fp_flag == 'f':
+        imu_folder = os.path.join(feat_extr_folder, 'imu')
+        emg_folder = os.path.join(feat_extr_folder, 'emg')
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_emg_and_imu_data_files(
+            imu_folder, emg_folder)
     else:
-        participant_folders = glob.glob(myo_data_folder)
-        accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_imu_data_files(participant_folders, emg=True)
+        imu_folder = glob.glob(myo_data_folder)
+        emg_folder = glob.glob(myo_data_folder)
+        accelerometer_files, gyro_files, orientation_files, orientation_euler_files, emg_files = get_emg_and_imu_data_files(
+            imu_folder, emg_folder)
+        if test_user:
+            imu_folder = myo_data_folder.replace('*', str(test_user))
+            emg_folder = myo_data_folder.replace('*', str(test_user))
 
     merged_files = []
-    for i in range(len(accelerometer_files)):
-        title_path = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i],
-                                     orientation_euler_files[i])
-        if check_sufficient_data(title_path) and check_sufficient_data(emg_files[i]):
-            merged_file = combine_emg_and_imu(title_path, emg_files[i])
-            merged_files.append(merged_file)
+    if test_user is not None:
+        accelerometer_files = remove_test_user_files(accelerometer_files, test_user, fp_flag)
+        emg_files = remove_test_user_files(emg_files, test_user, fp_flag)
+    for i in range(len(emg_files)):
+        if fp_flag:
+            file_name = os.path.basename(accelerometer_files[i])
+            search_segment = file_name[:4]
+            letter = ''
+            for c in search_segment:
+                if c in string.ascii_lowercase:
+                    letter = c
+                    break
+            if letter == '':
+                print('letter not found')
+                print(accelerometer_files[i])
+                raise Exception
+        else:
+            letter = os.path.basename(accelerometer_files[i])[0]
+        a = accelerometer_files[i]
+        g = a.replace('accelerometer', 'gyro')
+        o = a.replace('accelerometer', 'orientation')
+        oe = a.replace('accelerometer', 'orientationEuler')
+        e = a.replace('accelerometer', 'emg').replace('\\imu\\', '\\emg\\')
+        if fp_flag:
+            title_path = merge_imu_files(a, g, o, oe, letter)
+        else:
+            title_path = merge_imu_files(a, g, o, oe, letter, max_num_lines=50)
+
+        if title_path:
+            merged_file = combine_emg_and_imu(title_path, e)
+            if merged_file:
+                merged_files.append(merged_file)
         else:
             pass
 
-    X, Y = get_emg_imu_x_y(merged_files, preproc, feat_extr)
+    X, Y = get_emg_imu_x_y(merged_files, fp_flag=fp_flag)
+    if test_user is not None:
+        test_user_accelerometer_files, test_user_gyro_files, test_user_orientation_files, \
+        test_user_orientation_euler_files, test_user_emg_files = get_emg_and_imu_data_files(imu_folder, emg_folder,
+                                                                                            test_user=test_user)
 
-    if test_user:
+        test_user_merged_files = []
+        for i in range(len(test_user_emg_files)):
+            if fp_flag:
+                file_name = os.path.basename(test_user_accelerometer_files[i])
+                search_segment = file_name[:4]
+                letter = ''
+                for c in search_segment:
+                    if c in string.ascii_lowercase:
+                        letter = c
+                        break
+                if letter == '':
+                    print('letter not found')
+                    print(test_user_accelerometer_files[i])
+                    raise Exception
+            a = test_user_accelerometer_files[i]
+            g = a.replace('accelerometer', 'gyro')
+            o = a.replace('accelerometer', 'orientation')
+            oe = a.replace('accelerometer', 'orientationEuler')
+            e = a.replace('accelerometer', 'emg').replace('\\imu\\', '\\emg\\')
+            if fp_flag:
+                title_path = merge_imu_files(a, g, o, oe, letter)
+            else:
+                title_path = merge_imu_files(a, g, o, oe, letter, max_num_lines=50)
+
+            if title_path:
+                merged_file = combine_emg_and_imu(title_path, e)
+                if merged_file:
+                    test_user_merged_files.append(merged_file)
+            else:
+                pass
+        x_test, y_test = get_emg_imu_x_y(test_user_merged_files, fp_flag=fp_flag)
         x_train, y_train = X, Y
-        x_test, y_test = test_user_emg_and_imu(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
 
     else:
         x_train, x_test, y_train, y_test = train_test_split(X, Y)
     return x_train, x_test, y_train, y_test
 
 
-def read_emg_data_conll(test_user=None, preproc=False, feat_extr=False):
-    x_train, x_test, y_train, y_test = read_emg_data(test_user, preproc, feat_extr)
+def read_emg_data_conll(test_user=None, fp_flag=False):
+    x_train, x_test, y_train, y_test = read_emg_data(test_user, fp_flag=fp_flag)
     x_train, y_train, x_test, y_test, train_lengths, test_lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
     return x_train, x_test, y_train, y_test, train_lengths, test_lengths
 
 
-def read_imu_data_conll(test_user=None, preproc=False, feat_extr=False):
-    x_train, x_test, y_train, y_test = read_imu_data(test_user, preproc, feat_extr)
+def read_imu_data_conll(test_user=None, fp_flag=False):
+    x_train, x_test, y_train, y_test = read_imu_data(test_user, fp_flag=fp_flag)
     x_train, y_train, x_test, y_test, train_lengths, test_lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
     return x_train, x_test, y_train, y_test, train_lengths, test_lengths
 
 
-def read_emg_and_imu_data_conll(test_user=None, preproc=False, feat_extr=False):
-    x_train, x_test, y_train, y_test = read_emg_and_imu_data(test_user, preproc, feat_extr)
+def read_emg_and_imu_data_conll(test_user=None, fp_flag=False):
+    x_train, x_test, y_train, y_test = read_emg_and_imu_data(test_user, fp_flag=fp_flag)
     x_train, y_train, x_test, y_test, train_lengths, test_lengths = gesture_to_conll(x_train, x_test, y_train, y_test)
     return x_train, x_test, y_train, y_test, train_lengths, test_lengths
 
 
-def get_data(sensor_data="both", test_user=None, preproc=False, feat_extr=False):
+def get_data(sensor_data="both", test_user=None, fp_flag=False):
     if sensor_data == "both":
-        return read_emg_and_imu_data(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+        return read_emg_and_imu_data(test_user=test_user, fp_flag=fp_flag)
 
     elif sensor_data == "emg":
-        return read_emg_data(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+        return read_emg_data(test_user=test_user, fp_flag=fp_flag)
 
     elif sensor_data == "imu":
-        return read_imu_data(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+        return read_imu_data(test_user=test_user, fp_flag=fp_flag)
 
 
-def get_data_conll(sensor_data="both", test_user=None, preproc=False, feat_extr=False):
+def get_data_conll(sensor_data="both", test_user=None, fp_flag=False):
     if sensor_data == "both":
-        return read_emg_and_imu_data_conll(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+        return read_emg_and_imu_data_conll(test_user=test_user, fp_flag=fp_flag)
 
     elif sensor_data == "emg":
-        return read_emg_data_conll(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+        return read_emg_data_conll(test_user=test_user, fp_flag=fp_flag)
 
     elif sensor_data == "imu":
-        return read_imu_data_conll(test_user=test_user, preproc=preproc, feat_extr=feat_extr)
+        return read_imu_data_conll(test_user=test_user, fp_flag=fp_flag)

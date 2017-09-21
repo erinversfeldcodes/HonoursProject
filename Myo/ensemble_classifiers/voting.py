@@ -11,16 +11,16 @@ import time
 
 
 def compare_voting_ensemble_classifiers(classifier_1, classifier_2, classifier_3, x_train, x_test, y_train, y_test,
-                                        feat_extr=False, return_values=[None, None, None]):
+                                        fp_flag=False, return_values=[None, None, None]):
 
     class1_class2 = voting_ensemble_classifier(classifier_1, classifier_2, None, x_train, x_test, y_train, y_test,
-                                               feat_extr)
+                                               fp_flag)
     class1_class3 = voting_ensemble_classifier(classifier_1, classifier_3, None, x_train, x_test, y_train, y_test,
-                                               feat_extr)
+                                               fp_flag)
     class2_class3 = voting_ensemble_classifier(classifier_2, classifier_3, None, x_train, x_test, y_train, y_test,
-                                               feat_extr)
+                                               fp_flag)
     class1_class2_class3 = voting_ensemble_classifier(classifier_1, classifier_2, classifier_3, x_train, x_test,
-                                                      y_train, y_test, feat_extr)
+                                                      y_train, y_test, fp_flag)
 
     max_accuracy = class1_class2.get('Accuracy')
     best = class1_class2
@@ -47,13 +47,19 @@ def compare_voting_ensemble_classifiers(classifier_1, classifier_2, classifier_3
 
 
 def voting_ensemble_classifier(classifier_1, classifier_2, classifier_3, x_train, x_test, y_train, y_test,
-                               feat_extr=False):
+                               fp_flag=False):
 
     msg = str(time.time()) + ": Experimenting with voting ensemble classifiers"
     print(msg)
     logging.info(msg)
 
-    if feat_extr:
+    if fp_flag == 'p':
+        classifier_1 = make_pipeline(cols=set(range(1, 9)))
+        classifier_2 = make_pipeline(cols=set(range(1, 9)))
+    elif fp_flag == 'f':
+        classifier_1 = make_pipeline(cols=set(range(1, 9)))
+        classifier_2 = make_pipeline(cols=set(range(1, 9)))
+    elif fp_flag == 'fp':
         classifier_1 = make_pipeline(ColumnSelector(cols=(1, 2, 3, 4)), classifier_1)
         classifier_2 = make_pipeline(ColumnSelector(cols=(5, 6, 7, 8)), classifier_2)
 
@@ -125,7 +131,7 @@ def extra_trees_ensemble(x_train, x_test, y_train, y_test, return_values):
 
 
 def best_ensemble_classifier(classifier_1, classifier_2, classifier_3, x_train, x_test, y_train, y_test,
-                             feat_extr=False):
+                             fp_flag=False):
 
     msg = str(time.time()) + ": Experimenting with ensemble classifiers"
     print(msg)
@@ -136,7 +142,7 @@ def best_ensemble_classifier(classifier_1, classifier_2, classifier_3, x_train, 
     return_values = manager.list([None, None, None])
     voting_thread = Process(target=compare_voting_ensemble_classifiers, args=(classifier_1, classifier_2, classifier_3,
                                                                               x_train, x_test, y_train, y_test,
-                                                                              feat_extr, return_values,))
+                                                                              fp_flag, return_values,))
     voting_thread.start()
     rf_thread = Process(target=random_forest_ensemble, args=(x_train, x_test, y_train, y_test, return_values,))
     rf_thread.start()

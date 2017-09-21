@@ -15,13 +15,13 @@ def train(x_train, x_test, y_train, y_test, train_lengths, test_lengths, sensor_
     mnhmm = hmm.MultinomialHMM()
     mnhmm.fit(x_train, y_train, train_lengths)
     max_accuracy = mnhmm.score(x_test, y_test, test_lengths)
-    best_params = None
+    best_params = 'Default'
     y_score = mnhmm.predict(x_test, lengths=test_lengths)
     msg = str(time.time()) + ': The best MNHMM thus far is one trained with the parameters' + \
           str(best_params) + ' which produced an accuracy score of: ' + str(max_accuracy)
     print(msg)
     logging.info(msg)
-
+    #
     for algorithm in algorithm_options:
         for alpha in alpha_options:
             mnhmm = hmm.MultinomialHMM(decode=algorithm, alpha=alpha)
@@ -33,7 +33,7 @@ def train(x_train, x_test, y_train, y_test, train_lengths, test_lengths, sensor_
                 max_accuracy = accuracy
                 best_params = {"Decoder": algorithm, "Alpha": alpha}
                 y_score = mnhmm.predict(x_test, test_lengths)
-                msg = str(time.time()) + ': The best MNHMM thus far is one trained with the parameters' + \
+                msg = str(time.time()) + ': The best MNHMM thus far is one trained with the parameters ' + \
                       str(best_params) + ' which produced an accuracy score of: ' + str(max_accuracy)
                 print(msg)
                 logging.info(msg)

@@ -26,9 +26,11 @@ def train_knn(x_train, x_test, y_train, y_test, sensor_data):
     best_params = "default"
     y_score = default_knn.predict(x_test)
 
-
+    n_samples = np.array(x_train).shape[0]
+    n = n_samples if n_samples < 200 else 200
+    n_neighbours = list(range(1, n))
     parameters = {
-        'n_neighbors': [26, 52],
+        'n_neighbors': n_neighbours,
         'weights': ('uniform', 'distance'),
         'algorithm': ('auto', 'ball_tree','kd_tree', 'brute'),
         'leaf_size': [x for x in range(5, 27)]

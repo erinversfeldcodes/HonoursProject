@@ -7,6 +7,7 @@ from sklearn.metrics import auc, classification_report, confusion_matrix, roc_cu
 from sklearn.preprocessing import label_binarize
 import string
 import time
+import winsound
 
 
 def calc_model_accuracy(true_positive, false_positive, true_negative, false_negative):
@@ -85,7 +86,7 @@ def generate_roc_curve(classifier_type, data_type, y_true, y_score, target_names
     plt.plot(fpr["macro"], tpr["macro"],
              label='macro-average ROC curve (area = {0:0.2f})'
                    ''.format(roc_auc["macro"]),
-             color='navy', linestyle=':', linewidth=4)
+             color='grey', linestyle=':', linewidth=4)
 
     colors = cycle(['palevioletred', 'crimson', 'darkmagenta', 'dodgerblue', 'navy', 'darkturquoise', 'seagreen',
                     'limegreen', 'indianred', 'sienna', 'firebrick', 'blueviolet', 'cyan', 'darkorchid',
@@ -105,8 +106,10 @@ def generate_roc_curve(classifier_type, data_type, y_true, y_score, target_names
     title = 'Receiver operating curve for a ' + classifier_type + ' trained on ' + data_type
     plt.title(title)
     plt.legend(loc="lower right")
-    save_title = title + str(time.time()) + ".pdf"
-    plt.savefig(save_title)
+    # save_title = title + str(time.time()) + ".pdf"
+    # plt.savefig(save_title)
+    winsound.Beep(2000, 500)
+    plt.show()
 
     return fpr, tpr
 
@@ -156,12 +159,15 @@ def plot_confusion_matrix(classifier_type, data_type, cm, classes, normalize=Fal
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    save_title = title + str(time.time()) + ".pdf"
-    plt.savefig(save_title)
+    winsound.Beep(2000, 500)
+    plt.show()
+    # save_title = title + str(time.time()) + ".pdf"
+    # plt.savefig(save_title)
 
 
-def generate_statistics(best_emg, best_imu, best_emg_and_imu, best_ensemble):
-    classifiers = [best_emg, best_imu, best_emg_and_imu, best_ensemble]
+# def generate_statistics(best_emg, best_imu, best_emg_and_imu):  #, best_ensemble):
+def generate_statistics(best_emg,):# best_imu, best_emg_and_imu):
+    classifiers = [best_emg]#, best_imu, best_emg_and_imu]  #, best_ensemble]
     count = 0
     for classifier in classifiers:
         if count == 0:

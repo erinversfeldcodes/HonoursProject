@@ -1,7 +1,6 @@
-from Myo.data_processing.processing import *
-
 import logging
 import os
+import numpy as np
 import sklearn.neural_network as neural_network
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import time
@@ -15,10 +14,6 @@ logging.info(str(time.time()) + " Loaded ann.py")
 
 
 def mlp(x_train, x_test, y_train, y_test, sensor_data):
-    msg = str(time.time()) + ": Experimenting with MLPs"
-    print(msg)
-    logging.info(msg)
-
     m = neural_network.MLPClassifier()
     m.fit(x_train, y_train)
     max_accuracy = m.score(x_test, y_test)
@@ -33,7 +28,8 @@ def mlp(x_train, x_test, y_train, y_test, sensor_data):
     parameters = {'hidden_layer_sizes': [(x,) for x in nodes_per_layer_range],
                   'activation': ('logistic', 'relu', 'identity'),
                   'max_iter': [1000],
-                  'learning_rate': ['constant', 'invscaling', 'adaptive']}
+                  'learning_rate': ['constant', 'invscaling', 'adaptive'],
+                  'alpha': np.logspace(-5, 3, 5)}
     mlp = get_parameters(parameters, x_train, y_train)
     if mlp.score(x_test, y_test) > max_accuracy:
         m = mlp
