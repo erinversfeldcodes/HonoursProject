@@ -69,9 +69,9 @@ Myo/data/*
 *_data/*
 DataGathering/*
 DataGathering/Data\ Gatherer/HANDGRDataGatherer/*
-DataGathering/Data Gatherer/HANDGRDataGatherer/LightBuzz.Vitruvius.FingerTracking/bin/Debug/LightBuzz.Vitruvius.FingerTracking.pdb
-DataGathering/Data Gatherer/HANDGRDataGatherer/LightBuzz.Vitruvius.FingerTracking/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-DataGathering/Data Gatherer/HANDGRDataGatherer/HANDGRDataGatherer/bin/Debug/HANDGRDataGatherer.exe
-DataGathering/Data Gatherer/HANDGRDataGatherer/HANDGRDataGatherer/bin/Debug/HANDGRDataGatherer.exe
+DataGathering/Data\ Gatherer/HANDGRDataGatherer/LightBuzz.Vitruvius.FingerTracking/bin/Debug/LightBuzz.Vitruvius.FingerTracking.pdb
+DataGathering/Data\ Gatherer/HANDGRDataGatherer/LightBuzz.Vitruvius.FingerTracking/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+DataGathering/Data\ Gatherer/HANDGRDataGatherer/HANDGRDataGatherer/bin/Debug/HANDGRDataGatherer.exe
+DataGathering/Data\ Gatherer/HANDGRDataGatherer/HANDGRDataGatherer/bin/Debug/HANDGRDataGatherer.exe
 *.exe
 *.pdb
