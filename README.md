@@ -17,7 +17,7 @@ Have a bug or an issue with this project? [Open a new issue](https://github.com/
 
 ## Creator
 
-HANDGR was created by and is maintained by **[Anna Borysova](http://example.com)**, **[Shaheel Kooverjee](https://example.com)]** and **[Erin Versfeld](https://example.com).
+HANDGR was created by and is maintained by **[Anna Borysova](http://example.com)**, **[Shaheel Kooverjee](https://example.com)** and **[Erin Versfeld](https://example.com)**.
 
 ## Copyright and License
 
