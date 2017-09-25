@@ -1,3 +1,5 @@
+from multiprocessing import Process
+
 from data_processing.feature_extraction import *
 from data_processing.utils import check_file_not_empty
 from data_processing.pre_processing import *
@@ -7,7 +9,7 @@ import os
 import pandas as pd
 from pandas import DataFrame
 
-myo_data_folder = "..\\data\\Participant *\\Myo"
+myo_data_folder = "..\\data\\vanilla\\Participant *"
 processed_emg_data = "..\\data\\preprocessed\\emg"
 processed_imu_data = "..\\data\\preprocessed\\imu"
 feat_extr_emg_data = "..\\data\\feature_extracted\\emg"
@@ -184,9 +186,8 @@ def feature_extract(p_num):
 
 if __name__ == "__main__":
 
-    # participant_numbers = [0, 1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-    #                        35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48]
-    participant_numbers = [28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48]
+    participant_numbers = [0, 1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+                           35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48]
 
     for p_num in participant_numbers:
         p_folder = os.path.abspath(myo_data_folder.replace("*", str(p_num)))
@@ -203,7 +204,16 @@ if __name__ == "__main__":
         oe_regex = os.path.join(p_folder, "*-orientationEuler-*.csv")
         imu_files += glob.glob(oe_regex)
 
-        # preprocess_emg_data(p_num, emg_files)
-        # preprocess_imu_data(p_num, imu_files)
-        # feature_extract_with_preproc(p_num)
-        feature_extract(p_num)
+        pe_thread = Process(target=preprocess_emg_data, args=(p_num, emg_files))
+        pi_thread = Process(target=preprocess_imu_data, args=(p_num, imu_files))
+        fe_thread = Process(target=feature_extract, args=(p_num))
+        pe_thread.start()
+        pi_thread.start()
+        fe_thread.start()
+        pe_thread.join()
+        pi_thread.join()
+        fe_thread.join()
+        feature_extract_with_preproc(p_num)
+        pe_thread.terminate()
+        pi_thread.terminate()
+        fe_thread.terminate()
