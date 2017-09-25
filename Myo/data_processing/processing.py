@@ -18,9 +18,9 @@ path_to_log_file = os.path.join(path_to_logs, filename)
 logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
 logging.info("Loaded processing.py")
 
-myo_data_folder = os.path.abspath("data/Participant */Myo")
+myo_data_folder = os.path.abspath("data/Participant *")
 conll_folder = os.path.abspath('data/conll')
-feat_extr_preproc_folder = os.path.abspath('data/feature_extracted_preprocessed')
+feat_extr_preproc_folder = os.path.abspath('data/preproc_feat_extr')
 preproc_folder = os.path.abspath('data/preprocessed')
 feat_extr_folder = os.path.abspath('data/feature_extracted')
 
