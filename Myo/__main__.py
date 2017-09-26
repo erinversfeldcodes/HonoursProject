@@ -1,3 +1,5 @@
+import datetime
+
 from models.ann import train as ann
 from models.extra_trees import train as extra_trees
 from models.hmm import train as hmm
@@ -7,22 +9,19 @@ from models.randomforests import train as randomforests
 from data_processing.processing import *
 from model_statistics.utils import generate_statistics
 
-import itertools
 import logging
 import numpy as np
 from multiprocessing import Manager, Process
 import os
-from operator import itemgetter
 import random
-import seqlearn
 import time
 import winsound
 
-filename = "init_" + str(time.time())
+filename = "init_" + str(datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")) + ".log"
 path_to_logs = os.path.abspath("log/")
 path_to_log_file = os.path.join(path_to_logs, filename)
 
-logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
+logging.basicConfig(filename=path_to_log_file, format='%(asctime)s: %(levelname)s: %(message)s', level=logging.DEBUG)
 logging.info("Loaded the Myo directory's __init__ script")
 
 
@@ -126,21 +125,23 @@ def compare_models(test_user=None, fp_flag=False):
     print("---------------------------------------------------")
     logging.info("---------------------------------------------------")
 
-    x_train, x_test, y_train, y_test = get_data(sensor_data="both", test_user=test_user, fp_flag=fp_flag)
+    x_train, x_test, y_train, y_test = get_pf_data_both(test_user)
     x_train, x_test = np.array(x_train), np.array(x_test)
+    x_train = remove_nans(x_train, delete=False)
+    x_test = remove_nans(x_test, delete=False)
     y_train, y_test = np.array(y_train), np.array(y_test)
 
     manager = Manager()
     return_values = manager.list([None, None, None, None])
 
-    ann_model_thread = Process(target=ann, args=(x_train, y_train, x_test, y_test, "both", return_values))
+    ann_model_thread = Process(target=ann, args=(x_train, x_test, y_train, y_test, "both", return_values))
     ann_model_thread.start()
-    randomforests_model_thread = Process(target=randomforests, args=(x_train, y_train, x_test, y_test, "both",
+    randomforests_model_thread = Process(target=randomforests, args=(x_train, x_test, y_train, y_test, "both",
                                                                      return_values))
     randomforests_model_thread.start()
-    knn_model_thread = Process(target=knn, args=(x_train, y_train, x_test, y_test, "both", return_values))
+    knn_model_thread = Process(target=knn, args=(x_train, x_test, y_train, y_test, "both", return_values))
     knn_model_thread.start()
-    extra_trees_model_thread = Process(target=extra_trees, args=(x_train, y_train, x_test, y_test, "both",
+    extra_trees_model_thread = Process(target=extra_trees, args=(x_train, x_test, y_train, y_test, "both",
                                                                  return_values))
     extra_trees_model_thread.start()
     # voting = models.voting.train()
@@ -151,12 +152,16 @@ def compare_models(test_user=None, fp_flag=False):
     ann_model = return_values[0]
     randomforests_model = return_values[1]
     knn_model = return_values[2]
-    extra_trees_model_thread = return_values[3]
-    x_train, x_test, y_train, y_test, train_lengths, test_lengths = get_data_conll(sensor_data="both",
-                                                                                   test_user=test_user, fp_flag=fp_flag)
-    hmm_model = hmm(x_train, y_train, x_test, y_test, "both")
+    extra_trees_model = return_values[3]
+    # x_train, x_test, y_train, y_test, train_lengths, test_lengths = get_data_conll(sensor_data="both",
+    #                                                                                test_user=test_user, fp_flag=fp_flag)
+    # hmm_model = hmm(x_train, y_train, train_lengths, x_test, y_test, test_lengths, "both")
 
-
+    generate_statistics(ann_model)
+    generate_statistics(randomforests_model)
+    generate_statistics(knn_model)
+    generate_statistics(extra_trees_model)
+    # generate_statistics(hmm_model)
 
     result = "Winning"
 

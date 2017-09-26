@@ -206,11 +206,14 @@ def write_csv(title, max_num_lines, contents):
                 row_num += 1
 
 
-def merge_imu_files(acc_file, g, o, oe, letter, max_num_lines=2):
+def merge_imu_files(acc_file, g, o, oe, letter, max_num_lines=2, path=None):
     file_basename = os.path.basename(acc_file)
     timestamp = file_basename[-14:-4]
     title = letter + ' imu ' + timestamp + '.csv'
-    title_path = os.path.join(merged_folder, title)
+    if path is None:
+        title_path = os.path.join(merged_folder, title)
+    else:
+        title_path = os.path.join(path, title)
     sufficient_data = True
 
     # if title in os.listdir(merged_folder):
@@ -252,7 +255,7 @@ def combine_emg_and_imu(merged_imu_data_file, emg_data_file):
     contents = []
     for i in range(2):
         try:
-            line = imu_rows[i] + emg_rows[i]
+            line = imu_rows[i] + emg_rows[i][:-1]
             contents.append(line)
         except IndexError:
             sufficient_data = False

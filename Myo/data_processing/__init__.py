@@ -89,10 +89,13 @@ def feature_extract_emg_data(p_num, preproc=True):
     for file in emg_files:
         if check_sufficient_data(file):
             name = os.path.basename(file)
-            new_path = os.path.join(path_out, str(p_num) + '-' + name)
+            if name[0].isdigit():
+                new_path = os.path.join(path_out, name)
+            else:
+                new_path = os.path.join(path_out, str(p_num) + '-' + name)
             features = []
-            data = read_csv(file, skiprows=1, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8])
-            for i in range(0, len(data), 100):  # TODO: Rerun feat_extr_preproc with step set to 100
+            data = pd.read_csv(file, skiprows=1, header=None).as_matrix([1, 2, 3, 4, 5, 6, 7, 8])
+            for i in range(0, len(data), 100):
                 window_features = []
                 current_window = data[i:i+200]
                 if len(current_window) < 200:
@@ -145,7 +148,10 @@ def feature_extract_imu_data(p_num, preproc=True):
         if check_file_not_empty(file) is True:
             features = []
             name = os.path.basename(file)
-            new_path = os.path.join(path_out, str(p_num) + '-' + name)
+            if name[0].isdigit():
+                new_path = os.path.join(path_out, name)
+            else:
+                new_path = os.path.join(path_out, str(p_num) + '-' + name)
 
             if 'orientationEuler' in file or 'orientation' not in file:
                 data = pd.read_csv(file, skiprows=1, header=None).as_matrix([1, 2, 3])
@@ -175,45 +181,59 @@ def feature_extract_imu_data(p_num, preproc=True):
 
 
 def feature_extract_with_preproc(p_num):
-    feature_extract_emg_data(p_num)
-    feature_extract_imu_data(p_num)
+    fe = Process(target=feature_extract_emg_data, args=(p_num,))
+    fe.start()
+    fi = Process(target=feature_extract_imu_data, args=(p_num,))
+    fi.start()
+
+    fe.join()
+    fi.join()
 
 
 def feature_extract(p_num):
-    feature_extract_emg_data(p_num, preproc=False)
-    feature_extract_imu_data(p_num, preproc=False)
+    fe = Process(target=feature_extract_emg_data, args=(p_num, False))
+    fe.start()
+    fi = Process(target=feature_extract_imu_data, args=(p_num, False))
+    fi.start()
+
+    fe.join()
+    fi.join()
 
 
 if __name__ == "__main__":
 
-    participant_numbers = [0, 1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-                           35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48]
+    # participant_numbers = [0, 1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+    #                        35, 36, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48]
+    participant_numbers = [37, 38, 39, 40, 42]  # , 43, 44, 45, 46, 47, 48]
 
     for p_num in participant_numbers:
-        p_folder = os.path.abspath(myo_data_folder.replace("*", str(p_num)))
-        emg_regex = os.path.join(p_folder, "*-emg-*.csv")
-        emg_files = glob.glob(emg_regex)
-
-        imu_files = []
-        acc_regex = os.path.join(p_folder, "*-accelerometer-*.csv")
-        imu_files += glob.glob(acc_regex)
-        gyro_regex = os.path.join(p_folder, "*-gyro-*.csv")
-        imu_files += glob.glob(gyro_regex)
-        o_regex = os.path.join(p_folder, "*-orientation-*.csv")
-        imu_files += glob.glob(o_regex)
-        oe_regex = os.path.join(p_folder, "*-orientationEuler-*.csv")
-        imu_files += glob.glob(oe_regex)
-
-        pe_thread = Process(target=preprocess_emg_data, args=(p_num, emg_files))
-        pi_thread = Process(target=preprocess_imu_data, args=(p_num, imu_files))
-        fe_thread = Process(target=feature_extract, args=(p_num))
-        pe_thread.start()
-        pi_thread.start()
+        # p_folder = os.path.abspath(myo_data_folder.replace("*", str(p_num)))
+        # emg_regex = os.path.join(p_folder, "*-emg-*.csv")
+        # emg_files = glob.glob(emg_regex)
+        #
+        # imu_files = []
+        # acc_regex = os.path.join(p_folder, "*-accelerometer-*.csv")
+        # imu_files += glob.glob(acc_regex)
+        # gyro_regex = os.path.join(p_folder, "*-gyro-*.csv")
+        # imu_files += glob.glob(gyro_regex)
+        # o_regex = os.path.join(p_folder, "*-orientation-*.csv")
+        # imu_files += glob.glob(o_regex)
+        # oe_regex = os.path.join(p_folder, "*-orientationEuler-*.csv")
+        # imu_files += glob.glob(oe_regex)
+        #
+        # pe_thread = Process(target=preprocess_emg_data, args=(p_num, emg_files))
+        # pi_thread = Process(target=preprocess_imu_data, args=(p_num, imu_files))
+        fe_thread = Process(target=feature_extract, args=(p_num,))
+        # pe_thread.start()
+        # pi_thread.start()
         fe_thread.start()
-        pe_thread.join()
-        pi_thread.join()
+        # pe_thread.join()
+        # pi_thread.join()
+        fp = Process(target=feature_extract_with_preproc, args=(p_num,))
+        fp.start()
+        # pe_thread.terminate()
+        # pi_thread.terminate()
         fe_thread.join()
-        feature_extract_with_preproc(p_num)
-        pe_thread.terminate()
-        pi_thread.terminate()
+        fp.join()
         fe_thread.terminate()
+        fp.terminate()

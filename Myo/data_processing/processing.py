@@ -11,19 +11,6 @@ import os
 import pandas as pd
 import time
 
-filename = "processing_" + str(time.time())
-path_to_logs = os.path.abspath("log/")
-path_to_log_file = os.path.join(path_to_logs, filename)
-
-logging.basicConfig(filename=path_to_log_file, level=logging.DEBUG)
-logging.info("Loaded processing.py")
-
-myo_data_folder = os.path.abspath("data/Participant *")
-conll_folder = os.path.abspath('data/conll')
-feat_extr_preproc_folder = os.path.abspath('data/preproc_feat_extr')
-preproc_folder = os.path.abspath('data/preprocessed')
-feat_extr_folder = os.path.abspath('data/feature_extracted')
-
 
 def get_emg_x_y(files, fp_flag=False):
     X, Y = [], []
@@ -86,16 +73,19 @@ def get_imu_x_y(accelerometer_files, gyro_files, orientation_files, orientation_
     X, Y = [], []
 
     for i in range(len(accelerometer_files)):
-        file_name = os.path.basename(accelerometer_files[i])
+        a = accelerometer_files[i]
+        g = a.replace('accelerometer', 'gyro')
+        o = a.replace('accelerometer', 'orientation')
+        oe = a.replace('accelerometer', 'orientationEuler')
         letter = ''
-        for c in file_name[:5]:
+        for c in a[:5]:
             if c in string.ascii_lowercase:
                 letter = c
             break
         if fp_flag is False:
-            file = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i], orientation_euler_files[i], letter, max_num_lines=50)
+            file = merge_imu_files(a, g, o, oe, letter, max_num_lines=50)
         else:
-            file = merge_imu_files(accelerometer_files[i], gyro_files[i], orientation_files[i], orientation_euler_files[i], letter)
+            file = merge_imu_files(a, g, o, oe, letter)
 
         if file:
             if fp_flag:
@@ -388,3 +378,132 @@ def get_data_conll(sensor_data="both", test_user=None, fp_flag=False):
 
     elif sensor_data == "imu":
         return read_imu_data_conll(test_user=test_user, fp_flag=fp_flag)
+
+
+def get_x_y(files):
+    X = []
+    Y = []
+
+    no_columns = len(read_csv(files[0], 2)[0])
+    columns = list(range(no_columns))
+    no_rows = 2
+    skip = 0
+
+    for file in files:
+        letter = os.path.basename(file)[0]
+        gesture = pd.read_csv(file, skiprows=skip, nrows=no_rows, header=None).as_matrix(columns)
+        if gesture is None or gesture == []:
+            pass
+        else:
+            X.append(gesture)
+            Y.append(letter)
+
+    X, Y = np.array(X), np.array(Y)
+    if X.ndim == 3:
+        n_samples, n_row, n_features = X.shape
+        X = X.reshape((n_samples, n_row * n_features))
+
+    return (X, Y)
+
+def merge_files(emg, accelerometer, gyro, orientation, orientation_euler):
+    basename = os.path.basename(emg)
+    letter_search = basename[0:4]
+    letter = ''
+    for c in letter_search:
+        if c in string.ascii_lowercase:
+            letter = c
+            break
+
+    fp_merged_path = os.path.abspath('data/feature_extracted_preprocessed/merged')
+    imu_file = merge_imu_files(accelerometer, gyro, orientation, orientation_euler, letter, path=fp_merged_path)
+    if imu_file:
+        merged = combine_emg_and_imu(imu_file, emg)
+        return merged
+    else:
+        return imu_file
+
+
+def get_pf_data_both(test_user):
+    test_data = []
+    train_data = []
+
+    path = os.path.abspath('data/feature_extracted_preprocessed')
+    emg_dir = os.path.join(path, 'emg')
+    imu_dir = os.path.join(path, 'imu')
+
+    emg_files = os.listdir(emg_dir)
+    imu_files = os.listdir(imu_dir)
+
+    emg_train = []
+    emg_test = []
+    imu_train = []
+    imu_test = []
+
+    for file in emg_files:
+        if file[:len(str(test_user))].isdigit() and int(file[:len(str(test_user))]) == test_user:
+            if file[:len(str(test_user)) + 1].isdigit():
+                emg_train.append(file)
+            else:
+                emg_test.append(file)
+        else:
+            emg_train.append(file)
+    for file in imu_files:
+        if file[:len(str(test_user))].isdigit() and int(file[:len(str(test_user))]) == test_user:
+            if file[:len(str(test_user)) + 1].isdigit():
+                imu_train.append(file)
+            else:
+                imu_test.append(file)
+        else:
+            imu_train.append(file)
+
+    for file in emg_test:
+        if file in emg_train:
+            print('emg FUCK WHY')
+            break
+
+    for file in imu_test:
+        if file in imu_train:
+            print('imu FUCK WHY')
+            break
+
+    for file in emg_test:
+        a_file = file.replace('emg', 'accelerometer')
+        g_file = file.replace('emg', 'gyro')
+        o_file = file.replace('emg', 'orientation')
+        oe_file = file.replace('emg', 'orientationEuler')
+        e_path = os.path.join(emg_dir, file)
+        a_path = os.path.join(imu_dir, a_file)
+        g_path = os.path.join(imu_dir, g_file)
+        o_path = os.path.join(imu_dir, o_file)
+        oe_path = os.path.join(imu_dir, oe_file)
+        test_gesture = merge_files(e_path, a_path, g_path, o_path, oe_path)
+
+        if test_gesture:
+            test_data.append(test_gesture)
+
+    for file in emg_train:
+        a_file = file.replace('emg', 'accelerometer')
+        g_file = file.replace('emg', 'gyro')
+        o_file = file.replace('emg', 'orientation')
+        oe_file = file.replace('emg', 'orientationEuler')
+        e_path = os.path.join(emg_dir, file)
+        a_path = os.path.join(imu_dir, a_file)
+        g_path = os.path.join(imu_dir, g_file)
+        o_path = os.path.join(imu_dir, o_file)
+        oe_path = os.path.join(imu_dir, oe_file)
+        gesture = merge_files(e_path, a_path, g_path, o_path, oe_path)
+
+        if gesture:
+            train_data.append(gesture)
+
+    for file in test_data:
+        if file in train_data:
+            print('FUCK WHY merged')
+
+    x_test, y_test = get_x_y(test_data)
+    x_train, y_train = get_x_y(train_data)
+
+    return x_train, x_test, y_train, y_test
+
+if __name__ == '__main__':
+    get_pf_data_both(2)
