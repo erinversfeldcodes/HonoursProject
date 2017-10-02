@@ -1,0 +1,10 @@
+Data variables: 
+	 train_paths: ['Leap_Data\\Legit_Data\\Participant 1\\Leap', 'Leap_Data\\Legit_Data\\Participant 2\\Leap', 'Leap_Data\\Legit_Data\\Participant 12\\Leap', 'Leap_Data\\Legit_Data\\Participant 14\\Leap', 'Leap_Data\\Legit_Data\\Participant 15\\Leap', 'Leap_Data\\Legit_Data\\Participant 16\\Leap', 'Leap_Data\\Legit_Data\\Participant 17\\Leap', 'Leap_Data\\Legit_Data\\Participant 18\\Leap', 'Leap_Data\\Legit_Data\\Participant 19\\Leap', 'Leap_Data\\Legit_Data\\Participant 21\\Leap', 'Leap_Data\\Legit_Data\\Participant 22\\Leap', 'Leap_Data\\Legit_Data\\Participant 23\\Leap', 'Leap_Data\\Legit_Data\\Participant 26\\Leap', 'Leap_Data\\Legit_Data\\Participant 27\\Leap', 'Leap_Data\\Legit_Data\\Participant 28\\Leap', 'Leap_Data\\Legit_Data\\Participant 29\\Leap', 'Leap_Data\\Legit_Data\\Participant 30\\Leap', 'Leap_Data\\Legit_Data\\Participant 31\\Leap', 'Leap_Data\\Legit_Data\\Participant 32\\Leap', 'Leap_Data\\Legit_Data\\Participant 33\\Leap', 'Leap_Data\\Legit_Data\\Participant 35\\Leap', 'Leap_Data\\Legit_Data\\Participant 36\\Leap', 'Leap_Data\\Legit_Data\\Participant 37\\Leap', 'Leap_Data\\Legit_Data\\Participant 38\\Leap', 'Leap_Data\\Legit_Data\\Participant 39\\Leap', 'Leap_Data\\Legit_Data\\Participant 40\\Leap', 'Leap_Data\\Legit_Data\\Participant 41\\Leap', 'Leap_Data\\Legit_Data\\Participant 42\\Leap', 'Leap_Data\\Legit_Data\\Participant 43\\Leap', 'Leap_Data\\Legit_Data\\Participant 44\\Leap', 'Leap_Data\\Legit_Data\\Participant 45\\Leap', 'Leap_Data\\Legit_Data\\Participant 46\\Leap', 'Leap_Data\\Legit_Data\\Participant 47\\Leap', 'Leap_Data\\Legit_Data\\Participant 48\\Leap'], 
+	 test_paths: ['Leap_Data\\Legit_Data\\Participant 0\\Leap'], 
+	 use_auto_split: False, 
+	 frames_per_gesture: 1, 
+	 separate_frames: False, 
+	 feature_set_type: all 
+	 average: False
+loading data took 0.00264586973371 seconds
+loaded top 1 confidence frames...

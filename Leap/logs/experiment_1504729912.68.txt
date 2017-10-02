@@ -1,0 +1,23 @@
+Data variables: 
+	 train_paths: ['Leap_Data\\Legit_Data\\Participant 0\\Leap', 'Leap_Data\\Legit_Data\\Participant 1\\Leap', 'Leap_Data\\Legit_Data\\Participant 2\\Leap', 'Leap_Data\\Legit_Data\\Participant 3\\Leap', 'Leap_Data\\Legit_Data\\Participant 4\\Leap', 'Leap_Data\\Legit_Data\\Participant 5\\Leap', 'Leap_Data\\Legit_Data\\Participant 6\\Leap', 'Leap_Data\\Legit_Data\\Participant 7\\Leap', 'Leap_Data\\Legit_Data\\Participant 8\\Leap', 'Leap_Data\\Legit_Data\\Participant 9\\Leap', 'Leap_Data\\Legit_Data\\Participant 10\\Leap', 'Leap_Data\\Legit_Data\\Participant 11\\Leap', 'Leap_Data\\Legit_Data\\Participant 13\\Leap', 'Leap_Data\\Legit_Data\\Participant 14\\Leap', 'Leap_Data\\Legit_Data\\Participant 15\\Leap', 'Leap_Data\\Legit_Data\\Participant 16\\Leap', 'Leap_Data\\Legit_Data\\Participant 17\\Leap', 'Leap_Data\\Legit_Data\\Participant 18\\Leap', 'Leap_Data\\Legit_Data\\Participant 19\\Leap', 'Leap_Data\\Legit_Data\\Participant 20\\Leap', 'Leap_Data\\Legit_Data\\Participant 21\\Leap', 'Leap_Data\\Legit_Data\\Participant 22\\Leap', 'Leap_Data\\Legit_Data\\Participant 23\\Leap', 'Leap_Data\\Legit_Data\\Participant 24\\Leap', 'Leap_Data\\Legit_Data\\Participant 25\\Leap', 'Leap_Data\\Legit_Data\\Participant 26\\Leap', 'Leap_Data\\Legit_Data\\Participant 27\\Leap', 'Leap_Data\\Legit_Data\\Participant 28\\Leap', 'Leap_Data\\Legit_Data\\Participant 29\\Leap', 'Leap_Data\\Legit_Data\\Participant 30\\Leap', 'Leap_Data\\Legit_Data\\Participant 31\\Leap', 'Leap_Data\\Legit_Data\\Participant 32\\Leap', 'Leap_Data\\Legit_Data\\Participant 33\\Leap', 'Leap_Data\\Legit_Data\\Participant 34\\Leap', 'Leap_Data\\Legit_Data\\Participant 35\\Leap', 'Leap_Data\\Legit_Data\\Participant 36\\Leap', 'Leap_Data\\Legit_Data\\Participant 37\\Leap', 'Leap_Data\\Legit_Data\\Participant 38\\Leap', 'Leap_Data\\Legit_Data\\Participant 39\\Leap', 'Leap_Data\\Legit_Data\\Participant 40\\Leap', 'Leap_Data\\Legit_Data\\Participant 41\\Leap', 'Leap_Data\\Legit_Data\\Participant 42\\Leap', 'Leap_Data\\Legit_Data\\Participant 43\\Leap', 'Leap_Data\\Legit_Data\\Participant 44\\Leap', 'Leap_Data\\Legit_Data\\Participant 45\\Leap', 'Leap_Data\\Legit_Data\\Participant 46\\Leap', 'Leap_Data\\Legit_Data\\Participant 47\\Leap', 'Leap_Data\\Legit_Data\\Participant 48\\Leap', 'Leap_Data\\Legit_Data\\Participant 49\\Leap'], 
+	 test_paths: ['Leap_Data\\Legit_Data\\Participant 12\\Leap'], 
+	 use_auto_split: True, 
+	 frames_per_gesture: 1, 
+	 separate_frames: False, 
+	 feature_set_type: all 
+	 average: False
+scaling
+SelectFromModel(estimator=ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_split=1e-07, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           n_estimators=10, n_jobs=1, oob_score=False, random_state=None,
+           verbose=0, warm_start=False),
+        prefit=False, threshold=0.0002)
+number of features: 1363
+features selected: ['hand_arm_basis_x_basis_pitch' 'hand_arm_basis_x_basis_roll'
+ 'hand_arm_basis_x_basis_x' ...,
+ 'hand_finger_4_stabilized_tip_position_transformed_y'
+ 'hand_finger_4_stabilized_tip_position_transformed_yaw'
+ 'hand_finger_4_stabilized_tip_position_transformed_z']
+feature selection took 3.23286363159 seconds

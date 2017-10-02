@@ -1,0 +1,324 @@
+Data variables: 
+	 train_paths: ['Leap_Data\\Legit_Data\\Participant 1\\Leap', 'Leap_Data\\Legit_Data\\Participant 2\\Leap', 'Leap_Data\\Legit_Data\\Participant 12\\Leap', 'Leap_Data\\Legit_Data\\Participant 14\\Leap', 'Leap_Data\\Legit_Data\\Participant 15\\Leap', 'Leap_Data\\Legit_Data\\Participant 16\\Leap', 'Leap_Data\\Legit_Data\\Participant 17\\Leap', 'Leap_Data\\Legit_Data\\Participant 18\\Leap', 'Leap_Data\\Legit_Data\\Participant 19\\Leap', 'Leap_Data\\Legit_Data\\Participant 21\\Leap', 'Leap_Data\\Legit_Data\\Participant 22\\Leap', 'Leap_Data\\Legit_Data\\Participant 23\\Leap', 'Leap_Data\\Legit_Data\\Participant 26\\Leap', 'Leap_Data\\Legit_Data\\Participant 27\\Leap', 'Leap_Data\\Legit_Data\\Participant 28\\Leap', 'Leap_Data\\Legit_Data\\Participant 29\\Leap', 'Leap_Data\\Legit_Data\\Participant 30\\Leap', 'Leap_Data\\Legit_Data\\Participant 31\\Leap', 'Leap_Data\\Legit_Data\\Participant 32\\Leap', 'Leap_Data\\Legit_Data\\Participant 33\\Leap', 'Leap_Data\\Legit_Data\\Participant 35\\Leap', 'Leap_Data\\Legit_Data\\Participant 36\\Leap', 'Leap_Data\\Legit_Data\\Participant 37\\Leap', 'Leap_Data\\Legit_Data\\Participant 38\\Leap', 'Leap_Data\\Legit_Data\\Participant 39\\Leap', 'Leap_Data\\Legit_Data\\Participant 40\\Leap', 'Leap_Data\\Legit_Data\\Participant 41\\Leap', 'Leap_Data\\Legit_Data\\Participant 42\\Leap', 'Leap_Data\\Legit_Data\\Participant 43\\Leap', 'Leap_Data\\Legit_Data\\Participant 44\\Leap', 'Leap_Data\\Legit_Data\\Participant 45\\Leap', 'Leap_Data\\Legit_Data\\Participant 46\\Leap', 'Leap_Data\\Legit_Data\\Participant 47\\Leap', 'Leap_Data\\Legit_Data\\Participant 48\\Leap'], 
+	 test_paths: ['Leap_Data\\Legit_Data\\Participant 0\\Leap'], 
+	 use_auto_split: False, 
+	 frames_per_gesture: 1, 
+	 separate_frames: False, 
+	 feature_set_type: all 
+	 average: False
+loading data took 51.2977250036 seconds
+loaded top 1 confidence frames...
+scaling
+SelectKBest(k=500, score_func=<function f_classif at 0x0000000016E01F28>)
+RFE(estimator=ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_split=1e-07, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           n_estimators=10, n_jobs=1, oob_score=False, random_state=None,
+           verbose=0, warm_start=False),
+  n_features_to_select=50, step=1, verbose=0)
+number of features: 50
+features selected: ['hand_confidence' 'hand_pinch_strength' 'hand_finger_0_direction_x'
+ 'hand_finger_0_bone_0_basis_y_basis_roll'
+ 'hand_finger_0_bone_0_basis_y_basis_yaw'
+ 'hand_finger_0_bone_1_basis_z_basis_pitch'
+ 'hand_finger_0_bone_1_basis_z_basis_x'
+ 'hand_finger_0_bone_1_basis_z_basis_y' 'hand_finger_0_bone_1_direction_x'
+ 'hand_finger_0_bone_1_direction_y' 'hand_finger_0_bone_2_direction_x'
+ 'hand_finger_0_bone_2_direction_y'
+ 'hand_finger_0_bone_3_basis_y_basis_pitch'
+ 'hand_finger_0_bone_3_basis_y_basis_z'
+ 'hand_finger_0_bone_3_basis_z_basis_x'
+ 'hand_finger_0_bone_3_basis_z_basis_yaw'
+ 'hand_finger_0_bone_3_next_joint_transformed_x'
+ 'hand_finger_0_bone_3_next_joint_transformed_yaw'
+ 'hand_finger_0_tip_position_transformed_x'
+ 'hand_finger_0_stabilized_tip_position_transformed_x'
+ 'hand_finger_1_bone_0_basis_z_basis_x'
+ 'hand_finger_1_bone_0_basis_z_basis_y'
+ 'hand_finger_1_bone_1_basis_y_basis_z' 'hand_finger_1_bone_1_direction_x'
+ 'hand_finger_1_bone_1_direction_y'
+ 'hand_finger_1_bone_2_next_joint_transformed_pitch'
+ 'hand_finger_1_bone_3_basis_z_basis_y'
+ 'hand_finger_1_bone_3_basis_z_basis_z'
+ 'hand_finger_1_bone_3_prev_joint_transformed_z'
+ 'hand_finger_1_tip_position_transformed_z' 'hand_finger_2_direction_y'
+ 'hand_finger_2_bone_2_basis_z_basis_y'
+ 'hand_finger_2_bone_3_next_joint_transformed_yaw'
+ 'hand_finger_2_tip_position_transformed_z'
+ 'hand_finger_3_bone_1_basis_y_basis_z'
+ 'hand_finger_3_bone_2_basis_y_basis_z'
+ 'hand_finger_3_tip_position_transformed_z'
+ 'hand_finger_4_bone_0_basis_z_basis_y'
+ 'hand_finger_4_bone_0_direction_roll'
+ 'hand_finger_4_bone_1_basis_y_basis_z'
+ 'hand_finger_4_bone_1_basis_z_basis_x'
+ 'hand_finger_4_bone_1_basis_z_basis_y'
+ 'hand_finger_4_bone_1_basis_z_basis_yaw'
+ 'hand_finger_4_bone_1_direction_x' 'hand_finger_4_bone_1_direction_y'
+ 'hand_finger_4_bone_2_next_joint_transformed_x'
+ 'hand_finger_4_bone_3_prev_joint_transformed_z'
+ 'hand_finger_4_bone_3_next_joint_transformed_z'
+ 'hand_finger_4_tip_position_transformed_yaw'
+ 'hand_finger_4_tip_position_transformed_z']
+feature selection took 257.146912481 seconds
+parameter tuning MLP no tuning took 49.3628462415 seconds
+MLP no tuning chosen parameters: {}
+CLASSIFIER: MLP no tuning 0.608856088561
+             precision    recall  f1-score   support
+
+          a       0.60      0.50      0.55        12
+          b       0.38      0.30      0.33        10
+          c       1.00      0.90      0.95        10
+          d       0.67      0.20      0.31        10
+          e       0.50      0.50      0.50        10
+          f       1.00      1.00      1.00        10
+          g       0.88      0.70      0.78        10
+          h       0.77      0.91      0.83        11
+          i       0.52      1.00      0.69        11
+          j       1.00      0.77      0.87        13
+          k       0.33      0.30      0.32        10
+          l       1.00      1.00      1.00        11
+          m       0.27      0.30      0.29        10
+          n       0.19      0.30      0.23        10
+          o       0.47      0.64      0.54        11
+          p       0.83      1.00      0.91        10
+          q       1.00      1.00      1.00        10
+          r       0.58      0.64      0.61        11
+          s       0.00      0.00      0.00        10
+          t       0.46      0.60      0.52        10
+          u       0.20      0.10      0.13        10
+          v       0.30      0.30      0.30        10
+          w       0.25      0.27      0.26        11
+          x       0.73      0.80      0.76        10
+          y       1.00      1.00      1.00        10
+          z       0.70      0.70      0.70        10
+
+avg / total       0.61      0.61      0.60       271
+
+[[ 6  0  0  0  1  0  0  0  0  0  0  0  0  4  0  0  0  0  0  0  1  0  0  0
+   0  0]
+ [ 1  3  0  0  1  0  0  0  0  0  0  0  1  0  0  0  0  0  1  2  0  0  1  0
+   0  0]
+ [ 0  0  9  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  2  0  0  0  0  0  0  0  0  2  1  0  0  0  0  0  0  0  1  0  1
+   0  3]
+ [ 0  0  0  0  5  0  0  0  0  0  0  0  0  2  3  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  7  3  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  1 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  3 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  3  0  0  0  0  0  0  0  1  2  0  1  3  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  1  0  0  0  3  3  1  0  0  0  0  0  1  0  0  1
+   0  0]
+ [ 0  0  0  0  1  0  0  0  1  0  0  0  1  3  1  0  0  1  0  1  0  0  1  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  2  0  1  0  1  0  7  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 10  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 10  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  7  0  1  1  0  1  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  1  0  3  3  1  0  0  0  0  0  1  1  0  0
+   0  0]
+ [ 0  0  0  0  1  0  0  0  0  0  1  0  0  0  1  0  0  1  0  6  0  0  0  0
+   0  0]
+ [ 0  2  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  2  0  0  1  3  1  0
+   0  0]
+ [ 1  2  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  1  0  3  2  0
+   0  0]
+ [ 2  1  0  0  0  0  0  0  2  0  2  0  0  0  0  0  0  0  0  0  0  1  3  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  1  0  0  0  1  0  0  0  0  0  0  0  0  8
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  10  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  2  0  0  0  0  0  0  0  1
+   0  7]]
+testing classifier MLP no tuning took 0.0097509228728 seconds
+parameter tuning MLP took 490.409063366 seconds
+MLP chosen parameters: {'hidden_layer_sizes': (170,), 'learning_rate': 'constant', 'solver': 'sgd', 'alpha': 0.10000000000000001, 'activation': 'relu', 'learning_rate_init': 0.01}
+CLASSIFIER: MLP 0.645756457565
+             precision    recall  f1-score   support
+
+          a       0.69      0.75      0.72        12
+          b       0.45      0.50      0.48        10
+          c       1.00      0.90      0.95        10
+          d       0.67      0.20      0.31        10
+          e       0.67      0.40      0.50        10
+          f       0.91      1.00      0.95        10
+          g       0.90      0.90      0.90        10
+          h       0.90      0.82      0.86        11
+          i       0.57      0.73      0.64        11
+          j       0.77      0.77      0.77        13
+          k       0.50      0.50      0.50        10
+          l       1.00      1.00      1.00        11
+          m       0.36      0.40      0.38        10
+          n       0.45      0.50      0.48        10
+          o       0.57      0.73      0.64        11
+          p       0.91      1.00      0.95        10
+          q       1.00      1.00      1.00        10
+          r       0.60      0.55      0.57        11
+          s       0.00      0.00      0.00        10
+          t       0.39      0.70      0.50        10
+          u       0.11      0.10      0.11        10
+          v       0.27      0.30      0.29        10
+          w       0.40      0.36      0.38        11
+          x       0.73      0.80      0.76        10
+          y       0.91      1.00      0.95        10
+          z       0.80      0.80      0.80        10
+
+avg / total       0.64      0.65      0.63       271
+
+[[ 9  0  0  0  1  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  1  0  0  0
+   0  0]
+ [ 0  5  0  0  0  0  0  0  0  0  1  0  0  1  0  0  0  0  0  2  0  0  1  0
+   0  0]
+ [ 0  0  9  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0
+   0  0]
+ [ 0  0  0  2  0  0  0  0  0  0  0  0  2  1  0  0  0  0  0  1  0  1  0  1
+   0  2]
+ [ 0  0  0  0  4  0  0  0  0  0  0  0  2  0  2  0  0  1  0  1  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  9  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 1  0  0  0  0  0  1  9  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  8  3  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  3 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  1  0  0  0  0  0  0  0  0  5  0  0  0  0  0  0  0  0  1  0  1  1  0
+   1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  1  0  0  0  0  0  0  0  0  0  0  4  1  1  0  0  0  2  0  0  1  0  0
+   0  0]
+ [ 0  0  0  0  1  1  0  0  1  0  0  0  1  5  0  0  0  0  0  1  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  1  0  0  0  0  0  8  0  0  0  1  0  1  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 10  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 10  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  6  0  1  3  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  1  0  2  1  2  0  0  1  0  1  2  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  7  0  1  0  1
+   0  0]
+ [ 0  1  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  1  1  3  2  0
+   0  0]
+ [ 1  2  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  3  2  0
+   0  0]
+ [ 2  1  0  0  0  0  0  0  1  0  2  0  0  0  0  0  0  0  0  0  0  1  4  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  1  0  0  0  0  0  8
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  10  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  1
+   0  8]]
+testing classifier MLP took 0.0096269426308 seconds
+CLASSIFIER: voting 0.645756457565
+             precision    recall  f1-score   support
+
+          a       0.55      0.50      0.52        12
+          b       0.50      0.50      0.50        10
+          c       1.00      0.90      0.95        10
+          d       0.67      0.40      0.50        10
+          e       0.75      0.30      0.43        10
+          f       0.91      1.00      0.95        10
+          g       0.82      0.90      0.86        10
+          h       0.90      0.82      0.86        11
+          i       0.58      1.00      0.73        11
+          j       1.00      0.77      0.87        13
+          k       0.75      0.60      0.67        10
+          l       1.00      1.00      1.00        11
+          m       0.33      0.60      0.43        10
+          n       0.25      0.20      0.22        10
+          o       0.55      0.55      0.55        11
+          p       0.83      1.00      0.91        10
+          q       1.00      1.00      1.00        10
+          r       0.73      0.73      0.73        11
+          s       0.00      0.00      0.00        10
+          t       0.39      0.70      0.50        10
+          u       0.17      0.10      0.12        10
+          v       0.25      0.20      0.22        10
+          w       0.45      0.45      0.45        11
+          x       0.69      0.90      0.78        10
+          y       0.91      1.00      0.95        10
+          z       0.60      0.60      0.60        10
+
+avg / total       0.64      0.65      0.63       271
+
+[[ 6  1  0  0  0  0  0  0  0  0  0  0  2  3  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  5  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  1  2  0  0  1  0
+   0  0]
+ [ 0  0  9  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1
+   0  0]
+ [ 0  0  0  4  0  0  0  0  0  0  0  0  2  1  0  0  0  0  0  1  0  1  0  0
+   0  1]
+ [ 0  0  0  0  3  0  0  0  0  0  0  0  3  0  2  0  0  0  1  1  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  9  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  2  9  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  3 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  6  0  0  1  0  0  0  0  0  0  0  1  1  0
+   1  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  1  0  0  0  6  0  1  0  0  0  1  0  0  0  0  1
+   0  0]
+ [ 0  0  0  0  0  1  0  0  1  0  0  0  2  2  0  0  0  0  1  2  0  0  0  0
+   0  1]
+ [ 0  0  0  0  0  0  0  0  2  0  0  0  0  0  6  0  0  0  0  0  0  0  0  1
+   0  2]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 10  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 10  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  8  0  2  1  0  0  0
+   0  0]
+ [ 0  0  0  0  1  0  0  0  1  0  0  0  2  1  2  0  0  1  0  0  2  0  0  0
+   0  0]
+ [ 0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  7  0  0  0  1
+   0  0]
+ [ 0  1  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  1  1  3  2  0
+   0  0]
+ [ 2  1  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  2  2  0
+   0  0]
+ [ 3  1  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  1  5  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  9
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  10  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  2  0  0  0  1  1  0  0  0
+   0  6]]
+testing classifier voting took 0.0127457436187 seconds
+error! results so far: []

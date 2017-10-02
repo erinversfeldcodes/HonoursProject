@@ -1,0 +1,197 @@
+Data variables: 
+	 train_paths: ['Leap_Data\\Legit_Data\\Participant 0\\Leap', 'Leap_Data\\Legit_Data\\Participant 1\\Leap', 'Leap_Data\\Legit_Data\\Participant 2\\Leap', 'Leap_Data\\Legit_Data\\Participant 3\\Leap', 'Leap_Data\\Legit_Data\\Participant 4\\Leap', 'Leap_Data\\Legit_Data\\Participant 5\\Leap', 'Leap_Data\\Legit_Data\\Participant 6\\Leap', 'Leap_Data\\Legit_Data\\Participant 7\\Leap', 'Leap_Data\\Legit_Data\\Participant 8\\Leap', 'Leap_Data\\Legit_Data\\Participant 9\\Leap', 'Leap_Data\\Legit_Data\\Participant 10\\Leap', 'Leap_Data\\Legit_Data\\Participant 11\\Leap', 'Leap_Data\\Legit_Data\\Participant 13\\Leap', 'Leap_Data\\Legit_Data\\Participant 14\\Leap', 'Leap_Data\\Legit_Data\\Participant 15\\Leap', 'Leap_Data\\Legit_Data\\Participant 16\\Leap', 'Leap_Data\\Legit_Data\\Participant 17\\Leap', 'Leap_Data\\Legit_Data\\Participant 18\\Leap', 'Leap_Data\\Legit_Data\\Participant 19\\Leap', 'Leap_Data\\Legit_Data\\Participant 20\\Leap', 'Leap_Data\\Legit_Data\\Participant 21\\Leap', 'Leap_Data\\Legit_Data\\Participant 22\\Leap', 'Leap_Data\\Legit_Data\\Participant 23\\Leap', 'Leap_Data\\Legit_Data\\Participant 24\\Leap', 'Leap_Data\\Legit_Data\\Participant 25\\Leap', 'Leap_Data\\Legit_Data\\Participant 26\\Leap', 'Leap_Data\\Legit_Data\\Participant 27\\Leap', 'Leap_Data\\Legit_Data\\Participant 28\\Leap', 'Leap_Data\\Legit_Data\\Participant 29\\Leap', 'Leap_Data\\Legit_Data\\Participant 30\\Leap', 'Leap_Data\\Legit_Data\\Participant 31\\Leap', 'Leap_Data\\Legit_Data\\Participant 32\\Leap', 'Leap_Data\\Legit_Data\\Participant 33\\Leap', 'Leap_Data\\Legit_Data\\Participant 34\\Leap', 'Leap_Data\\Legit_Data\\Participant 35\\Leap', 'Leap_Data\\Legit_Data\\Participant 36\\Leap', 'Leap_Data\\Legit_Data\\Participant 37\\Leap', 'Leap_Data\\Legit_Data\\Participant 38\\Leap', 'Leap_Data\\Legit_Data\\Participant 39\\Leap', 'Leap_Data\\Legit_Data\\Participant 40\\Leap', 'Leap_Data\\Legit_Data\\Participant 41\\Leap', 'Leap_Data\\Legit_Data\\Participant 42\\Leap', 'Leap_Data\\Legit_Data\\Participant 43\\Leap', 'Leap_Data\\Legit_Data\\Participant 44\\Leap', 'Leap_Data\\Legit_Data\\Participant 45\\Leap', 'Leap_Data\\Legit_Data\\Participant 46\\Leap', 'Leap_Data\\Legit_Data\\Participant 47\\Leap', 'Leap_Data\\Legit_Data\\Participant 48\\Leap', 'Leap_Data\\Legit_Data\\Participant 49\\Leap'], 
+	 test_paths: ['Leap_Data\\Legit_Data\\Participant 12\\Leap'], 
+	 use_auto_split: True, 
+	 frames_per_gesture: 1, 
+	 separate_frames: False, 
+	 feature_set_type: all 
+	 average: False
+scaling
+SelectFromModel(estimator=ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_split=1e-07, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           n_estimators=10, n_jobs=1, oob_score=False, random_state=None,
+           verbose=0, warm_start=False),
+        prefit=False, threshold=0.003)
+number of features: 9
+features selected: ['hand_basis_x_basis_z' 'hand_finger_0_direction_roll'
+ 'hand_finger_0_bone_1_direction_pitch'
+ 'hand_finger_0_bone_2_basis_z_basis_x'
+ 'hand_finger_0_bone_3_next_joint_transformed_x'
+ 'hand_finger_2_bone_0_basis_z_basis_x' 'hand_finger_2_bone_0_direction_y'
+ 'hand_finger_3_bone_1_direction_y'
+ 'hand_finger_4_bone_2_next_joint_transformed_z']
+feature selection took 9.05695044731 seconds
+parameter tuning MLP took 268.860551786 seconds
+MLP chosen parameters: {'hidden_layer_sizes': (24,), 'learning_rate': 'constant', 'solver': 'adam', 'alpha': 1.0000000000000001e-05, 'activation': 'tanh', 'learning_rate_init': 0.001}
+CLASSIFIER: MLP 0.360741444867
+             precision    recall  f1-score   support
+
+          a       0.33      0.62      0.43        73
+          b       0.29      0.25      0.27        88
+          c       0.87      0.83      0.85        87
+          d       0.17      0.05      0.08        80
+          e       0.22      0.17      0.19        88
+          f       0.47      0.63      0.54        82
+          g       0.49      0.43      0.45        82
+          h       0.47      0.57      0.52        74
+          i       0.25      0.23      0.24        66
+          j       0.45      0.31      0.36        81
+          k       0.16      0.06      0.08        71
+          l       0.70      0.81      0.75        79
+          m       0.16      0.20      0.18        86
+          n       0.22      0.22      0.22        88
+          o       0.28      0.47      0.35        90
+          p       0.55      0.66      0.60        71
+          q       0.66      0.72      0.69        79
+          r       0.15      0.10      0.12        73
+          s       0.18      0.09      0.12        89
+          t       0.25      0.38      0.30        69
+          u       0.14      0.16      0.15        94
+          v       0.22      0.09      0.13        85
+          w       0.24      0.32      0.28        75
+          x       0.14      0.09      0.11        87
+          y       0.76      0.74      0.75        80
+          z       0.22      0.31      0.25        87
+
+avg / total       0.34      0.36      0.34      2104
+
+[[45  1  2  0  1  4  0  0  0  2  0  7  1  2  1  0  0  0  0  6  0  0  0  0
+   1  0]
+ [ 6 22  0  1 10  5  0  0  5  1  3  0  3  3  1  1  1  0  1 11  4  0  5  2
+   1  2]
+ [ 1  1 72  0  0  0  3  6  0  0  0  0  2  1  0  0  0  0  0  1  0  0  0  0
+   0  0]
+ [ 0  1  0  4  4  1  0  2  1  1  2  0  3  6  9  0  0  6  4  4  9  3  4  6
+   0 10]
+ [ 5  7  0  1 15  6  0  1  1  0  2  1  6  4  6  0  0  3  8 10  7  1  3  0
+   0  1]
+ [ 5  3  0  0  1 52  1  0  4  3  0  1  2  0  0  0  0  0  0  0  0  0  1  0
+   8  1]
+ [ 3  0  3  0  0  0 35 30  0  0  0  4  3  0  1  1  1  0  0  1  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0 24 42  0  1  0  0  1  1  0  3  1  0  0  0  0  0  0  0
+   0  1]
+ [ 3  5  0  0  3  8  0  0 15 11  0  1  0  4  5  0  0  0  0  3  1  0  4  0
+   3  0]
+ [ 5  6  0  0  3  8  0  0 16 25  1  1  1  0  1  0  1  0  0  0  2  1  5  0
+   3  2]
+ [ 6  6  0  0  4  3  0  1  3  0  4  1  7  5  3  0  1  1  2  2  7  2  5  3
+   1  4]
+ [ 4  0  3  0  0  3  1  0  2  0  0 64  0  0  0  1  0  0  0  0  0  0  0  0
+   1  0]
+ [ 7  3  2  2  5  0  1  1  0  1  1  1 17  9 11  2  0  2  3  2  3  0  4  2
+   0  7]
+ [11  4  0  1  1  1  1  1  1  0  2  0  6 19  4  0  0  3  5  7  5  0  3  4
+   0  9]
+ [ 1  1  0  1  5  0  0  1  1  2  1  1  6  3 42  1  0  2  0  0  3  1  5  6
+   0  7]
+ [ 0  0  0  0  0  0  0  1  0  0  0  0  0  0  0 47 21  0  0  0  0  0  0  0
+   0  2]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 22 57  0  0  0  0  0  0  0
+   0  0]
+ [ 5  2  0  3  2  1  0  2  0  0  0  0  6  1 10  1  0  7  3  2 12  9  2  2
+   0  3]
+ [ 6  2  0  3 10  6  0  0  3  0  0  0  6 10  8  0  1  5  8  7  3  0  3  5
+   1  2]
+ [12  1  0  0  0  1  2  0  0  0  2  1  1  7  2  0  0  1  1 26  3  0  4  3
+   0  2]
+ [ 4  1  0  3  2  3  1  0  2  2  2  0  7  1 10  0  0  9  3  3 15  4 10  1
+   0 11]
+ [ 2  3  0  1  0  2  0  0  1  1  2  0  3  1 10  2  0  4  3  4 15  8  9  2
+   0 12]
+ [ 1  6  0  0  0  4  1  0  4  0  2  1  4  1  7  0  1  0  1  3  8  3 24  0
+   0  4]
+ [ 3  0  1  1  1  1  0  1  0  0  0  0  8  4 14  1  1  2  2  8  6  4  3  8
+   0 18]
+ [ 3  1  0  0  0  1  0  0  1  5  0  7  1  0  0  0  0  0  0  1  0  0  1  0
+  59  0]
+ [ 0  0  0  2  0  1  2  0  1  1  1  0 11  5  5  4  1  1  0  4  2  1  3 15
+   0 27]]
+testing classifier MLP took 0.0314269386897 seconds
+CLASSIFIER: voting 0.350285171103
+             precision    recall  f1-score   support
+
+          a       0.34      0.62      0.43        73
+          b       0.36      0.34      0.35        88
+          c       0.85      0.78      0.81        87
+          d       0.07      0.03      0.04        80
+          e       0.22      0.18      0.20        88
+          f       0.45      0.66      0.53        82
+          g       0.47      0.41      0.44        82
+          h       0.45      0.54      0.49        74
+          i       0.25      0.23      0.24        66
+          j       0.34      0.25      0.29        81
+          k       0.17      0.08      0.11        71
+          l       0.66      0.78      0.72        79
+          m       0.14      0.15      0.15        86
+          n       0.13      0.08      0.10        88
+          o       0.29      0.43      0.35        90
+          p       0.52      0.59      0.55        71
+          q       0.64      0.75      0.69        79
+          r       0.15      0.11      0.13        73
+          s       0.20      0.15      0.17        89
+          t       0.18      0.28      0.22        69
+          u       0.15      0.17      0.16        94
+          v       0.12      0.05      0.07        85
+          w       0.25      0.31      0.28        75
+          x       0.18      0.16      0.17        87
+          y       0.77      0.74      0.75        80
+          z       0.25      0.33      0.28        87
+
+avg / total       0.33      0.35      0.33      2104
+
+[[45  2  1  0  1  6  0  1  0  0  1  7  1  1  0  0  0  0  1  6  0  0  0  0
+   0  0]
+ [ 5 30  0  0  9  7  0  0  4  2  5  0  1  2  0  1  0  1  0 10  3  1  3  2
+   1  1]
+ [ 0  0 68  0  0  0  2  6  1  0  0  3  1  1  0  0  0  0  0  4  0  0  1  0
+   0  0]
+ [ 0  1  0  2  2  2  0  2  0  2  3  0  5  4  6  0  0  6  4  6  8  2  4  9
+   0 12]
+ [ 6  8  0  1 16  5  0  1  1  0  3  1  5  2  4  0  0  4  7 10  7  0  7  0
+   0  0]
+ [ 6  2  0  0  1 54  1  0  2  4  0  1  1  0  2  0  0  0  0  0  0  0  1  0
+   7  0]
+ [ 4  0  5  0  0  0 34 30  1  0  0  4  2  0  0  0  1  0  0  0  0  0  0  1
+   0  0]
+ [ 0  0  0  0  0  0 24 40  0  1  0  0  0  0  2  4  2  0  0  1  0  0  0  0
+   0  0]
+ [ 4  7  0  0  3  7  0  0 15 12  1  1  0  0  4  0  0  0  2  2  3  1  2  0
+   2  0]
+ [ 2  4  0  0  2 10  1  0 21 20  0  2  1  0  5  1  0  0  0  1  2  1  4  1
+   2  1]
+ [ 6  3  1  1  4  3  0  1  1  2  6  1  3  3  3  0  1  1  3  6  6  1  8  2
+   2  3]
+ [ 5  0  1  0  0  2  0  1  1  2  0 62  0  0  0  0  1  0  0  0  0  0  1  0
+   3  0]
+ [ 7  4  2  1  7  0  2  1  1  0  3  0 13  5  9  1  0  4  7  5  3  2  2  1
+   0  6]
+ [ 9  2  0  4  2  2  3  1  2  0  3  1  8  7  3  0  0  3 12  7  3  0  2  8
+   0  6]
+ [ 1  1  0  2  6  1  1  1  1  2  0  0  7  2 39  1  0  2  1  2  2  1  5  5
+   0  7]
+ [ 0  0  0  0  0  0  0  1  0  0  0  0  0  0  0 42 25  0  0  0  0  0  0  0
+   0  3]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 20 59  0  0  0  0  0  0  0
+   0  0]
+ [ 5  1  1  6  2  1  0  2  0  1  0  0  4  0 11  2  0  8  2  2 11  6  1  2
+   0  5]
+ [ 4  3  0  2 10  5  0  0  1  0  2  0  3  9  8  0  1  6 13  8  7  0  1  5
+   0  1]
+ [15  3  0  0  1  1  2  0  1  0  2  1  2  7  1  0  0  1  1 19  3  1  2  2
+   1  3]
+ [ 4  3  0  0  3  3  0  0  0  1  1  0  9  1  9  2  0  9  5  1 16  4 11  3
+   0  9]
+ [ 3  3  0  1  2  1  0  0  1  1  3  0  5  0  7  2  0  5  2  3 14  4 10  6
+   0 12]
+ [ 1  5  0  0  1  5  1  0  4  1  1  1  4  1  3  2  0  1  1  4 10  3 23  1
+   0  2]
+ [ 2  0  1  5  1  1  0  1  0  0  0  0  4  6 14  1  1  1  3  5  4  4  2 14
+   0 17]
+ [ 0  1  0  0  0  3  0  0  1  5  0  9  1  0  0  0  0  0  0  1  0  0  0  0
+  59  0]
+ [ 0  0  0  3  0  1  1  0  1  2  2  0 12  3  4  2  1  0  0  4  2  2  2 16
+   0 29]]
+testing classifier voting took 0.0295545086113 seconds

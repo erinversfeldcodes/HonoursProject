@@ -1,0 +1,332 @@
+Data variables: 
+	 train_paths: ['Leap_Data\\Legit_Data\\Participant 0\\Leap', 'Leap_Data\\Legit_Data\\Participant 1\\Leap', 'Leap_Data\\Legit_Data\\Participant 2\\Leap', 'Leap_Data\\Legit_Data\\Participant 3\\Leap', 'Leap_Data\\Legit_Data\\Participant 4\\Leap', 'Leap_Data\\Legit_Data\\Participant 5\\Leap', 'Leap_Data\\Legit_Data\\Participant 6\\Leap', 'Leap_Data\\Legit_Data\\Participant 7\\Leap', 'Leap_Data\\Legit_Data\\Participant 8\\Leap', 'Leap_Data\\Legit_Data\\Participant 9\\Leap', 'Leap_Data\\Legit_Data\\Participant 10\\Leap', 'Leap_Data\\Legit_Data\\Participant 11\\Leap', 'Leap_Data\\Legit_Data\\Participant 13\\Leap', 'Leap_Data\\Legit_Data\\Participant 14\\Leap', 'Leap_Data\\Legit_Data\\Participant 15\\Leap', 'Leap_Data\\Legit_Data\\Participant 16\\Leap', 'Leap_Data\\Legit_Data\\Participant 17\\Leap', 'Leap_Data\\Legit_Data\\Participant 18\\Leap', 'Leap_Data\\Legit_Data\\Participant 19\\Leap', 'Leap_Data\\Legit_Data\\Participant 20\\Leap', 'Leap_Data\\Legit_Data\\Participant 21\\Leap', 'Leap_Data\\Legit_Data\\Participant 22\\Leap', 'Leap_Data\\Legit_Data\\Participant 23\\Leap', 'Leap_Data\\Legit_Data\\Participant 24\\Leap', 'Leap_Data\\Legit_Data\\Participant 25\\Leap', 'Leap_Data\\Legit_Data\\Participant 26\\Leap', 'Leap_Data\\Legit_Data\\Participant 27\\Leap', 'Leap_Data\\Legit_Data\\Participant 28\\Leap', 'Leap_Data\\Legit_Data\\Participant 29\\Leap', 'Leap_Data\\Legit_Data\\Participant 30\\Leap', 'Leap_Data\\Legit_Data\\Participant 31\\Leap', 'Leap_Data\\Legit_Data\\Participant 32\\Leap', 'Leap_Data\\Legit_Data\\Participant 33\\Leap', 'Leap_Data\\Legit_Data\\Participant 34\\Leap', 'Leap_Data\\Legit_Data\\Participant 35\\Leap', 'Leap_Data\\Legit_Data\\Participant 36\\Leap', 'Leap_Data\\Legit_Data\\Participant 37\\Leap', 'Leap_Data\\Legit_Data\\Participant 38\\Leap', 'Leap_Data\\Legit_Data\\Participant 39\\Leap', 'Leap_Data\\Legit_Data\\Participant 40\\Leap', 'Leap_Data\\Legit_Data\\Participant 41\\Leap', 'Leap_Data\\Legit_Data\\Participant 42\\Leap', 'Leap_Data\\Legit_Data\\Participant 43\\Leap', 'Leap_Data\\Legit_Data\\Participant 44\\Leap', 'Leap_Data\\Legit_Data\\Participant 45\\Leap', 'Leap_Data\\Legit_Data\\Participant 46\\Leap', 'Leap_Data\\Legit_Data\\Participant 47\\Leap', 'Leap_Data\\Legit_Data\\Participant 48\\Leap', 'Leap_Data\\Legit_Data\\Participant 49\\Leap'], 
+	 test_paths: ['Leap_Data\\Legit_Data\\Participant 12\\Leap'], 
+	 use_auto_split: False, 
+	 frames_per_gesture: 2, 
+	 separate_frames: False, 
+	 feature_set_type: all 
+	 average: False
+scaling
+SelectKBest(k=500, score_func=<function f_classif at 0x0000000017271F28>)
+SelectFromModel(estimator=ExtraTreesClassifier(bootstrap=False, class_weight=None, criterion='gini',
+           max_depth=None, max_features='auto', max_leaf_nodes=None,
+           min_impurity_split=1e-07, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           n_estimators=10, n_jobs=1, oob_score=False, random_state=None,
+           verbose=0, warm_start=False),
+        prefit=False, threshold=0.002)
+number of features: 169
+features selected: ['hand_basis_z_basis_x' 'hand_direction_x' 'hand_palm_normal_x'
+ 'hand_pinch_strength' 'Hand_sphere_center_transformed_z'
+ 'hand_finger_0_direction_x' 'hand_finger_0_direction_y'
+ 'hand_finger_0_bone_0_basis_y_basis_roll'
+ 'hand_finger_0_bone_0_basis_y_basis_yaw'
+ 'hand_finger_0_bone_1_basis_z_basis_roll'
+ 'hand_finger_0_bone_1_basis_z_basis_x'
+ 'hand_finger_0_bone_1_basis_z_basis_y' 'hand_finger_0_bone_1_direction_x'
+ 'hand_finger_0_bone_1_next_joint_transformed_z'
+ 'hand_finger_0_bone_2_basis_y_basis_y'
+ 'hand_finger_0_bone_2_basis_z_basis_pitch'
+ 'hand_finger_0_bone_2_basis_z_basis_roll'
+ 'hand_finger_0_bone_2_basis_z_basis_x'
+ 'hand_finger_0_bone_2_basis_z_basis_y'
+ 'hand_finger_0_bone_2_direction_roll' 'hand_finger_0_bone_2_direction_x'
+ 'hand_finger_0_bone_2_direction_y'
+ 'hand_finger_0_bone_2_prev_joint_transformed_x'
+ 'hand_finger_0_bone_2_prev_joint_transformed_z'
+ 'hand_finger_0_bone_2_next_joint_transformed_x'
+ 'hand_finger_0_bone_3_basis_y_basis_pitch'
+ 'hand_finger_0_bone_3_basis_y_basis_y'
+ 'hand_finger_0_bone_3_basis_y_basis_z'
+ 'hand_finger_0_bone_3_basis_z_basis_roll'
+ 'hand_finger_0_bone_3_basis_z_basis_x'
+ 'hand_finger_0_bone_3_basis_z_basis_yaw'
+ 'hand_finger_0_bone_3_direction_x' 'hand_finger_0_bone_3_direction_y'
+ 'hand_finger_0_bone_3_direction_yaw' 'hand_finger_0_bone_3_next_joint_x'
+ 'hand_finger_0_bone_3_prev_joint_transformed_x'
+ 'hand_finger_0_bone_3_next_joint_transformed_x'
+ 'hand_finger_0_bone_3_next_joint_transformed_yaw'
+ 'hand_finger_0_tip_position_transformed_x'
+ 'hand_finger_0_stabilized_tip_position_transformed_x'
+ 'hand_finger_1_stabilized_tip_position_y'
+ 'hand_finger_1_bone_0_basis_z_basis_pitch'
+ 'hand_finger_1_bone_0_basis_z_basis_roll'
+ 'hand_finger_1_bone_1_basis_y_basis_z'
+ 'hand_finger_1_bone_1_basis_z_basis_x'
+ 'hand_finger_1_bone_1_basis_z_basis_y' 'hand_finger_1_bone_1_direction_x'
+ 'hand_finger_1_bone_1_direction_y' 'hand_finger_2_bone_0_basis_z_basis_y'
+ 'hand_finger_2_bone_1_basis_z_basis_x'
+ 'hand_finger_2_bone_1_basis_z_basis_y'
+ 'hand_finger_2_bone_1_next_joint_transformed_y'
+ 'hand_finger_2_bone_2_prev_joint_transformed_y'
+ 'hand_finger_2_bone_2_next_joint_transformed_pitch'
+ 'hand_finger_2_bone_2_next_joint_transformed_z'
+ 'hand_finger_2_bone_3_prev_joint_transformed_pitch'
+ 'hand_finger_2_bone_3_next_joint_transformed_z'
+ 'hand_finger_2_stabilized_tip_position_transformed_z'
+ 'hand_finger_3_bone_0_direction_pitch'
+ 'hand_finger_3_bone_1_basis_z_basis_y' 'hand_finger_3_bone_1_direction_x'
+ 'hand_finger_3_bone_1_direction_y' 'hand_finger_4_bone_0_basis_y_basis_z'
+ 'hand_finger_4_bone_0_direction_roll' 'hand_finger_4_bone_0_direction_x'
+ 'hand_finger_4_bone_0_direction_yaw'
+ 'hand_finger_4_bone_1_basis_z_basis_x'
+ 'hand_finger_4_bone_1_basis_z_basis_y'
+ 'hand_finger_4_bone_2_basis_y_basis_x'
+ 'hand_finger_4_bone_2_basis_z_basis_y'
+ 'hand_finger_4_bone_2_prev_joint_transformed_pitch'
+ 'hand_finger_4_bone_2_next_joint_transformed_pitch'
+ 'hand_finger_4_bone_3_prev_joint_transformed_roll'
+ 'hand_finger_4_bone_3_next_joint_transformed_pitch'
+ 'hand_finger_4_tip_position_transformed_z' 'hand_basis_y_basis_x'
+ 'hand_basis_z_basis_x' 'hand_palm_normal_x' 'hand_pinch_strength'
+ 'Hand_sphere_center_transformed_z' 'hand_finger_0_direction_pitch'
+ 'hand_finger_0_direction_x' 'hand_finger_0_direction_yaw'
+ 'hand_finger_0_bone_0_basis_x_basis_z'
+ 'hand_finger_0_bone_0_basis_y_basis_roll'
+ 'hand_finger_0_bone_0_basis_y_basis_y'
+ 'hand_finger_0_bone_0_basis_y_basis_yaw'
+ 'hand_finger_0_bone_0_basis_z_basis_roll'
+ 'hand_finger_0_bone_0_basis_z_basis_y'
+ 'hand_finger_0_bone_1_basis_z_basis_pitch'
+ 'hand_finger_0_bone_1_basis_z_basis_roll'
+ 'hand_finger_0_bone_1_basis_z_basis_x'
+ 'hand_finger_0_bone_1_basis_z_basis_y'
+ 'hand_finger_0_bone_1_direction_roll' 'hand_finger_0_bone_1_direction_x'
+ 'hand_finger_0_bone_1_next_joint_transformed_x'
+ 'hand_finger_0_bone_1_next_joint_transformed_z'
+ 'hand_finger_0_bone_2_basis_z_basis_pitch'
+ 'hand_finger_0_bone_2_basis_z_basis_roll'
+ 'hand_finger_0_bone_2_basis_z_basis_x'
+ 'hand_finger_0_bone_2_basis_z_basis_y'
+ 'hand_finger_0_bone_2_direction_roll' 'hand_finger_0_bone_2_direction_x'
+ 'hand_finger_0_bone_2_direction_y'
+ 'hand_finger_0_bone_2_prev_joint_transformed_x'
+ 'hand_finger_0_bone_2_next_joint_transformed_x'
+ 'hand_finger_0_bone_3_basis_y_basis_pitch'
+ 'hand_finger_0_bone_3_basis_y_basis_z'
+ 'hand_finger_0_bone_3_basis_z_basis_roll'
+ 'hand_finger_0_bone_3_basis_z_basis_x'
+ 'hand_finger_0_bone_3_basis_z_basis_y'
+ 'hand_finger_0_bone_3_basis_z_basis_yaw'
+ 'hand_finger_0_bone_3_direction_roll' 'hand_finger_0_bone_3_direction_x'
+ 'hand_finger_0_bone_3_direction_y' 'hand_finger_0_bone_3_direction_yaw'
+ 'hand_finger_0_bone_3_prev_joint_transformed_x'
+ 'hand_finger_0_bone_3_next_joint_transformed_roll'
+ 'hand_finger_0_bone_3_next_joint_transformed_x'
+ 'hand_finger_0_bone_3_next_joint_transformed_yaw'
+ 'hand_finger_0_tip_position_transformed_x'
+ 'hand_finger_0_stabilized_tip_position_transformed_x'
+ 'hand_finger_1_bone_0_basis_z_basis_pitch'
+ 'hand_finger_1_bone_0_basis_z_basis_roll'
+ 'hand_finger_1_bone_0_basis_z_basis_x'
+ 'hand_finger_1_bone_0_direction_pitch'
+ 'hand_finger_1_bone_1_basis_y_basis_z'
+ 'hand_finger_1_bone_1_basis_z_basis_x'
+ 'hand_finger_1_bone_1_basis_z_basis_y' 'hand_finger_1_bone_1_direction_x'
+ 'hand_finger_1_bone_1_direction_y' 'hand_finger_1_bone_3_next_joint_y'
+ 'hand_finger_2_bone_0_direction_x' 'hand_finger_2_bone_1_basis_z_basis_x'
+ 'hand_finger_2_bone_2_next_joint_transformed_z'
+ 'hand_finger_2_bone_3_prev_joint_transformed_z'
+ 'hand_finger_2_bone_3_next_joint_transformed_pitch'
+ 'hand_finger_2_bone_3_next_joint_transformed_z'
+ 'hand_finger_2_tip_position_transformed_pitch'
+ 'hand_finger_2_stabilized_tip_position_transformed_z'
+ 'hand_finger_3_bone_0_direction_x' 'hand_finger_3_bone_1_basis_y_basis_z'
+ 'hand_finger_3_bone_1_basis_z_basis_x'
+ 'hand_finger_3_bone_1_basis_z_basis_y'
+ 'hand_finger_3_bone_1_next_joint_transformed_roll'
+ 'hand_finger_3_bone_2_prev_joint_transformed_y'
+ 'hand_finger_3_bone_2_next_joint_transformed_z'
+ 'hand_finger_4_bone_0_basis_z_basis_yaw'
+ 'hand_finger_4_bone_0_direction_pitch'
+ 'hand_finger_4_bone_0_direction_roll' 'hand_finger_4_bone_0_direction_x'
+ 'hand_finger_4_bone_0_direction_yaw'
+ 'hand_finger_4_bone_1_basis_y_basis_z'
+ 'hand_finger_4_bone_1_basis_z_basis_x' 'hand_finger_4_bone_1_direction_x'
+ 'hand_finger_4_bone_1_direction_y'
+ 'hand_finger_4_bone_1_next_joint_transformed_pitch'
+ 'hand_finger_4_bone_1_next_joint_transformed_roll'
+ 'hand_finger_4_bone_1_next_joint_transformed_z'
+ 'hand_finger_4_bone_2_basis_y_basis_yaw'
+ 'hand_finger_4_bone_2_basis_z_basis_pitch'
+ 'hand_finger_4_bone_2_direction_pitch'
+ 'hand_finger_4_bone_2_prev_joint_transformed_x'
+ 'hand_finger_4_bone_2_next_joint_transformed_x'
+ 'hand_finger_4_bone_2_next_joint_transformed_y'
+ 'hand_finger_4_bone_3_prev_joint_transformed_roll'
+ 'hand_finger_4_bone_3_next_joint_transformed_pitch'
+ 'hand_finger_4_tip_position_transformed_pitch'
+ 'hand_finger_4_tip_position_transformed_x']
+feature selection took 7.01433819183 seconds
+parameter tuning MLP took 766.363557281 seconds
+MLP chosen parameters: {'hidden_layer_sizes': (136,), 'learning_rate': 'constant', 'solver': 'adam', 'alpha': 1.0000000000000001e-05, 'activation': 'logistic', 'learning_rate_init': 0.001}
+CLASSIFIER: MLP 0.538461538462
+             precision    recall  f1-score   support
+
+          a       0.80      0.36      0.50        11
+          b       0.50      0.50      0.50        10
+          c       0.92      1.00      0.96        11
+          d       0.14      0.11      0.12         9
+          e       0.50      0.22      0.31         9
+          f       1.00      0.90      0.95        10
+          g       0.56      0.45      0.50        11
+          h       0.54      0.64      0.58        11
+          i       0.58      0.70      0.64        10
+          j       0.89      0.89      0.89         9
+          k       0.25      0.44      0.32         9
+          l       1.00      1.00      1.00        11
+          m       0.38      0.30      0.33        10
+          n       0.25      0.30      0.27        10
+          o       0.71      0.91      0.80        11
+          p       1.00      0.50      0.67        10
+          q       0.69      1.00      0.82         9
+          r       0.43      0.27      0.33        11
+          s       0.33      0.50      0.40        10
+          t       0.38      0.60      0.46        10
+          u       0.20      0.20      0.20        10
+          v       0.25      0.11      0.15         9
+          w       0.38      0.27      0.32        11
+          x       0.14      0.10      0.12        10
+          y       1.00      1.00      1.00        10
+          z       0.36      0.62      0.45         8
+
+avg / total       0.55      0.54      0.53       260
+
+[[ 4  0  0  0  1  0  0  0  0  0  1  0  0  1  0  0  0  0  0  3  0  0  1  0
+   0  0]
+ [ 0  5  0  0  0  0  0  0  2  0  1  0  0  0  0  0  0  0  0  1  0  0  1  0
+   0  0]
+ [ 0  0 11  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  1  1  0  0  0  0  0  1  0  2  1  0  0  0  0  2  0  0  0  0  1
+   0  0]
+ [ 0  0  0  2  2  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0  0  0  0  3
+   0  0]
+ [ 0  1  0  0  0  9  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  1  0  0  0  5  5  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  4  7  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  7  1  1  0  0  0  0  0  0  0  1  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  1  8  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  1  0  0  0  0  0  0  0  0  4  0  0  0  0  0  0  1  0  1  0  0  2  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  1  0  0  0  0  1  0  0  0  3  3  0  0  0  0  1  1  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  1  3  0  0  0  0  2  3  1  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  1  0 10  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  5  4  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  9  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  2  0  0  0  0  0  0  0  0  0  0  1  0  0  3  0  0  2  0  1  0
+   0  2]
+ [ 1  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0  0  1  5  0  0  0  0  1
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  2  0  0  1  0  0  0  0  1  6  0  0  0  0
+   0  0]
+ [ 0  2  0  0  0  0  0  0  0  0  2  0  1  0  1  0  0  0  2  0  2  0  0  0
+   0  0]
+ [ 0  1  0  0  0  0  0  0  1  0  2  0  0  0  0  0  0  0  0  0  1  1  0  1
+   0  2]
+ [ 0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  4  2  3  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0  0  0  0  1  0  1  0  1
+   0  5]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  10  0]
+ [ 0  0  0  0  0  0  0  0  0  0  2  0  0  1  0  0  0  0  0  0  0  0  0  0
+   0  5]]
+testing classifier MLP took 0.0171589475966 seconds
+CLASSIFIER: voting 0.534615384615
+             precision    recall  f1-score   support
+
+          a       0.82      0.82      0.82        11
+          b       0.60      0.60      0.60        10
+          c       0.92      1.00      0.96        11
+          d       0.11      0.11      0.11         9
+          e       0.29      0.22      0.25         9
+          f       0.83      1.00      0.91        10
+          g       0.60      0.27      0.37        11
+          h       0.56      0.82      0.67        11
+          i       0.67      0.20      0.31        10
+          j       0.57      0.89      0.70         9
+          k       0.29      0.56      0.38         9
+          l       0.85      1.00      0.92        11
+          m       0.25      0.30      0.27        10
+          n       0.44      0.40      0.42        10
+          o       0.75      0.55      0.63        11
+          p       1.00      0.40      0.57        10
+          q       0.75      1.00      0.86         9
+          r       0.71      0.45      0.56        11
+          s       0.27      0.40      0.32        10
+          t       0.50      0.50      0.50        10
+          u       0.00      0.00      0.00        10
+          v       0.29      0.44      0.35         9
+          w       0.27      0.27      0.27        11
+          x       0.20      0.10      0.13        10
+          y       1.00      1.00      1.00        10
+          z       0.40      0.50      0.44         8
+
+avg / total       0.55      0.53      0.52       260
+
+[[ 9  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  1  0  0
+   0  0]
+ [ 0  6  0  0  0  0  0  0  1  1  2  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0 11  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  1  1  0  0  0  0  0  1  0  2  1  1  0  0  0  2  0  0  0  0  0
+   0  0]
+ [ 0  0  0  2  2  0  0  0  0  0  0  0  0  0  0  0  0  0  3  0  0  0  0  2
+   0  0]
+ [ 0  0  0  0  0 10  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  1  0  0  0  3  5  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  2  9  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  1  0  0  2  5  0  0  0  0  0  0  0  0  2  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  1  0  0  0  8  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  1  0  0  1  0  0  0  0  0  5  0  0  0  0  0  0  0  0  2  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0 11  0  0  0  0  0  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  1  0  0  0  0  0  0  0  0  3  2  0  0  0  0  2  1  0  0  1  0
+   0  0]
+ [ 1  0  0  0  1  0  0  0  0  0  1  0  0  4  0  0  0  0  1  1  1  0  0  0
+   0  0]
+ [ 0  0  0  1  0  0  0  0  0  0  0  0  3  0  6  0  0  0  1  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  2  0  0  0  0  0  1  0  4  3  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  9  0  0  0  0  0  0  0
+   0  0]
+ [ 0  0  0  2  0  0  0  0  0  0  0  0  0  0  0  0  0  5  0  0  0  1  1  1
+   0  1]
+ [ 1  0  0  0  2  0  0  0  0  0  0  0  1  1  0  0  0  1  4  0  0  0  0  0
+   0  0]
+ [ 0  0  0  0  0  0  0  0  0  0  3  0  1  0  0  0  0  0  0  5  0  0  0  0
+   0  1]
+ [ 0  2  0  1  0  0  0  0  0  0  2  0  0  0  0  0  0  0  0  1  0  2  2  0
+   0  0]
+ [ 0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  4  1  1
+   0  1]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  3  5  3  0
+   0  0]
+ [ 0  0  0  1  0  0  0  0  0  0  0  1  1  0  1  0  0  0  0  0  0  0  2  1
+   0  3]
+ [ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  10  0]
+ [ 0  0  0  0  0  0  0  0  0  0  2  0  0  0  0  0  0  0  0  0  0  1  1  0
+   0  4]]
+testing classifier voting took 0.00941921414596 seconds

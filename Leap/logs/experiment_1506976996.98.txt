@@ -1,0 +1,12 @@
+Data variables: 
+	 train_paths: [], 
+	 test_paths: ['Leap_Data\\Legit_Data\\Participant 0\\Leap'], 
+	 use_auto_split: True, 
+	 frames_per_gesture: 1, 
+	 separate_frames: False, 
+	 feature_set_type: all 
+	 average: False
+loading data took 1.22902229674 seconds
+loaded top 1 confidence frames...
+scaling
+SelectKBest(k=500, score_func=<function f_classif at 0x0000000016F5B3C8>)
