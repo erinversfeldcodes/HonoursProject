@@ -2,7 +2,7 @@ This data gathering program is compatible with the Microsoft Kinect V2, Leap Mot
 External application dependancies are as follows:
 
 - For the Kinect V2: The Kinect 2.0 SDK must be installed. This can be found at https://www.microsoft.com/en-us/download/details.aspx?id=44561.
-- For the Leap Motion Controller:
+- For the Leap Motion Controller: Set up Leap Motion for your computer: https://www.leapmotion.com/setup/desktop. Download the sdk (https://developer.leapmotion.com/sdk/v2) and point the visual studio project to it (https://developer.leapmotion.com/documentation/csharp/devguide/Project_Setup.html). The data gatherer for this project was run using V2 of the Leap software.
 - For the Myo Armband:
 
 The program file is HANDGRDataGatherer\HANDGRDataGatherer\bin\Debug\HANDGRDataGatherer.exe. 
